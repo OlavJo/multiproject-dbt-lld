@@ -10,9 +10,9 @@
 
 ## Next steps
 
-1. Run `prototype/00_teardown_spikes.sql`, then `prototype/00_lab_foundation.sql`, then Increment 1 in the order of `prototype/README.md`; export the demo evidence to `evidence/INC1_<date>.csv`; fix what fails.
+1. Run `prototype/00_teardown_spikes.sql`, `prototype/00_lab_foundation.sql` and `prototype/00_git_integration.sql`, then Increment 1 in the order of `prototype/README.md`; export the demo evidence to `evidence/INC1_<date>.csv`; fix what fails.
 2. Open the increment 1 pull request (LLD documents, teardown, increment 1, evidence) and review the implementation choices listed in LLD 01, Section 11.
-3. Increment 2: first publication under the new roles (project object from Git with `ADD VERSION`, publish procedure, lease procedures, a task owned by the unit role, consumer reads through the reader database role). The Snowflake Git objects kept by Increment 0 (`SPIKE_LAB.GIT`, API integration `SPIKE_GIT_API`) point at the spikes repository; the prototype's dbt project will live here, so Increment 2 adds a Git integration script here that points them at this repository (the integration's `API_ALLOWED_PREFIXES`, the repository object's `ORIGIN`), and the token needs access to this repository (trial shortcut T4).
+3. Increment 2: first publication under the new roles (project object from Git with `ADD VERSION`, publish procedure, lease procedures, a task owned by the unit role, consumer reads through the reader database role). The Snowflake Git objects kept by Increment 0 (`SPIKE_LAB.GIT`, API integration `SPIKE_GIT_API`) point at the spikes repository; the prototype's dbt project will live here, so Increment 2 uses the separate Git objects for this repository instead, from `prototype/00_git_integration.sql` (`LLD_LAB.GIT.LLD_REPO`, integration `LLD_GIT_API`).
 4. LLD component 3 (environments and naming), which fixes the placeholder names.
 
 ## Housekeeping

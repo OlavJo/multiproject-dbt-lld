@@ -12,6 +12,7 @@ Scripts are organised by LLD component, and numbered `i<increment>_<step>` so th
 prototype/
   00_lab_foundation.sql       Increment 0: lab scaffolding (warehouse, cost guard, evidence store, PROBE, RECORD)
   00_teardown_spikes.sql      Increment 0: remove the spike objects (trial account only)
+  00_git_integration.sql      Increment 0: Git integration for this repository (LLD_LAB, LLD_GIT_API)
   01_identity/                Component 1: roles, provisioning
   06_run_control/             Component 6: run-control tables and procedures
   10_external/                Component 10: the simulated platform landing (raw)
@@ -43,6 +44,7 @@ As with the spikes, scripts run in Snowsight worksheets (or any client that supp
 |---|---|---|
 | 0.a | `00_teardown_spikes.sql` (edit `v_confirm` to `YES`); trial account only, skip on a new account | `ACCOUNTADMIN` |
 | 0.b | `00_lab_foundation.sql`; on a new account, run it first | `SYSADMIN`, `ACCOUNTADMIN` (switches itself) |
+| 0.c | `00_git_integration.sql` (paste a token first; see the header) | `SYSADMIN`, `ACCOUNTADMIN` (switches itself) |
 | 1.10 | `01_identity/i1_10_foundation.sql` | `USERADMIN`, `SECURITYADMIN`, `ACCOUNTADMIN`, `SYSADMIN`, `SILVER_PROVISIONER` (switches itself) |
 | 1.20 | `10_external/i1_20_platform_raw.sql` | `PLATFORM_INGEST` |
 | 1.30 | `06_run_control/i1_30_control_tables.sql` | `SILVER_STEWARD` |
@@ -60,7 +62,7 @@ Recorded so the production build replaces each one deliberately (guardrail 5).
 | T1 | One user holds every role, including the provisioner and, in demos, unit service roles | `i1_10`, demos | No person holds service, provisioner or owner roles (IA-4, IA-7); scripts run by the deployment pipeline |
 | T2 | Administrator roles run interactively by that user | `00`, `i1_10` | Version-controlled scripts run by a pipeline or by named administrators (IA-4, CD-1) |
 | T3 | One warehouse, `SPIKE_WH`, for every role | `i1_10` | Warehouses per OC-1 |
-| T4 | Git access through a personal access token kept from the spikes | Increment 2 | CD-3 |
+| T4 | Git access through a personal access token | `00_git_integration.sql` | CD-3 |
 | T5 | One account holds what will be several environments | everywhere | EN-1 |
 | T6 | Evidence store and probe procedures in `SPIKE_LAB` | `00_lab_foundation.sql`, everywhere | Not needed in production; CI tests take their place |
 | T7 | Raw landing simulated by the prototype | `10_external/` | The platform team's landing (EX-1) |
