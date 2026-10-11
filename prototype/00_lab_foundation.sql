@@ -181,6 +181,9 @@ call lld_lab.evidence.probe($run_id, 'INC0', 'INC0.12', 'Probe self-test: negate
 call lld_lab.evidence.record($run_id, 'INC0', 'INC0.13', 'Record self-test: value supplied by the caller',
   'n/a', 'hello', 'hello');
 
+-- As ACCOUNTADMIN: SHOW WAREHOUSES shows the resource monitor only to roles
+-- that can see it, so SYSADMIN reads 'null' even when the monitor is set.
+use role accountadmin;
 show warehouses like 'LLD_WH';
 set obs = (select nvl(max("resource_monitor"), '<none>') from table(result_scan(last_query_id())));
 call lld_lab.evidence.record($run_id, 'INC0', 'INC0.14', 'LLD_WH is guarded by LLD_RM',
@@ -190,4 +193,4 @@ select case_id, outcome, description, observed, role_name, secondary_roles
 from lld_lab.evidence.observation
 where run_id = $run_id
 order by case_id;
--- Expect five PASS rows and SECONDARY_ROLES empty.
+-- Expect five PASS rows (INC0.14 recorded by ACCOUNTADMIN) and SECONDARY_ROLES empty.
