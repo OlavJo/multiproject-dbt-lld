@@ -24,7 +24,7 @@
 -- =============================================================================
 
 use secondary roles none;
-use warehouse spike_wh;
+use warehouse lld_wh;
 
 -- Part A: the steward grants the provisioner, the unit base role and the operator ------
 use role silver_steward;

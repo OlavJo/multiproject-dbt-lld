@@ -18,7 +18,7 @@
 
 use role platform_ingest;
 use secondary roles none;
-use warehouse spike_wh;
+use warehouse lld_wh;
 
 create schema if not exists raw.erp with managed access;
 create schema if not exists raw.crm with managed access;

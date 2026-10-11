@@ -17,7 +17,7 @@
 
 use role silver_steward;
 use secondary roles none;
-use warehouse spike_wh;
+use warehouse lld_wh;
 
 create schema if not exists analytics_ops.control with managed access;
 

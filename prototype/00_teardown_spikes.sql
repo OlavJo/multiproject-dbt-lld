@@ -8,12 +8,13 @@
 --   roles      PLATFORM_INGEST, SILVER_STEWARD, SVC_SILVER_ERP, SVC_SILVER_CRM,
 --              SVC_SILVER_CORE, ANALYST_TIER1, GOVERNANCE_ADMIN
 --
--- Keeps, because the prototype reuses them:
+-- Keeps, as the spike record (the prototype does not use any of them; it has
+-- its own LLD_WH, LLD_RM and LLD_LAB from 00_lab_foundation.sql):
 --   warehouse SPIKE_WH and resource monitor SPIKE_RM
 --   SPIKE_LAB.EVIDENCE (the OBSERVATION table, with every spike row, and PROBE)
 --   SPIKE_LAB.GIT (the GitHub secret and Git repository object) and the API
---   integration SPIKE_GIT_API, so the token need not be entered again. Their
---   ownership moves from SILVER_STEWARD to SYSADMIN before that role is dropped.
+--   integration SPIKE_GIT_API. Their ownership moves from SILVER_STEWARD to
+--   SYSADMIN before that role is dropped, so nothing is left orphaned.
 --
 -- The spike evidence is committed under reference/spikes/evidence/, and the
 -- spike scripts can rebuild the spike objects (reference/spikes/setup/00 to 10),
@@ -21,13 +22,14 @@
 -- databases stay recoverable with UNDROP for their Time Travel period.
 --
 -- SAFETY: the drops run only if v_confirm below is edited to 'YES'.
+-- Requires: 00_lab_foundation.sql (the INC0 evidence goes to LLD_LAB).
 -- Run as: ACCOUNTADMIN (it inherits every spike role through SYSADMIN).
 -- Idempotent: every drop is IF EXISTS or guarded.
 -- =============================================================================
 
 use role accountadmin;
 use secondary roles none;
-use warehouse spike_wh;
+use warehouse lld_wh;
 set run_id = (select uuid_string());
 
 -- 1. Review what will be removed ------------------------------------------------
@@ -65,7 +67,7 @@ begin
   drop schema if exists spike_lab.hello;
   begin drop masking policy if exists spike_lab.evidence.mp_edition_check; exception when other then v_notes := v_notes || ' mp_edition_check;'; end;
 
-  -- Keep the Git objects: move them to SYSADMIN before their owner role is dropped
+  -- Keep the spike Git objects: move them to SYSADMIN before their owner role is dropped
   begin grant ownership on git repository spike_lab.git.spikes_repo to role sysadmin copy current grants; exception when other then v_notes := v_notes || ' repo:' || sqlerrm || ';'; end;
   begin grant ownership on secret spike_lab.git.github_pat          to role sysadmin copy current grants; exception when other then v_notes := v_notes || ' secret:' || sqlerrm || ';'; end;
   begin grant ownership on schema spike_lab.git                     to role sysadmin copy current grants; exception when other then v_notes := v_notes || ' git schema:' || sqlerrm || ';'; end;
@@ -88,27 +90,27 @@ show databases;
 set obs = (select count(*) from table(result_scan(last_query_id()))
            where "name" in ('RAW', 'SILVER', 'ANALYTICS_OPS', 'GOVERNANCE'));
 set q = (select 'select ' || $obs);
-call spike_lab.evidence.probe($run_id, 'INC0', 'INC0.01', 'No spike databases remain', $q, '0');
+call lld_lab.evidence.probe($run_id, 'INC0', 'INC0.01', 'No spike databases remain', $q, '0');
 
 show roles;
 set obs = (select count(*) from table(result_scan(last_query_id()))
            where "name" in ('PLATFORM_INGEST', 'SILVER_STEWARD', 'SVC_SILVER_ERP', 'SVC_SILVER_CRM',
                             'SVC_SILVER_CORE', 'ANALYST_TIER1', 'GOVERNANCE_ADMIN'));
 set q = (select 'select ' || $obs);
-call spike_lab.evidence.probe($run_id, 'INC0', 'INC0.02', 'No spike roles remain', $q, '0');
+call lld_lab.evidence.probe($run_id, 'INC0', 'INC0.02', 'No spike roles remain', $q, '0');
 
 show git repositories in schema spike_lab.git;
 set obs = (select nvl(max("owner"), '<none>') from table(result_scan(last_query_id())) where "name" = 'SPIKES_REPO');
 set q = (select 'select ''' || $obs || '''');
-call spike_lab.evidence.probe($run_id, 'INC0', 'INC0.03', 'Git repository object kept, owned by SYSADMIN', $q, 'SYSADMIN');
+call lld_lab.evidence.probe($run_id, 'INC0', 'INC0.03', 'Git repository object kept, owned by SYSADMIN', $q, 'SYSADMIN');
 
 show secrets in schema spike_lab.git;
 set obs = (select nvl(max("owner"), '<none>') from table(result_scan(last_query_id())) where "name" = 'GITHUB_PAT');
 set q = (select 'select ''' || $obs || '''');
-call spike_lab.evidence.probe($run_id, 'INC0', 'INC0.04', 'GitHub secret kept, owned by SYSADMIN', $q, 'SYSADMIN');
+call lld_lab.evidence.probe($run_id, 'INC0', 'INC0.04', 'GitHub secret kept, owned by SYSADMIN', $q, 'SYSADMIN');
 
-call spike_lab.evidence.probe($run_id, 'INC0', 'INC0.05', 'Spike evidence kept',
+call lld_lab.evidence.probe($run_id, 'INC0', 'INC0.05', 'Spike evidence kept in SPIKE_LAB',
   $$select count(*) from spike_lab.evidence.observation where spike not like 'INC%'$$, '!0');
 
 select case_id, outcome, description, observed
-from spike_lab.evidence.observation where run_id = $run_id order by case_id;
+from lld_lab.evidence.observation where run_id = $run_id order by case_id;

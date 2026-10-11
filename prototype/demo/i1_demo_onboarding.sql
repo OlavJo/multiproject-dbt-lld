@@ -19,7 +19,7 @@
 -- =============================================================================
 
 use secondary roles none;
-use warehouse spike_wh;
+use warehouse lld_wh;
 set me = (select current_user());
 set run_id = (select uuid_string());
 
@@ -55,42 +55,42 @@ insert into analytics_ops.control.unit_dependencies (unit, upstream_unit, max_ag
 
 -- Part 2: onboarding by the operator --------------------------------------------------------
 use role silver_operator;
-call spike_lab.evidence.probe($run_id, 'INC1', 'INC1.00', 'Core is refused before its upstreams are onboarded',
+call lld_lab.evidence.probe($run_id, 'INC1', 'INC1.00', 'Core is refused before its upstreams are onboarded',
   $$call silver.ops.onboard_unit('silver.core')$$, 'REFUSED:upstream_not_onboarded');
-call spike_lab.evidence.probe($run_id, 'INC1', 'INC1.01', 'Operator onboards ERP',
+call lld_lab.evidence.probe($run_id, 'INC1', 'INC1.01', 'Operator onboards ERP',
   $$call silver.ops.onboard_unit('silver.erp')$$, 'ONBOARDED:SVC_SILVER_ERP (schema created)');
-call spike_lab.evidence.probe($run_id, 'INC1', 'INC1.02', 'Operator onboards CRM',
+call lld_lab.evidence.probe($run_id, 'INC1', 'INC1.02', 'Operator onboards CRM',
   $$call silver.ops.onboard_unit('silver.crm')$$, 'ONBOARDED:SVC_SILVER_CRM (schema created)');
-call spike_lab.evidence.probe($run_id, 'INC1', 'INC1.03', 'Operator onboards HR (sensitive)',
+call lld_lab.evidence.probe($run_id, 'INC1', 'INC1.03', 'Operator onboards HR (sensitive)',
   $$call silver.ops.onboard_unit('silver.hr')$$, 'ONBOARDED:SVC_SILVER_HR (schema created)');
-call spike_lab.evidence.probe($run_id, 'INC1', 'INC1.04', 'Operator onboards Core after its upstreams',
+call lld_lab.evidence.probe($run_id, 'INC1', 'INC1.04', 'Operator onboards Core after its upstreams',
   $$call silver.ops.onboard_unit('silver.core')$$, 'ONBOARDED:SVC_SILVER_CORE (schema created)');
-call spike_lab.evidence.probe($run_id, 'INC1', 'INC1.05', 'A malformed unit name is refused (no SQL injection)',
+call lld_lab.evidence.probe($run_id, 'INC1', 'INC1.05', 'A malformed unit name is refused (no SQL injection)',
   $$call silver.ops.onboard_unit('silver.erp; drop role silver_operator')$$, 'REFUSED:invalid_unit_name');
-call spike_lab.evidence.probe($run_id, 'INC1', 'INC1.06', 'A unit missing from configuration is refused',
+call lld_lab.evidence.probe($run_id, 'INC1', 'INC1.06', 'A unit missing from configuration is refused',
   $$call silver.ops.onboard_unit('silver.nounit')$$, 'REFUSED:not_in_units');
-call spike_lab.evidence.probe($run_id, 'INC1', 'INC1.07', 'The operator cannot create a role directly',
+call lld_lab.evidence.probe($run_id, 'INC1', 'INC1.07', 'The operator cannot create a role directly',
   $$create role inc1_should_not_exist$$, 'ERROR:%');
 use role silver_steward;
-call spike_lab.evidence.probe($run_id, 'INC1', 'INC1.08', 'The steward owner role cannot create a role directly',
+call lld_lab.evidence.probe($run_id, 'INC1', 'INC1.08', 'The steward owner role cannot create a role directly',
   $$create role inc1_should_not_exist$$, 'ERROR:%');
 
 -- Part 3: the platform grants raw access (onboarding runbook, platform step) -------------
 use role platform_ingest;
-call spike_lab.evidence.probe($run_id, 'INC1', 'INC1.09', 'Platform grants raw.reader_erp to the ERP unit role',
+call lld_lab.evidence.probe($run_id, 'INC1', 'INC1.09', 'Platform grants raw.reader_erp to the ERP unit role',
   $$grant database role raw.reader_erp to role svc_silver_erp$$, '!ERROR:%');
-call spike_lab.evidence.probe($run_id, 'INC1', 'INC1.10', 'Platform grants raw.reader_crm to the CRM unit role',
+call lld_lab.evidence.probe($run_id, 'INC1', 'INC1.10', 'Platform grants raw.reader_crm to the CRM unit role',
   $$grant database role raw.reader_crm to role svc_silver_crm$$, '!ERROR:%');
-call spike_lab.evidence.probe($run_id, 'INC1', 'INC1.11', 'Platform grants raw.reader_hr to the HR unit role',
+call lld_lab.evidence.probe($run_id, 'INC1', 'INC1.11', 'Platform grants raw.reader_hr to the HR unit role',
   $$grant database role raw.reader_hr to role svc_silver_hr$$, '!ERROR:%');
 
 -- Part 4: consumer access ---------------------------------------------------------------
 use role silver_operator;
-call spike_lab.evidence.probe($run_id, 'INC1', 'INC1.12', 'Operator grants the aggregate reader to ANALYST_ALL',
+call lld_lab.evidence.probe($run_id, 'INC1', 'INC1.12', 'Operator grants the aggregate reader to ANALYST_ALL',
   $$call silver.ops.grant_unit_reader('silver', 'analyst_all')$$, 'GRANTED:silver.reader to ANALYST_ALL');
-call spike_lab.evidence.probe($run_id, 'INC1', 'INC1.13', 'Operator grants the HR reader to ANALYST_HR',
+call lld_lab.evidence.probe($run_id, 'INC1', 'INC1.13', 'Operator grants the HR reader to ANALYST_HR',
   $$call silver.ops.grant_unit_reader('silver.hr', 'analyst_hr')$$, 'GRANTED:silver.reader_hr to ANALYST_HR');
-call spike_lab.evidence.probe($run_id, 'INC1', 'INC1.14', 'A reader role cannot be granted to a service role this way',
+call lld_lab.evidence.probe($run_id, 'INC1', 'INC1.14', 'A reader role cannot be granted to a service role this way',
   $$call silver.ops.grant_unit_reader('silver.hr', 'svc_silver_core')$$, 'REFUSED:invalid_role');
 
 -- Part 5: what was created (inspection as SYSADMIN, which inherits every unit role) ------
@@ -98,38 +98,38 @@ use role sysadmin;
 show roles like 'SVC_SILVER_%';
 set obs = (select listagg("name" || ':' || "owner", ',') within group (order by "name")
            from table(result_scan(last_query_id())));
-call spike_lab.evidence.record($run_id, 'INC1', 'INC1.15', 'One service role per unit, owned by the provisioner',
+call lld_lab.evidence.record($run_id, 'INC1', 'INC1.15', 'One service role per unit, owned by the provisioner',
   'show roles like ''SVC_SILVER_%''',
   'SVC_SILVER_CORE:SILVER_PROVISIONER,SVC_SILVER_CRM:SILVER_PROVISIONER,SVC_SILVER_ERP:SILVER_PROVISIONER,SVC_SILVER_HR:SILVER_PROVISIONER', $obs);
 
 show schemas in database silver;
 set obs = (select listagg("name" || ':' || "owner" || ':' || "options", ',') within group (order by "name")
            from table(result_scan(last_query_id())) where "name" in ('ERP', 'CRM', 'HR', 'CORE'));
-call spike_lab.evidence.record($run_id, 'INC1', 'INC1.16', 'Each published schema is owned by its unit role and managed access',
+call lld_lab.evidence.record($run_id, 'INC1', 'INC1.16', 'Each published schema is owned by its unit role and managed access',
   'show schemas in database silver',
   'CORE:SVC_SILVER_CORE:MANAGED ACCESS,CRM:SVC_SILVER_CRM:MANAGED ACCESS,ERP:SVC_SILVER_ERP:MANAGED ACCESS,HR:SVC_SILVER_HR:MANAGED ACCESS', $obs);
 
 show grants to role svc_silver_core;
 set obs = (select listagg("name", ',') within group (order by "name")
            from table(result_scan(last_query_id())) where "granted_on" in ('ROLE', 'DATABASE_ROLE'));
-call spike_lab.evidence.record($run_id, 'INC1', 'INC1.17', 'Core holds the ERP and CRM reader roles, the unit base and the task runner',
+call lld_lab.evidence.record($run_id, 'INC1', 'INC1.17', 'Core holds the ERP and CRM reader roles, the unit base and the task runner',
   'show grants to role svc_silver_core', '%READER_CRM%READER_ERP%SILVER_UNIT_BASE%TASK_RUNNER%', $obs);
-call spike_lab.evidence.record($run_id, 'INC1', 'INC1.18', 'Core does not hold the HR reader role (not a declared upstream)',
+call lld_lab.evidence.record($run_id, 'INC1', 'INC1.18', 'Core does not hold the HR reader role (not a declared upstream)',
   'show grants to role svc_silver_core', '!%READER_HR%', $obs);
 
 show grants to role svc_silver_erp;
 set obs = (select listagg("name", ',') within group (order by "name")
            from table(result_scan(last_query_id())) where "granted_on" in ('ROLE', 'DATABASE_ROLE'));
-call spike_lab.evidence.record($run_id, 'INC1', 'INC1.19', 'ERP holds its raw reader role (from the platform), the unit base and the task runner',
+call lld_lab.evidence.record($run_id, 'INC1', 'INC1.19', 'ERP holds its raw reader role (from the platform), the unit base and the task runner',
   'show grants to role svc_silver_erp', '%RAW.READER_ERP%SILVER_UNIT_BASE%TASK_RUNNER%', $obs);
 
 use role silver_provisioner;
 show grants to database role silver.reader;
 set obs = (select listagg("name", ',') within group (order by "name")
            from table(result_scan(last_query_id())) where "granted_on" = 'DATABASE_ROLE');
-call spike_lab.evidence.record($run_id, 'INC1', 'INC1.20', 'The aggregate reader holds the non-sensitive unit readers',
+call lld_lab.evidence.record($run_id, 'INC1', 'INC1.20', 'The aggregate reader holds the non-sensitive unit readers',
   'show grants to database role silver.reader', '%READER_CORE%READER_CRM%READER_ERP%', $obs);
-call spike_lab.evidence.record($run_id, 'INC1', 'INC1.21', 'The aggregate reader does not hold the sensitive HR reader',
+call lld_lab.evidence.record($run_id, 'INC1', 'INC1.21', 'The aggregate reader does not hold the sensitive HR reader',
   'show grants to database role silver.reader', '!%READER_HR%', $obs);
 
 -- Part 6: privileges in use, as the unit roles (trial shortcut T1) -----------------------
@@ -138,73 +138,73 @@ grant role svc_silver_erp  to user identifier($me);
 grant role svc_silver_core to user identifier($me);
 
 use role svc_silver_erp;
-call spike_lab.evidence.probe($run_id, 'INC1', 'INC1.22', 'ERP role clones its own build schema (managed access), as publication will',
+call lld_lab.evidence.probe($run_id, 'INC1', 'INC1.22', 'ERP role clones its own build schema (managed access), as publication will',
   $$create or replace schema silver.erp__build clone silver.erp with managed access$$, '!ERROR:%');
 drop schema if exists silver.erp__build;
-call spike_lab.evidence.probe($run_id, 'INC1', 'INC1.23', 'ERP role reads its own raw source',
+call lld_lab.evidence.probe($run_id, 'INC1', 'INC1.23', 'ERP role reads its own raw source',
   $$select count(*) from raw.erp.accounts$$, '1');
-call spike_lab.evidence.probe($run_id, 'INC1', 'INC1.24', 'ERP role cannot read another source',
+call lld_lab.evidence.probe($run_id, 'INC1', 'INC1.24', 'ERP role cannot read another source',
   $$select count(*) from raw.crm.contacts$$, 'ERROR:%');
-call spike_lab.evidence.probe($run_id, 'INC1', 'INC1.25', 'ERP role cannot clone (or touch) the CRM unit',
+call lld_lab.evidence.probe($run_id, 'INC1', 'INC1.25', 'ERP role cannot clone (or touch) the CRM unit',
   $$create or replace schema silver.crm__build clone silver.crm with managed access$$, 'ERROR:%');
-call spike_lab.evidence.probe($run_id, 'INC1', 'INC1.26', 'ERP role cannot write the run-control log directly',
+call lld_lab.evidence.probe($run_id, 'INC1', 'INC1.26', 'ERP role cannot write the run-control log directly',
   $$insert into analytics_ops.control.publish_log (unit, event_type) values ('silver.erp', 'PUBLISHED')$$, 'ERROR:%');
-call spike_lab.evidence.probe($run_id, 'INC1', 'INC1.27', 'Residual risk (LLD 01, 9): a unit role can create any schema in silver',
+call lld_lab.evidence.probe($run_id, 'INC1', 'INC1.27', 'Residual risk (LLD 01, 9): a unit role can create any schema in silver',
   $$create schema if not exists silver.inc1_stray$$, null);
 drop schema if exists silver.inc1_stray;
 
 use role svc_silver_core;
-call spike_lab.evidence.probe($run_id, 'INC1', 'INC1.28', 'Core role has no raw access',
+call lld_lab.evidence.probe($run_id, 'INC1', 'INC1.28', 'Core role has no raw access',
   $$select count(*) from raw.erp.accounts$$, 'ERROR:%');
 
 -- Part 7: what consumers see -------------------------------------------------------------
 use role analyst_all;
-call spike_lab.evidence.probe($run_id, 'INC1', 'INC1.29', 'ANALYST_ALL sees the non-sensitive unit schemas only',
+call lld_lab.evidence.probe($run_id, 'INC1', 'INC1.29', 'ANALYST_ALL sees the non-sensitive unit schemas only',
   $$select listagg(schema_name, ',') within group (order by schema_name) from silver.information_schema.schemata where schema_name not in ('INFORMATION_SCHEMA', 'PUBLIC')$$,
   'CORE,CRM,ERP');
 use role analyst_hr;
-call spike_lab.evidence.probe($run_id, 'INC1', 'INC1.30', 'ANALYST_HR sees the HR unit schema only',
+call lld_lab.evidence.probe($run_id, 'INC1', 'INC1.30', 'ANALYST_HR sees the HR unit schema only',
   $$select listagg(schema_name, ',') within group (order by schema_name) from silver.information_schema.schemata where schema_name not in ('INFORMATION_SCHEMA', 'PUBLIC')$$,
   'HR');
 
 -- Part 8: run control records it ----------------------------------------------------------
 use role silver_operator;
-call spike_lab.evidence.probe($run_id, 'INC1', 'INC1.31', 'An ONBOARDED event for each unit',
+call lld_lab.evidence.probe($run_id, 'INC1', 'INC1.31', 'An ONBOARDED event for each unit',
   $$select count(distinct unit) from analytics_ops.control.publish_log where event_type = 'ONBOARDED' and unit in ('silver.erp', 'silver.crm', 'silver.hr', 'silver.core')$$, '4');
-call spike_lab.evidence.probe($run_id, 'INC1', 'INC1.32', 'A lease row for each unit',
+call lld_lab.evidence.probe($run_id, 'INC1', 'INC1.32', 'A lease row for each unit',
   $$select count(*) from analytics_ops.control.unit_lease where unit in ('silver.erp', 'silver.crm', 'silver.hr', 'silver.core')$$, '4');
-call spike_lab.evidence.probe($run_id, 'INC1', 'INC1.33', 'Access grants are logged',
+call lld_lab.evidence.probe($run_id, 'INC1', 'INC1.33', 'Access grants are logged',
   $$select count(*) from analytics_ops.control.publish_log where event_type = 'ACCESS_GRANTED' and event_ts > dateadd(hour, -1, sysdate())$$, '!0');
 
 -- Part 9: rerun and retirement --------------------------------------------------------------
-call spike_lab.evidence.probe($run_id, 'INC1', 'INC1.34', 'Onboarding again re-applies grants and leaves the schema alone',
+call lld_lab.evidence.probe($run_id, 'INC1', 'INC1.34', 'Onboarding again re-applies grants and leaves the schema alone',
   $$call silver.ops.onboard_unit('silver.erp')$$, 'ONBOARDED:SVC_SILVER_ERP (schema existing)');
-call spike_lab.evidence.probe($run_id, 'INC1', 'INC1.35', 'ERP cannot be offboarded while Core depends on it',
+call lld_lab.evidence.probe($run_id, 'INC1', 'INC1.35', 'ERP cannot be offboarded while Core depends on it',
   $$call silver.ops.offboard_unit('silver.erp')$$, 'REFUSED:has_dependents:silver.core');
-call spike_lab.evidence.probe($run_id, 'INC1', 'INC1.36', 'HR is offboarded',
+call lld_lab.evidence.probe($run_id, 'INC1', 'INC1.36', 'HR is offboarded',
   $$call silver.ops.offboard_unit('silver.hr')$$, 'OFFBOARDED:SVC_SILVER_HR');
 
 use role sysadmin;
 show schemas in database silver;
 set obs = (select listagg("name" || ':' || "owner" || ':' || "options", ',') within group (order by "name")
            from table(result_scan(last_query_id())) where "name" in ('ERP', 'CRM', 'HR', 'CORE'));
-call spike_lab.evidence.record($run_id, 'INC1', 'INC1.37', 'After a rerun and an offboarding: ERP unchanged, HR gone',
+call lld_lab.evidence.record($run_id, 'INC1', 'INC1.37', 'After a rerun and an offboarding: ERP unchanged, HR gone',
   'show schemas in database silver',
   'CORE:SVC_SILVER_CORE:MANAGED ACCESS,CRM:SVC_SILVER_CRM:MANAGED ACCESS,ERP:SVC_SILVER_ERP:MANAGED ACCESS', $obs);
 show roles like 'SVC_SILVER_HR';
 set obs = (select count(*) from table(result_scan(last_query_id())));
-call spike_lab.evidence.record($run_id, 'INC1', 'INC1.38', 'The HR service role is gone', 'show roles like ''SVC_SILVER_HR''', '0', $obs);
+call lld_lab.evidence.record($run_id, 'INC1', 'INC1.38', 'The HR service role is gone', 'show roles like ''SVC_SILVER_HR''', '0', $obs);
 show database roles in database silver;
 set obs = (select count(*) from table(result_scan(last_query_id())) where "name" = 'READER_HR');
-call spike_lab.evidence.record($run_id, 'INC1', 'INC1.39', 'The HR reader role is gone', 'show database roles in database silver', '0', $obs);
+call lld_lab.evidence.record($run_id, 'INC1', 'INC1.39', 'The HR reader role is gone', 'show database roles in database silver', '0', $obs);
 
 use role analyst_hr;
-call spike_lab.evidence.probe($run_id, 'INC1', 'INC1.40', 'ANALYST_HR has lost access with the unit',
+call lld_lab.evidence.probe($run_id, 'INC1', 'INC1.40', 'ANALYST_HR has lost access with the unit',
   $$select listagg(schema_name, ',') within group (order by schema_name) from silver.information_schema.schemata where schema_name not in ('INFORMATION_SCHEMA', 'PUBLIC')$$,
   '!HR');
 
 use role silver_operator;
-call spike_lab.evidence.probe($run_id, 'INC1', 'INC1.41', 'HR can be onboarded again',
+call lld_lab.evidence.probe($run_id, 'INC1', 'INC1.41', 'HR can be onboarded again',
   $$call silver.ops.onboard_unit('silver.hr')$$, 'ONBOARDED:SVC_SILVER_HR (schema created)');
 call silver.ops.grant_unit_reader('silver.hr', 'analyst_hr');
 use role platform_ingest;
@@ -213,4 +213,4 @@ grant database role raw.reader_hr to role svc_silver_hr;
 -- Result -----------------------------------------------------------------------------------------
 use role sysadmin;
 select case_id, outcome, description, observed, role_name, observed_at
-from spike_lab.evidence.observation where run_id = $run_id order by case_id;
+from lld_lab.evidence.observation where run_id = $run_id order by case_id;

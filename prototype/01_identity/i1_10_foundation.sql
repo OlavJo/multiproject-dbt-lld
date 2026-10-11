@@ -16,7 +16,7 @@
 -- Unit service roles are NOT created here: onboard_unit creates them (step 40).
 --
 -- Trial shortcuts (prototype/README.md): the running user is granted every role
--- here (T1); SPIKE_WH serves every role (T3).
+-- here (T1); LLD_WH serves every role (T3).
 --
 -- Run as: USERADMIN, SECURITYADMIN, ACCOUNTADMIN, SYSADMIN (switches itself).
 -- Requires: 00_lab_foundation.sql (and, on the trial account, 00_teardown_spikes.sql). Idempotent.
@@ -78,13 +78,13 @@ grant ownership on database silver        to role silver_steward  copy current g
 grant ownership on database analytics_ops to role silver_steward  copy current grants;
 
 -- Warehouse (trial shortcut T3; OC-1 is open) ---------------------------------------
-grant usage on warehouse spike_wh to role platform_ingest;
-grant usage on warehouse spike_wh to role silver_steward;
-grant usage on warehouse spike_wh to role silver_provisioner;
-grant usage on warehouse spike_wh to role silver_unit_base;
-grant usage on warehouse spike_wh to role silver_operator;
-grant usage on warehouse spike_wh to role analyst_all;
-grant usage on warehouse spike_wh to role analyst_hr;
+grant usage on warehouse lld_wh to role platform_ingest;
+grant usage on warehouse lld_wh to role silver_steward;
+grant usage on warehouse lld_wh to role silver_provisioner;
+grant usage on warehouse lld_wh to role silver_unit_base;
+grant usage on warehouse lld_wh to role silver_operator;
+grant usage on warehouse lld_wh to role analyst_all;
+grant usage on warehouse lld_wh to role analyst_hr;
 
 -- Evidence store: every prototype role may record observations ------------------------
 -- PROBE and RECORD are created by 00_lab_foundation.sql.
@@ -95,11 +95,11 @@ declare
       '["PLATFORM_INGEST","SILVER_STEWARD","SILVER_PROVISIONER","SILVER_UNIT_BASE","SILVER_OPERATOR","ANALYST_ALL","ANALYST_HR"]')));
 begin
   for rec in c_roles do
-    execute immediate 'grant usage on database spike_lab to role ' || rec.r;
-    execute immediate 'grant usage on schema spike_lab.evidence to role ' || rec.r;
-    execute immediate 'grant select, insert on table spike_lab.evidence.observation to role ' || rec.r;
-    execute immediate 'grant usage on procedure spike_lab.evidence.probe(varchar, varchar, varchar, varchar, varchar, varchar) to role ' || rec.r;
-    execute immediate 'grant usage on procedure spike_lab.evidence.record(varchar, varchar, varchar, varchar, varchar, varchar, varchar) to role ' || rec.r;
+    execute immediate 'grant usage on database lld_lab to role ' || rec.r;
+    execute immediate 'grant usage on schema lld_lab.evidence to role ' || rec.r;
+    execute immediate 'grant select, insert on table lld_lab.evidence.observation to role ' || rec.r;
+    execute immediate 'grant usage on procedure lld_lab.evidence.probe(varchar, varchar, varchar, varchar, varchar, varchar) to role ' || rec.r;
+    execute immediate 'grant usage on procedure lld_lab.evidence.record(varchar, varchar, varchar, varchar, varchar, varchar, varchar) to role ' || rec.r;
   end for;
   return 'evidence grants done';
 end;

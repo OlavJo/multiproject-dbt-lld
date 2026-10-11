@@ -3,7 +3,7 @@
 --
 -- Connects Snowflake to https://github.com/OlavJo/multiproject-dbt-lld, kept
 -- apart from the spike Git objects (SPIKE_LAB.GIT, SPIKE_GIT_API):
---   database         LLD_LAB, schema LLD_LAB.GIT (owned by SYSADMIN)
+--   schema           LLD_LAB.GIT (owned by SYSADMIN)
 --   secret           LLD_LAB.GIT.GITHUB_PAT
 --   API integration  LLD_GIT_API, allowing this repository only
 --   Git repository   LLD_LAB.GIT.LLD_REPO (used by Increment 2 for dbt project
@@ -23,6 +23,7 @@
 -- token from the worksheet. NEVER commit the token.
 --
 -- Trial shortcut T4: a personal access token; production per CD-3.
+-- Requires: 00_lab_foundation.sql (LLD_LAB, LLD_WH, PROBE, RECORD).
 -- Run as: SYSADMIN and ACCOUNTADMIN (switches itself). Idempotent: rerunning
 -- never overwrites the token. To rotate it:
 --   alter secret lld_lab.git.github_pat set password = '<token>';
@@ -31,8 +32,7 @@
 use secondary roles none;
 
 use role sysadmin;
-use warehouse spike_wh;
-create database if not exists lld_lab comment = 'LLD prototype lab scaffolding (separate from SPIKE_LAB)';
+use warehouse lld_wh;
 create schema   if not exists lld_lab.git;
 
 create secret if not exists lld_lab.git.github_pat
@@ -60,16 +60,16 @@ alter git repository lld_lab.git.lld_repo fetch;
 show git branches in lld_lab.git.lld_repo;
 
 set run_id = (select uuid_string());
-call spike_lab.evidence.probe($run_id, 'INC0', 'INC0.20',
+call lld_lab.evidence.probe($run_id, 'INC0', 'INC0.20',
   'This repository is readable from Snowflake through LLD_GIT_API and the PAT secret',
   $$ls @lld_lab.git.lld_repo/branches/main/README.md$$, '%README.md%');
 
 show secrets like 'GITHUB_PAT' in schema lld_lab.git;
 set obs = (select nvl(max("owner"), '<none>') from table(result_scan(last_query_id())));
-call spike_lab.evidence.record($run_id, 'INC0', 'INC0.21', 'Secret exists and is owned by SYSADMIN (value never recorded)',
+call lld_lab.evidence.record($run_id, 'INC0', 'INC0.21', 'Secret exists and is owned by SYSADMIN (value never recorded)',
   'show secrets like ''GITHUB_PAT'' in schema lld_lab.git', 'SYSADMIN', $obs);
 
 select case_id, outcome, observed
-from spike_lab.evidence.observation
+from lld_lab.evidence.observation
 where run_id = $run_id
 order by case_id;
