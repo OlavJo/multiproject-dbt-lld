@@ -89,7 +89,7 @@ Every open design decision for the LLD, one row each. Each decision is recorded 
 | ID | Decision | Options | Constrained by | Status |
 |---|---|---|---|---|
 | OC-1 | Warehouse granularity and sizing | Per tier, per project, per unit | SLD 3.1: tasks need user-managed warehouses | Open |
-| OC-2 | Resource monitors | Per warehouse; quotas; actions | `setup/00` | Open |
+| OC-2 | Resource monitors | Per warehouse; quotas; actions; who may see them | `setup/00`; INC0.14 (a warehouse's monitor is visible only to roles that can see the monitor, by default `ACCOUNTADMIN`) | Open |
 | OC-3 | Cost attribution | Object tags, query tags, warehouse per owner | Overview 10 | Open |
 | OC-4 | Disaster recovery | Replicate raw and analytics in one group; or rebuild analytics from raw | SLD 7.4, 10.10 | Open |
 

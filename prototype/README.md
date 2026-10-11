@@ -25,7 +25,7 @@ Further component folders (`02_governance/`, `05_publication/`, ...) appear with
 
 | # | Increment | Value demonstrated | Verifies | Status |
 |---|---|---|---|---|
-| 0 | Clean slate | The prototype's own lab (warehouse, evidence store, Git integration), independent of the spike objects; the spike databases and roles removed, the spike record (`SPIKE_LAB`) kept | | Scripts ready |
+| 0 | Clean slate | The prototype's own lab (warehouse, evidence store, Git integration), independent of the spike objects; the spike databases and roles removed, the spike record (`SPIKE_LAB`) kept | | **Done** 2026-10-11 |
 | 1 | **Unit onboarding** | Stewards onboard and retire Silver units themselves: a role per unit, reader roles, a sensitive source kept out of the aggregate reader, refusals for bad input | V-IA-9; IA-1, IA-3 | Scripts ready |
 | 2 | First publication under the new roles | ERP lands, freezes, builds and publishes through the publish procedure, run by its own task; a consumer reads it through the reader database role | V-IA-1, V-IA-7 | Planned |
 | 3 | Consistent reads through the clone procedure | Core builds from input clones taken by `SILVER_CLONER`, reading upstream published objects only | V-IA-2, V-IA-3; IA-2 | Planned |
@@ -33,6 +33,16 @@ Further component folders (`02_governance/`, `05_publication/`, ...) appear with
 | 5 | CI under its own role | A CI build with `IMPORTS` of canonical state and `--defer`, under `CI_SILVER` | V-IA-4, V-IA-5 | Planned |
 
 Each increment ends with: its scripts, a demo with probes, the evidence CSV in `evidence/`, a "Prototype" section in the LLD component document, and a pull request.
+
+## Results
+
+**Increment 0** (2026-10-11, `evidence/INC0_20261011.csv`): all cases PASS after one script fix. `00_lab_foundation.sql` ran three times (idempotence shown), the teardown once, the Git integration once.
+
+| Case | Finding |
+|---|---|
+| INC0.14 | First run FAIL, observed `null`: `SHOW WAREHOUSES` shows the `resource_monitor` column only to roles that can see the monitor (by default `ACCOUNTADMIN`), so `SYSADMIN` reads `null` although the monitor is set. Check moved to `ACCOUNTADMIN`; PASS on the next two runs. Relevant to OC-2: whoever monitors cost needs `MONITOR` on the resource monitors, not just warehouse ownership. |
+| INC0.05 | 720 spike observations kept in `SPIKE_LAB` |
+| INC0.20 | This repository readable from Snowflake through `LLD_GIT_API` and the PAT secret |
 
 ## Running an increment
 
