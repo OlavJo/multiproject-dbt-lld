@@ -1,0 +1,14 @@
+CASE_ID,OUTCOME,DESCRIPTION,OBSERVED,ROLE_NAME,SECONDARY_ROLES,OBSERVED_AT
+S9e.01,PASS,Propagated tag on the target,PII_DECL:phone:PROPAGATED,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 20:47:53.157
+S9e.02,PASS,Consumer reads the propagated column: masked,***MASKED***,ANALYST_TIER1,"{""roles"":"""",""value"":""""}",2026-10-06 20:47:55.788
+S9e.10,INFO,SET the reserved value declassified,Statement executed successfully.,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 20:47:57.798
+S9e.11,PASS,Consumer reads after declassification: clear,+64 21 000 001,ANALYST_TIER1,"{""roles"":"""",""value"":""""}",2026-10-06 20:47:59.604
+S9e.20,PASS,After MERGE: tag on target,PII_DECL:declassified:MANUAL,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 20:48:14.108
+S9e.21,PASS,After MERGE: consumer reads updated row: clear,+64 21 000 001 v2,ANALYST_TIER1,"{""roles"":"""",""value"":""""}",2026-10-06 20:48:16.263
+S9e.22,PASS,After MERGE: consumer reads inserted row: clear,+64 21 000 001,ANALYST_TIER1,"{""roles"":"""",""value"":""""}",2026-10-06 20:48:18.316
+S9e.23,PASS,After INSERT SELECT: consumer reads: clear,+64 21 000 001,ANALYST_TIER1,"{""roles"":"""",""value"":""""}",2026-10-06 20:48:33.406
+S9e.30,PASS,Schema clone: tag on the cloned target,PII_DECL:declassified:MANUAL,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 20:48:38.007
+S9e.31,PASS,Schema clone: consumer reads the clone: clear,+64 21 000 001 v2,ANALYST_TIER1,"{""roles"":"""",""value"":""""}",2026-10-06 20:48:40.204
+S9e.32,PASS,After full-refresh CTAS: consumer reads: masked again (fails closed),***MASKED***,ANALYST_TIER1,"{""roles"":"""",""value"":""""}",2026-10-06 20:48:55.612
+S9e.40,PASS,Unit role without APPLY on the tag tries to declassify,"ERROR: SQL access control error:
+Insufficient privileges to operate on tag 'PII_DECL'. Your primary role SVC_SILVER_ERP must have APPLY granted on TAG GOVERNANCE.POLICIES.PII_DECL.",SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 20:48:58.581

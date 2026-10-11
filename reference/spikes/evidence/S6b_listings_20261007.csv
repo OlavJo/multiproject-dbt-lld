@@ -1,0 +1,23 @@
+CASE_ID,LISTING
+S6.B30,"[0m01:22:02  Running with dbt=1.12.3
+[0m01:22:02  State adapter: dbt-state v0.0.0 is disabled
+[0m01:22:02  Registered adapter: snowflake=1.12.0
+silver.erp.stg_erp__accounts
+"
+S6.B40,"[0m01:22:13  Running with dbt=1.12.3
+[0m01:22:13  State adapter: dbt-state v0.0.0 is disabled
+[0m01:22:13  Registered adapter: snowflake=1.12.0
+[0m01:22:14  Unable to do partial parsing because saved manifest not found. Starting full parse.
+silver.erp.stg_erp__accounts
+"
+S6.B41,"[0m01:22:25  Running with dbt=1.12.3
+[0m01:22:25  State adapter: dbt-state v0.0.0 is disabled
+[0m01:22:25  Registered adapter: snowflake=1.12.0
+silver.erp.stg_erp__accounts
+"
+S6.B42,"[0m01:22:36  Running with dbt=1.12.3
+[0m01:22:36  State adapter: dbt-state v0.0.0 is disabled
+[0m01:22:36  Registered adapter: snowflake=1.12.0
+silver.erp.erp_accounts
+silver.erp.stg_erp__accounts
+"

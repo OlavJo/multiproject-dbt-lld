@@ -1,0 +1,10 @@
+version: 2
+
+models:
+  - name: core_orders_b
+    data_tests:
+      # Consistent reads: both reads of the upstream units must show the same version
+      - same_rows:
+          arguments:
+            other: "{{ ref('core_orders_a') }}"
+            columns: [orders, amount, contacts, accounts]

@@ -1,0 +1,45 @@
+version: 2
+
+sources:
+  # Live raw tables: read only by the freeze and by freshness observation (SLD 6.3)
+  - name: erp_raw
+    database: raw
+    schema: erp
+    config:
+      freshness:
+        warn_after: {count: 6, period: hour}
+        error_after: {count: 12, period: hour}
+      loaded_at_query: |
+        select max(completed_at)
+        from {{ var('ops_database') }}.control.v_landing_complete
+        where source_system = 'ERP'
+    tables:
+      - name: accounts
+      - name: orders
+
+  # Frozen inputs: what every model and source test reads (SLD 7). They resolve to
+  # the unit's __build schema while the unit is being published.
+  - name: erp_frozen
+    database: silver
+    schema: erp   # redirected to erp__build by the source() override
+    tables:
+      - name: accounts
+        identifier: raw__accounts
+        columns:
+          - name: account_id
+            data_tests:
+              - not_null
+              - unique
+          - name: email
+      - name: orders
+        identifier: raw__orders
+        columns:
+          - name: order_id
+            data_tests:
+              - not_null
+          - name: _seq
+            data_tests:
+              - not_null
+          - name: account_id
+            data_tests:
+              - not_null

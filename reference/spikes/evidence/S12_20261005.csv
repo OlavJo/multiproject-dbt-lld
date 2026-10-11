@@ -1,0 +1,29 @@
+CASE_ID,OUTCOME,DESCRIPTION,OBSERVED,EXPECTED,ROLE_NAME,SECONDARY_ROLES,OBSERVED_AT
+S12.01,PASS,A: acquire a free lease,true,true,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 05:06:08.746
+S12.02,PASS,A: a second run cannot acquire a held lease,false,false,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 05:06:11.977
+S12.03,PASS,A: a run that does not hold the lease cannot release it,false,false,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 05:06:13.971
+S12.04,PASS,A: lease still held by the first run,c9a3d30a-1615-4c5b-99f3-9293f104b6e1-r1,%-r1,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 05:06:15.359
+S12.05,PASS,A: the holder releases its lease,true,true,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 05:06:17.598
+S12.06,PASS,A: a released lease can be acquired,true,true,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 05:06:20.290
+S12.10,PASS,"B: a run acquires the lease and then ""dies"" (never releases)",true,true,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 05:06:25.817
+S12.11,PASS,"B: after expiry, a new run takes over the lease",true,true,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 05:06:31.627
+S12.12,PASS,"B: the dead run, if it wakes, cannot release the new holder's lease",false,false,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 05:06:34.354
+S12.13,PASS,B: the lease is held by the new run,c9a3d30a-1615-4c5b-99f3-9293f104b6e1-d2,%-d2,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 05:06:36.883
+S12.20,PASS,C: unit service role cannot update the lease table directly,"ERROR: SQL access control error:
+Insufficient privileges to operate on table 'UNIT_LEASE'. Your primary role SVC_SILVER_ERP must have UPDATE granted on TABLE ANALYTICS_OPS.CONTROL.UNIT_LEASE.",ERROR:%,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 05:06:37.972
+S12.21,PASS,C: unit service role cannot write the event log directly,"ERROR: SQL compilation error:
+Table 'ANALYTICS_OPS.CONTROL.PUBLISH_LOG' does not exist or not authorized. Your primary role SVC_SILVER_ERP must have at least one privilege granted on TABLE ANALYTICS_OPS.CONTROL.PUBLISH_LOG.",ERROR:%,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 05:06:39.389
+S12.22,PASS,C: a consumer cannot call the lease procedures,"ERROR: SQL compilation error:
+Unknown user-defined function ANALYTICS_OPS.CONTROL.ACQUIRE_LEASE.",ERROR:%,ANALYST_TIER1,"{""roles"":"""",""value"":""""}",2026-10-05 05:06:41.675
+S12.30,PASS,D: all 100 contenders completed with distinct run ids,100,100,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 05:07:33.924
+S12.31,INFO,"D: contenders overlapped in time (attempt timestamps per race span, max seconds)",7.296000,,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 05:07:35.559
+S12.32,PASS,KEY D: number of races without exactly one winner,0,0,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 05:07:37.246
+S12.33,PASS,D: number of races where the recorded winner is not the lease holder,0,0,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 05:07:39.280
+S12.40,PASS,"E: STARTED 120 min ago, max runtime 30, no terminal event: stale",true,true,SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-05 05:07:42.726
+S12.41,PASS,E: STARTED 5 min ago: not stale,false,false,SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-05 05:07:44.015
+S12.42,PASS,E: STARTED then PUBLISHED: not stale,false,false,SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-05 05:07:46.532
+S12.50,PASS,F: nothing new since tier1 last published: gate skips,false,false,SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-05 05:07:49.468
+S12.51,PASS,KEY F: a DEPLOYED event after the last publication: gate proceeds,true,true,SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-05 05:07:52.063
+S12.52,PASS,F: after publishing the deployed code: gate skips,false,false,SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-05 05:07:54.248
+S12.53,PASS,F: an upstream PUBLISHED after the last publication: gate proceeds,true,true,SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-05 05:07:56.872
+S12.54,PASS,F: unit_status derives the latest watermark from the log,true,true,SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-05 05:07:58.094

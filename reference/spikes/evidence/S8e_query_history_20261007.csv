@@ -1,0 +1,97 @@
+START_TIME,END_TIME,ROLE_NAME,QUERY_TEXT
+2026-10-06 14:34:53.801 -0700,2026-10-06 14:35:21.595 -0700,SILVER_STEWARD,create or replace dbt project silver.ops.silver_layer from '@spike_lab.git.spikes_repo/branches/main/dbt/silve
+2026-10-06 14:34:54.102 -0700,2026-10-06 14:35:18.097 -0700,SILVER_STEWARD,execute dbt project from '@spike_lab.git.spikes_repo/branches/main/dbt/silver' args='compile' upload_url='snow
+2026-10-06 15:20:04.307 -0700,2026-10-06 15:20:19.597 -0700,SVC_SILVER_ERP,"execute dbt project silver.ops.silver_layer args = 'run-operation freeze_sources --args ""{unit: erp, watermark"
+2026-10-06 15:20:20.131 -0700,2026-10-06 15:20:38.498 -0700,SVC_SILVER_ERP,"execute dbt project silver.ops.silver_layer args = 'build --selector unit_erp --vars ""{publish_unit: erp}"" --t"
+2026-10-06 15:20:39.644 -0700,2026-10-06 15:20:51.622 -0700,SVC_SILVER_ERP,execute dbt project silver.ops.silver_layer args = 'compile --target prod_erp --target-path target/canonical -
+2026-10-06 15:21:22.789 -0700,2026-10-06 15:21:35.089 -0700,SVC_SILVER_ERP,"execute dbt project silver.ops.silver_layer args = 'run-operation freeze_sources --args ""{unit: erp, watermark"
+2026-10-06 15:21:35.550 -0700,2026-10-06 15:21:56.920 -0700,SVC_SILVER_ERP,"execute dbt project silver.ops.silver_layer args = 'build --selector unit_erp --vars ""{publish_unit: erp}"" --t"
+2026-10-06 15:21:58.129 -0700,2026-10-06 15:22:11.171 -0700,SVC_SILVER_ERP,execute dbt project silver.ops.silver_layer args = 'compile --target prod_erp --target-path target/canonical -
+2026-10-06 15:23:06.980 -0700,2026-10-06 15:23:19.053 -0700,SVC_SILVER_ERP,"execute dbt project silver.ops.silver_layer args = 'run-operation freeze_sources --args ""{unit: erp, watermark"
+2026-10-06 15:23:20.342 -0700,2026-10-06 15:23:38.829 -0700,SVC_SILVER_ERP,"execute dbt project silver.ops.silver_layer args = 'build --selector unit_erp --vars ""{publish_unit: erp}"" --t"
+2026-10-06 15:23:39.852 -0700,2026-10-06 15:23:52.115 -0700,SVC_SILVER_ERP,execute dbt project silver.ops.silver_layer args = 'compile --target prod_erp --target-path target/canonical -
+2026-10-06 15:24:04.818 -0700,2026-10-06 15:24:18.702 -0700,SVC_SILVER_CRM,"execute dbt project silver.ops.silver_layer args = 'run-operation freeze_sources --args ""{unit: crm, watermark"
+2026-10-06 15:24:19.100 -0700,2026-10-06 15:24:41.009 -0700,SVC_SILVER_CRM,"execute dbt project silver.ops.silver_layer args = 'build --selector unit_crm --vars ""{publish_unit: crm}"" --t"
+2026-10-06 15:24:42.991 -0700,2026-10-06 15:24:57.254 -0700,SVC_SILVER_CRM,execute dbt project silver.ops.silver_layer args = 'compile --target prod_crm --target-path target/canonical -
+2026-10-06 15:32:51.094 -0700,2026-10-06 15:33:06.503 -0700,SVC_SILVER_ERP,"execute dbt project silver.ops.silver_layer args = 'run-operation freeze_sources --args ""{unit: erp, watermark"
+2026-10-06 15:33:07.012 -0700,2026-10-06 15:33:24.859 -0700,SVC_SILVER_ERP,"execute dbt project silver.ops.silver_layer args = 'build --selector unit_erp --vars ""{publish_unit: erp}"" --t"
+2026-10-06 15:33:25.635 -0700,2026-10-06 15:33:37.129 -0700,SVC_SILVER_ERP,execute dbt project silver.ops.silver_layer args = 'compile --target prod_erp --target-path target/canonical -
+2026-10-06 15:40:21.626 -0700,2026-10-06 15:40:50.074 -0700,SILVER_STEWARD,create or replace dbt project silver.ops.silver_layer from '@spike_lab.git.spikes_repo/branches/main/dbt/silve
+2026-10-06 15:40:21.813 -0700,2026-10-06 15:40:47.686 -0700,SILVER_STEWARD,execute dbt project from '@spike_lab.git.spikes_repo/branches/main/dbt/silver' args='compile' upload_url='snow
+2026-10-06 15:43:39.380 -0700,2026-10-06 15:43:55.534 -0700,SVC_SILVER_ERP,"execute dbt project silver.ops.silver_layer args = 'run-operation freeze_sources --args ""{unit: erp, watermark"
+2026-10-06 15:43:58.576 -0700,2026-10-06 15:44:19.020 -0700,SVC_SILVER_ERP,"execute dbt project silver.ops.silver_layer args = 'build --selector unit_erp --vars ""{publish_unit: erp}"" --t"
+2026-10-06 15:44:23.916 -0700,2026-10-06 15:44:52.390 -0700,SVC_SILVER_ERP,"execute dbt project silver.ops.silver_layer args = 'build --selector unit_erp --vars ""{publish_unit: erp, inje"
+2026-10-06 15:44:54.055 -0700,2026-10-06 15:45:12.146 -0700,SVC_SILVER_ERP,"execute dbt project silver.ops.silver_layer args = 'build --selector unit_erp --vars ""{publish_unit: erp, inje"
+2026-10-06 15:45:22.673 -0700,2026-10-06 15:45:41.492 -0700,SVC_SILVER_ERP,"execute dbt project silver.ops.silver_layer args = 'build --selector unit_erp --vars ""{publish_unit: erp, inje"
+2026-10-06 15:45:50.125 -0700,2026-10-06 15:46:12.480 -0700,SVC_SILVER_ERP,"execute dbt project silver.ops.silver_layer args = 'build --selector unit_erp --vars ""{publish_unit: erp, inje"
+2026-10-06 15:46:14.198 -0700,2026-10-06 15:46:24.085 -0700,SVC_SILVER_ERP,"execute dbt project silver.ops.silver_layer args = 'build --selector unit_nope --vars ""{publish_unit: erp}"" --"
+2026-10-06 15:46:32.086 -0700,2026-10-06 15:46:42.833 -0700,SVC_SILVER_ERP,"execute dbt project silver.ops.silver_layer args = 'run-operation freeze_sources --args ""{unit: nope, watermar"
+2026-10-06 15:46:48.064 -0700,2026-10-06 15:46:59.830 -0700,SVC_SILVER_ERP,execute dbt project silver.ops.silver_layer args = 'run-operation no_such_macro --target prod_erp --target-pat
+2026-10-06 15:47:04.776 -0700,2026-10-06 15:47:15.670 -0700,SVC_SILVER_ERP,"execute dbt project silver.ops.silver_layer args = 'run-operation freeze_sources --args ""{unit: erp, watermark"
+2026-10-06 15:47:18.016 -0700,2026-10-06 15:47:30.450 -0700,SVC_SILVER_ERP,execute dbt project silver.ops.silver_layer args = 'compile --target prod_erp --target-path target/canonical -
+2026-10-06 15:47:33.048 -0700,2026-10-06 15:47:44.390 -0700,SVC_SILVER_ERP,"execute dbt project silver.ops.silver_layer args = 'compile --vars ""{inject_failure: compile_error}"" --target "
+2026-10-06 15:47:45.890 -0700,2026-10-06 15:47:59.634 -0700,SVC_SILVER_ERP,execute dbt project silver.ops.silver_layer args = 'source freshness --select source:erp_raw --target prod_erp
+2026-10-06 15:48:01.360 -0700,2026-10-06 15:48:01.481 -0700,SVC_SILVER_ERP,execute dbt project silver.ops.silver_layer args = 'nonsense --target prod_erp'
+2026-10-06 15:48:16.350 -0700,2026-10-06 15:48:31.195 -0700,SVC_SILVER_ERP,"execute dbt project silver.ops.silver_layer args = 'run-operation freeze_sources --args ""{unit: erp, watermark"
+2026-10-06 15:48:31.620 -0700,2026-10-06 15:48:48.895 -0700,SVC_SILVER_ERP,"execute dbt project silver.ops.silver_layer args = 'build --selector unit_erp --vars ""{publish_unit: erp}"" --t"
+2026-10-06 15:48:50.517 -0700,2026-10-06 15:49:02.102 -0700,SVC_SILVER_ERP,execute dbt project silver.ops.silver_layer args = 'compile --target prod_erp --target-path target/canonical -
+2026-10-06 15:49:18.844 -0700,2026-10-06 15:49:32.031 -0700,SVC_SILVER_ERP,"execute dbt project silver.ops.silver_layer args = 'run-operation freeze_sources --args ""{unit: erp, watermark"
+2026-10-06 15:49:32.953 -0700,2026-10-06 15:49:50.109 -0700,SVC_SILVER_ERP,"execute dbt project silver.ops.silver_layer args = 'build --selector unit_erp --vars ""{publish_unit: erp}"" --t"
+2026-10-06 15:50:25.819 -0700,2026-10-06 15:50:38.821 -0700,SVC_SILVER_ERP,"execute dbt project silver.ops.silver_layer args = 'run-operation freeze_sources --args ""{unit: erp, watermark"
+2026-10-06 15:50:39.182 -0700,2026-10-06 15:50:55.809 -0700,SVC_SILVER_ERP,"execute dbt project silver.ops.silver_layer args = 'build --selector unit_erp --vars ""{publish_unit: erp}"" --t"
+2026-10-06 15:50:56.594 -0700,2026-10-06 15:51:08.336 -0700,SVC_SILVER_ERP,execute dbt project silver.ops.silver_layer args = 'compile --target prod_erp --target-path target/canonical -
+2026-10-06 16:05:23.631 -0700,2026-10-06 16:05:39.162 -0700,SVC_SILVER_ERP,"execute dbt project silver.ops.silver_layer args = 'run-operation freeze_sources --args ""{unit: erp, watermark"
+2026-10-06 16:06:05.220 -0700,2026-10-06 16:06:17.945 -0700,SVC_SILVER_ERP,"execute dbt project silver.ops.silver_layer args = 'run-operation freeze_sources --args ""{unit: erp, watermark"
+2026-10-06 16:06:18.334 -0700,2026-10-06 16:06:38.187 -0700,SVC_SILVER_ERP,"execute dbt project silver.ops.silver_layer args = 'build --selector unit_erp --vars ""{publish_unit: erp}"" --t"
+2026-10-06 16:06:38.968 -0700,2026-10-06 16:06:51.071 -0700,SVC_SILVER_ERP,execute dbt project silver.ops.silver_layer args = 'compile --target prod_erp --target-path target/canonical -
+2026-10-06 16:07:04.643 -0700,2026-10-06 16:07:17.732 -0700,SVC_SILVER_ERP,"execute dbt project silver.ops.silver_layer args = 'run-operation freeze_sources --args ""{unit: erp, watermark"
+2026-10-06 16:07:18.424 -0700,2026-10-06 16:07:34.728 -0700,SVC_SILVER_ERP,"execute dbt project silver.ops.silver_layer args = 'build --selector unit_erp --vars ""{publish_unit: erp}"" --t"
+2026-10-06 16:07:56.154 -0700,2026-10-06 16:08:09.150 -0700,SVC_SILVER_ERP,"execute dbt project silver.ops.silver_layer args = 'run-operation freeze_sources --args ""{unit: erp, watermark"
+2026-10-06 16:08:09.532 -0700,2026-10-06 16:08:28.263 -0700,SVC_SILVER_ERP,"execute dbt project silver.ops.silver_layer args = 'build --selector unit_erp --vars ""{publish_unit: erp}"" --t"
+2026-10-06 16:08:29.944 -0700,2026-10-06 16:08:41.968 -0700,SVC_SILVER_ERP,execute dbt project silver.ops.silver_layer args = 'compile --target prod_erp --target-path target/canonical -
+2026-10-06 16:13:14.528 -0700,2026-10-06 16:13:30.759 -0700,SVC_SILVER_ERP,"execute dbt project silver.ops.silver_layer args = 'run-operation freeze_sources --args ""{unit: erp, watermark"
+2026-10-06 16:13:31.227 -0700,2026-10-06 16:13:48.438 -0700,SVC_SILVER_ERP,"execute dbt project silver.ops.silver_layer args = 'build --selector unit_erp --vars ""{publish_unit: erp}"" --t"
+2026-10-06 16:13:49.338 -0700,2026-10-06 16:14:01.067 -0700,SVC_SILVER_ERP,execute dbt project silver.ops.silver_layer args = 'compile --target prod_erp --target-path target/canonical -
+2026-10-06 16:14:16.454 -0700,2026-10-06 16:14:29.548 -0700,SVC_SILVER_ERP,"execute dbt project silver.ops.silver_layer args = 'run-operation freeze_sources --args ""{unit: erp, watermark"
+2026-10-06 16:14:29.958 -0700,2026-10-06 16:14:47.931 -0700,SVC_SILVER_ERP,"execute dbt project silver.ops.silver_layer args = 'build --selector unit_erp --vars ""{publish_unit: erp}"" --t"
+2026-10-06 16:15:13.734 -0700,2026-10-06 16:15:28.084 -0700,SVC_SILVER_ERP,"execute dbt project silver.ops.silver_layer args = 'run-operation freeze_sources --args ""{unit: erp, watermark"
+2026-10-06 16:15:28.461 -0700,2026-10-06 16:15:47.838 -0700,SVC_SILVER_ERP,"execute dbt project silver.ops.silver_layer args = 'build --selector unit_erp --vars ""{publish_unit: erp}"" --t"
+2026-10-06 16:15:48.950 -0700,2026-10-06 16:16:03.179 -0700,SVC_SILVER_ERP,execute dbt project silver.ops.silver_layer args = 'compile --target prod_erp --target-path target/canonical -
+2026-10-06 16:16:20.105 -0700,2026-10-06 16:16:31.171 -0700,SVC_SILVER_ERP,"execute dbt project silver.ops.silver_layer args = 'run-operation freeze_sources --args ""{unit: erp, watermark"
+2026-10-06 16:16:51.453 -0700,2026-10-06 16:17:03.200 -0700,SVC_SILVER_ERP,"execute dbt project silver.ops.silver_layer args = 'run-operation freeze_sources --args ""{unit: erp, watermark"
+2026-10-06 16:17:03.591 -0700,2026-10-06 16:17:20.042 -0700,SVC_SILVER_ERP,"execute dbt project silver.ops.silver_layer args = 'build --selector unit_erp --vars ""{publish_unit: erp}"" --t"
+2026-10-06 16:17:20.788 -0700,2026-10-06 16:17:32.777 -0700,SVC_SILVER_ERP,execute dbt project silver.ops.silver_layer args = 'compile --target prod_erp --target-path target/canonical -
+2026-10-06 16:17:44.932 -0700,2026-10-06 16:17:57.213 -0700,SVC_SILVER_ERP,"execute dbt project silver.ops.silver_layer args = 'run-operation freeze_sources --args ""{unit: erp, watermark"
+2026-10-06 16:17:57.623 -0700,2026-10-06 16:18:13.231 -0700,SVC_SILVER_ERP,"execute dbt project silver.ops.silver_layer args = 'build --selector unit_erp --vars ""{publish_unit: erp}"" --t"
+2026-10-06 16:18:39.167 -0700,2026-10-06 16:18:51.331 -0700,SVC_SILVER_ERP,"execute dbt project silver.ops.silver_layer args = 'run-operation freeze_sources --args ""{unit: erp, watermark"
+2026-10-06 16:18:51.838 -0700,2026-10-06 16:19:09.527 -0700,SVC_SILVER_ERP,"execute dbt project silver.ops.silver_layer args = 'build --selector unit_erp --vars ""{publish_unit: erp}"" --t"
+2026-10-06 16:19:11.113 -0700,2026-10-06 16:19:23.278 -0700,SVC_SILVER_ERP,execute dbt project silver.ops.silver_layer args = 'compile --target prod_erp --target-path target/canonical -
+2026-10-06 16:26:26.590 -0700,2026-10-06 16:26:41.323 -0700,SYSADMIN,"execute dbt project silver.ops.silver_layer args = 'run-operation freeze_sources --args ""{unit: crm, watermark"
+2026-10-06 16:26:27.297 -0700,2026-10-06 16:26:39.883 -0700,SYSADMIN,"execute dbt project silver.ops.silver_layer args = 'run-operation freeze_sources --args ""{unit: erp, watermark"
+2026-10-06 16:27:04.225 -0700,2026-10-06 16:27:15.143 -0700,SYSADMIN,"execute dbt project silver.ops.silver_layer args = 'parse --target prod_erp --vars ""{publish_unit: erp}"" --tar"
+2026-10-06 16:27:17.225 -0700,2026-10-06 16:27:27.441 -0700,SYSADMIN,"execute dbt project silver.ops.silver_layer args = 'parse --target prod_erp --vars ""{publish_unit: erp}"" --tar"
+2026-10-06 16:27:29.149 -0700,2026-10-06 16:27:38.758 -0700,SYSADMIN,"execute dbt project silver.ops.silver_layer args = 'parse --target prod_crm --vars ""{publish_unit: crm}"" --tar"
+2026-10-06 16:27:41.171 -0700,2026-10-06 16:27:51.875 -0700,SYSADMIN,"execute dbt project silver.ops.silver_layer args = 'parse --target prod_erp --vars ""{publish_unit: erp}"" --tar"
+2026-10-06 16:27:53.202 -0700,2026-10-06 16:28:04.431 -0700,SYSADMIN,"execute dbt project silver.ops.silver_layer args = 'parse --target prod_erp --vars ""{publish_unit: erp, inject"
+2026-10-06 16:28:06.231 -0700,2026-10-06 16:28:17.866 -0700,SYSADMIN,"execute dbt project silver.ops.silver_layer args = 'parse --target prod_erp --vars ""{publish_unit: erp}"" --tar"
+2026-10-06 16:28:19.508 -0700,2026-10-06 16:28:31.549 -0700,SYSADMIN,"execute dbt project silver.ops.silver_layer args = 'parse --target prod_erp --vars ""{publish_unit: erp}"" --tar"
+2026-10-06 16:28:19.555 -0700,2026-10-06 16:28:31.616 -0700,SYSADMIN,"execute dbt project silver.ops.silver_layer args = 'parse --target prod_crm --vars ""{publish_unit: crm}"" --tar"
+2026-10-06 16:52:25.940 -0700,2026-10-06 16:52:39.468 -0700,SVC_SILVER_CRM,"execute dbt project silver.ops.silver_layer args = 'run-operation freeze_sources --args ""{unit: crm, watermark"
+2026-10-06 16:52:29.075 -0700,2026-10-06 16:52:41.667 -0700,SVC_SILVER_ERP,"execute dbt project silver.ops.silver_layer args = 'run-operation freeze_sources --args ""{unit: erp, watermark"
+2026-10-06 16:52:39.872 -0700,2026-10-06 16:52:55.911 -0700,SVC_SILVER_CRM,"execute dbt project silver.ops.silver_layer args = 'build --selector unit_crm --vars ""{publish_unit: crm}"" --t"
+2026-10-06 16:52:42.083 -0700,2026-10-06 16:53:00.143 -0700,SVC_SILVER_ERP,"execute dbt project silver.ops.silver_layer args = 'build --selector unit_erp --vars ""{publish_unit: erp}"" --t"
+2026-10-06 16:52:56.771 -0700,2026-10-06 16:53:08.794 -0700,SVC_SILVER_CRM,execute dbt project silver.ops.silver_layer args = 'compile --target prod_crm --target-path target/canonical -
+2026-10-06 16:53:01.054 -0700,2026-10-06 16:53:13.701 -0700,SVC_SILVER_ERP,execute dbt project silver.ops.silver_layer args = 'compile --target prod_erp --target-path target/canonical -
+2026-10-06 17:01:48.571 -0700,2026-10-06 17:02:04.157 -0700,SVC_SILVER_ERP,"execute dbt project silver.ops.silver_layer
+       args = 'compile --target prod_erp --vars ""{publish_unit: er"
+2026-10-06 17:01:51.358 -0700,2026-10-06 17:02:04.157 -0700,SVC_SILVER_CRM,"execute dbt project silver.ops.silver_layer
+       args = 'compile --target prod_crm --vars ""{publish_unit: cr"
+2026-10-06 17:03:26.485 -0700,2026-10-06 17:03:40.778 -0700,SVC_SILVER_ERP,"execute dbt project silver.ops.silver_layer args = 'compile --target prod_erp --vars ""{publish_unit: erp}"" --t"
+2026-10-06 17:05:23.357 -0700,2026-10-06 17:05:38.884 -0700,SVC_SILVER_ERP,"execute dbt project silver.ops.silver_layer args = 'run-operation freeze_sources --args ""{unit: erp, watermark"
+2026-10-06 17:05:39.301 -0700,2026-10-06 17:05:57.748 -0700,SVC_SILVER_ERP,"execute dbt project silver.ops.silver_layer args = 'build --selector unit_erp --vars ""{publish_unit: erp}"" --t"
+2026-10-06 17:05:42.516 -0700,2026-10-06 17:06:10.448 -0700,SILVER_STEWARD,create or replace dbt project silver.ops.silver_layer from '@spike_lab.git.spikes_repo/branches/main/dbt/silve
+2026-10-06 17:05:42.806 -0700,2026-10-06 17:06:06.980 -0700,SILVER_STEWARD,execute dbt project from '@spike_lab.git.spikes_repo/branches/main/dbt/silver' args='compile' upload_url='snow
+2026-10-06 17:05:58.634 -0700,2026-10-06 17:06:11.350 -0700,SVC_SILVER_ERP,execute dbt project silver.ops.silver_layer args = 'compile --target prod_erp --target-path target/canonical -
+2026-10-06 17:08:14.730 -0700,2026-10-06 17:08:30.178 -0700,SVC_SILVER_ERP,"execute dbt project silver.ops.silver_layer args = 'run-operation freeze_sources --args ""{unit: erp, watermark"
+2026-10-06 17:08:30.545 -0700,2026-10-06 17:08:48.179 -0700,SVC_SILVER_ERP,"execute dbt project silver.ops.silver_layer args = 'build --selector unit_erp --vars ""{publish_unit: erp}"" --t"
+2026-10-06 17:08:49.146 -0700,2026-10-06 17:09:00.826 -0700,SVC_SILVER_ERP,execute dbt project silver.ops.silver_layer args = 'compile --target prod_erp --target-path target/canonical -

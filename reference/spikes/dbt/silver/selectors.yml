@@ -1,0 +1,31 @@
+# One selector per publication unit (SLD 10.3): the unit's models, its frozen-input sources and the
+# tests declared beside them. A unit is selected by the PATH of its folder only.
+#
+# Do NOT select a unit's frozen-input source with children: true. That selects every DESCENDANT of the
+# source, and once another unit reads this unit's models (the Core module reads ERP and CRM, S10) the
+# descendants include that unit's models: the ERP run then tries to build Core models in the Core
+# schema and fails (Schema 'CORE' already exists, but current role has no privileges on it).
+selectors:
+  - name: unit_erp
+    description: "Source Entity unit ERP"
+    definition:
+      method: path
+      value: models/erp
+  - name: unit_crm
+    description: "Source Entity unit CRM"
+    definition:
+      method: path
+      value: models/crm
+  - name: unit_s4
+    description: "Spike S4 unit (CDC history model and a snapshot)"
+    definition:
+      union:
+        - method: path
+          value: models/s4
+        - method: path
+          value: snapshots/s4
+  - name: unit_core
+    description: "Core module (Tier 0.5), spike S10 - reads the published ERP and CRM outputs"
+    definition:
+      method: path
+      value: models/core

@@ -1,0 +1,25 @@
+CASE_ID,OUTCOME,DESCRIPTION,OBSERVED,ROLE_NAME,SECONDARY_ROLES,OBSERVED_AT
+S8.A1,PASS,Both units published at the same moment by one orchestrating role (SYSADMIN),done,SYSADMIN,"{""roles"":"""",""value"":""""}",2026-10-06 23:26:42.967
+S8.A2,FAIL,Both units logged PUBLISHED in the last 15 minutes,1,SYSADMIN,"{""roles"":"""",""value"":""""}",2026-10-06 23:26:44.728
+S8.A3,FAIL,Their runs overlapped in time (STARTED of each before PUBLISHED of the other),SERIAL,SYSADMIN,"{""roles"":"""",""value"":""""}",2026-10-06 23:26:46.080
+S8.A4,INFO,Timeline: STARTED and PUBLISHED times of the two runs,silver.erp STARTED 23:13:11.2 | silver.erp PUBLISHED 23:14:01.4 | silver.erp STARTED 23:14:13.0 | silver.erp STARTED 23:15:10.6 | silver.erp PUBLISHED 23:16:03.5 | silver.erp STARTED 23:16:16.5 | silver.erp STARTED 23:16:46.6 | silver.erp PUBLISHED 23:17:33.1 | silver.erp STARTED 23:17:41.2 | silver.erp STARTED 23:18:35.5 | silver.erp PUBLISHED 23:19:23.7 | silver.erp STARTED 23:26:23.9 | silver.crm STARTED 23:26:24.4,SYSADMIN,"{""roles"":"""",""value"":""""}",2026-10-06 23:26:47.974
+S8.A5,PASS,Leases of both units are free,0,SYSADMIN,"{""roles"":"""",""value"":""""}",2026-10-06 23:26:49.625
+S8.A6,INFO,Each unit holds its own data: ERP current orders and CRM contacts (counts),16 orders / 2 contacts,SYSADMIN,"{""roles"":"""",""value"":""""}",2026-10-06 23:26:51.391
+S8.A7,FAIL,Both PUBLISHED events carry their own canonical state query id (distinct),4,SYSADMIN,"{""roles"":"""",""value"":""""}",2026-10-06 23:26:52.997
+S8.A8,FAIL,Canonical compile ok for both,4,SYSADMIN,"{""roles"":"""",""value"":""""}",2026-10-06 23:26:54.768
+S8.B1,INFO,EXECUTE DBT PROJECT statements in the last 20 minutes and the most in progress together,statements=24; max_concurrent=2,ACCOUNTADMIN,"{""roles"":"""",""value"":""""}",2026-10-06 23:26:56.474
+S8.C1,INFO,SYSTEM$DBT_GET_LAST_SUCCESSFUL_RUN_TARGET on the shared object,snow://dbt/SILVER.OPS.SILVER_LAYER/results/query_id_01c78ef7-0004-2187-0003-5b0a00054192/target/,SYSADMIN,"{""roles"":"""",""value"":""""}",2026-10-06 23:26:59.978
+S8.C2,INFO,LOCATE_DBT_ARTIFACTS for the ERP canonical query id,"ERROR: SQL compilation error:
+argument 0 to function SqlIdentifier{qualifierNames=[], identifierName=SYSTEM$LOCATE_DBT_ARTIFACTS} needs to be constant, found '(SELECT CAST(GET(PUBLISH_LOG.DETAIL, 'state_query_id') AS VARCHAR(134217728)) AS ""DETAIL:STATE_QUERY_ID::VARCHAR"" FROM ANALYTICS_OPS.CONTROL.PUBLISH_LOG AS PUBLISH_LOG WHERE (PUBLISH_LOG.UNIT = 'silver.erp') AND (PUBLISH_LOG.EVENT_TYPE = 'PUBLISHED')  ORDER BY PUBLISH_LOG.EVENT_TS DESC NULLS FIRST LIMIT 1 OFFSET 0)'",SYSADMIN,"{""roles"":"""",""value"":""""}",2026-10-06 23:27:01.150
+S8.C3,INFO,LOCATE_DBT_ARTIFACTS for the CRM canonical query id,"ERROR: SQL compilation error:
+argument 0 to function SqlIdentifier{qualifierNames=[], identifierName=SYSTEM$LOCATE_DBT_ARTIFACTS} needs to be constant, found '(SELECT CAST(GET(PUBLISH_LOG.DETAIL, 'state_query_id') AS VARCHAR(134217728)) AS ""DETAIL:STATE_QUERY_ID::VARCHAR"" FROM ANALYTICS_OPS.CONTROL.PUBLISH_LOG AS PUBLISH_LOG WHERE (PUBLISH_LOG.UNIT = 'silver.crm') AND (PUBLISH_LOG.EVENT_TYPE = 'PUBLISHED')  ORDER BY PUBLISH_LOG.EVENT_TS DESC NULLS FIRST LIMIT 1 OFFSET 0)'",SYSADMIN,"{""roles"":"""",""value"":""""}",2026-10-06 23:27:02.985
+S8.D1,INFO,D: ERP parse (state from earlier runs may exist),success=true,SYSADMIN,"{""roles"":"""",""value"":""""}",2026-10-06 23:27:15.607
+S8.D2,INFO,"D: ERP parse again, same arguments: partial parsing expected",success=true,SYSADMIN,"{""roles"":"""",""value"":""""}",2026-10-06 23:27:27.783
+S8.D3,INFO,D: CRM parse (a different unit and target path),success=true,SYSADMIN,"{""roles"":"""",""value"":""""}",2026-10-06 23:27:39.079
+S8.D4,INFO,D: ERP parse again after the CRM run: is its state still valid?,success=true,SYSADMIN,"{""roles"":"""",""value"":""""}",2026-10-06 23:27:52.336
+S8.D5,INFO,D: ERP parse with different --vars: full re-parse expected (SLD 3.2),success=true,SYSADMIN,"{""roles"":"""",""value"":""""}",2026-10-06 23:28:04.755
+S8.D6,INFO,D: ERP parse with the original vars again,success=true,SYSADMIN,"{""roles"":"""",""value"":""""}",2026-10-06 23:28:18.222
+S8.E1,INFO,"E: ERP parse, shared target path, concurrent",success=true,SYSADMIN,"{""roles"":"""",""value"":""""}",2026-10-06 23:28:31.903
+S8.E2,FAIL,"E: CRM parse, shared target path, concurrent","RAISED: SQL compilation error: error line 1 at position 20
+invalid identifier '$2'",SYSADMIN,"{""roles"":"""",""value"":""""}",2026-10-06 23:28:31.919
+S8.E0,PASS,"Two concurrent parses with the SAME target path (E1, E2 record their own outcomes)",done,SYSADMIN,"{""roles"":"""",""value"":""""}",2026-10-06 23:28:32.869

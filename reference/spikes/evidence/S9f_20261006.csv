@@ -1,0 +1,12 @@
+CASE_ID,OUTCOME,DESCRIPTION,OBSERVED,ROLE_NAME,SECONDARY_ROLES,OBSERVED_AT
+S9f.A1,INFO,Tags on raw.erp.accounts.email,PII_DECL:email:MANUAL,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 22:00:08.533
+S9f.A2,INFO,Tags on the frozen input silver.erp.raw__accounts.email,PII_DECL:email:MANUAL,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 22:00:11.778
+S9f.A3,INFO,Tags on the base view silver.erp.stg_erp__accounts.email,,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 22:00:14.321
+S9f.A4,INFO,Tags on the table silver.erp.erp_accounts.email,,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 22:00:16.141
+S9f.B1,INFO,Tags on the frozen clone,EMAIL_CTL=PII_DECL:email:MANUAL; EMAIL_DEP=PII_DEP:email:MANUAL,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 22:00:52.054
+S9f.B2,INFO,Tags on the view (does a view column take a propagated tag?),EMAIL_DEP=PII_DEP:email:PROPAGATED,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 22:00:53.891
+S9f.B3,INFO,Tags on the CTAS table built from the view,EMAIL_DEP=PII_DEP:email:PROPAGATED,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 22:00:55.706
+S9f.B4,INFO,"Consumer reads the view, control column (PII_DECL)",***masked***,ANALYST_TIER1,"{""roles"":"""",""value"":""""}",2026-10-06 22:00:58.852
+S9f.B5,INFO,"Consumer reads the view, candidate column (PII_DEP)",***MASKED***,ANALYST_TIER1,"{""roles"":"""",""value"":""""}",2026-10-06 22:01:00.094
+S9f.B6,INFO,"Consumer reads the table, control column (PII_DECL)",a@example.com,ANALYST_TIER1,"{""roles"":"""",""value"":""""}",2026-10-06 22:01:02.034
+S9f.B7,PASS,"Consumer reads the table, candidate column (PII_DEP): masked?",***MASKED***,ANALYST_TIER1,"{""roles"":"""",""value"":""""}",2026-10-06 22:01:03.316

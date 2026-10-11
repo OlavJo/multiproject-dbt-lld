@@ -1,0 +1,11 @@
+CASE_ID,DESCRIPTION,OBSERVED,UNABLE,PARTIAL_LINES,WRITEBACK_LINES,STARTED_AT,ENDED_AT
+S8.D1,D: ERP parse (state from earlier runs may exist),success=true,false,,,2026-10-06 23:27:04.133,2026-10-06 23:27:15.607
+S8.D2,"D: ERP parse again, same arguments: partial parsing expected",success=true,false,,,2026-10-06 23:27:17.143,2026-10-06 23:27:27.783
+S8.D3,D: CRM parse (a different unit and target path),success=true,false,,,2026-10-06 23:27:29.060,2026-10-06 23:27:39.079
+S8.D4,D: ERP parse again after the CRM run: is its state still valid?,success=true,false,,,2026-10-06 23:27:41.083,2026-10-06 23:27:52.336
+S8.D5,D: ERP parse with different --vars: full re-parse expected (SLD 3.2),success=true,true,"[0m23:28:00  Unable to do partial parsing because config vars, config profile, or config target have changed",,2026-10-06 23:27:53.114,2026-10-06 23:28:04.755
+S8.D6,D: ERP parse with the original vars again,success=true,true,"[0m23:28:13  Unable to do partial parsing because config vars, config profile, or config target have changed",,2026-10-06 23:28:06.129,2026-10-06 23:28:18.222
+S8.E1,"E: ERP parse, shared target path, concurrent",success=true,true,[0m23:28:27  Unable to do partial parsing because saved manifest not found. Starting full parse.,,2026-10-06 23:28:19.425,2026-10-06 23:28:31.903
+S8.E2,"E: CRM parse, shared target path, concurrent","RAISED: SQL compilation error: error line 1 at position 20
+invalid identifier '$2'",,,,2026-10-06 23:28:19.468,2026-10-06 23:28:31.919
+S8.E0,"Two concurrent parses with the SAME target path (E1, E2 record their own outcomes)",done,,,,,

@@ -1,0 +1,11 @@
+CASE_ID,OUTCOME,DESCRIPTION,OBSERVED,EXPECTED,ROLE_NAME,SECONDARY_ROLES,OBSERVED_AT
+S2.50,PASS,E: CREATE SCHEMA ... CLONE ... WITH MANAGED ACCESS accepted by the unit service role,Schema S2E__BUILD successfully created.,!ERROR:%,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:45:56.610
+S2.51,PASS,E: build schema created by S2.50 is managed access,MANAGED ACCESS,%MANAGED ACCESS%,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:45:58.452
+S2.52,FAIL,E: CREATE SCHEMA ... WITH MANAGED ACCESS CLONE ... accepted (alternative clause order),"ERROR: SQL compilation error:
+syntax error line 1 at position 73 unexpected 'silver'.",!ERROR:%,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:45:59.661
+S2.54,PASS,"KEY E: after swap, the PUBLISHED schema is managed access",MANAGED ACCESS,%MANAGED ACCESS%,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:46:08.072
+S2.55,PASS,E: consumer reads NEW,V2,V2,ANALYST_TIER1,"{""roles"":"""",""value"":""""}",2026-10-05 04:46:09.896
+S2.56,PASS,E: consumer has no access to the build schema,"ERROR: SQL compilation error:
+Schema 'SILVER.S2E__BUILD' does not exist or not authorized. Your primary role ANALYST_TIER1 must have USAGE or any other privilege granted on SCHEMA SILVER.S2E__BUILD.",ERROR:%,ANALYST_TIER1,"{""roles"":"""",""value"":""""}",2026-10-05 04:46:11.017
+S2.57,PASS,E: consumer cannot read the internal table,"ERROR: SQL compilation error:
+Object 'SILVER.S2E.INT_T' does not exist or not authorized. Your primary role ANALYST_TIER1 must have at least one privilege granted on TABLE SILVER.S2E.INT_T.",ERROR:%,ANALYST_TIER1,"{""roles"":"""",""value"":""""}",2026-10-05 04:46:12.412

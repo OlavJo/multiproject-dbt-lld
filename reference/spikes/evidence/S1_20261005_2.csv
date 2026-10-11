@@ -1,0 +1,50 @@
+CASE_ID,OUTCOME,DESCRIPTION,OBSERVED,EXPECTED,ROLE_NAME,SECONDARY_ROLES,OBSERVED_AT
+S1.01,PASS,CREATE VIEW accepts a bare (unqualified) identifier,View V successfully created.,%successfully created%,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:25:18.132
+S1.02,PASS,"Bare identifier resolves in the VIEW's schema, not the session schema (session = s1_other)",OLD,OLD,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:25:19.496
+S1.03,PASS,Stored view text keeps the bare identifier (binding is not expanded at creation),"create or replace view V(
+	ID,
+	MARKER
+) as select id, marker from t;",%from t%,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:25:20.827
+S1.04,PASS,No fallback to the session schema: a name that exists only in the session schema is rejected,"ERROR: SQL compilation error:
+Object 'SILVER.S1_PUB.U' does not exist or not authorized. Your primary role SVC_SILVER_ERP must have at least one privilege granted on TABLE SILVER.S1_PUB.U.",ERROR:%,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:25:22.012
+S1.05,PASS,CREATE SEMANTIC VIEW accepts a bare table name,Semantic view SV successfully created.,!ERROR:%,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:25:24.489
+S1.06,FAIL,Semantic view with bare table name resolves in its own schema,OTHER,OLD,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:25:26.043
+S1.07,INFO,Stored semantic view text keeps the bare table name,"create or replace semantic view SV
+	tables (
+		SILVER.S1_OTHER.T primary key (ID)
+	)
+	dimensions (
+		T.MARKER_DIM as marker
+	)
+	metrics (
+		T.ROW_COUNT as count(*)
+	);",,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:25:28.374
+S1.10,PASS,"Cloned view reads the CLONE's T, not the source schema's T",CLONED,CLONED,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:25:32.826
+S1.11,PASS,Cloned view-on-view reads the clone's siblings,CLONED,CLONED,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:25:34.181
+S1.12,FAIL,Cloned semantic view reads the clone's T,OTHER,CLONED,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:25:35.649
+S1.13,PASS,Source schema unaffected by the clone,OLD,OLD,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:25:37.433
+S1.20,PASS,Before swap: published view still reads OLD,OLD,OLD,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:25:46.876
+S1.21,PASS,"KEY: after swap, bare-identifier view under the published name reads the NEW sibling",NEW,NEW,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:25:49.012
+S1.22,PASS,"After swap, view-on-view under the published name reads NEW",NEW,NEW,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:25:50.313
+S1.23,FAIL,"After swap, semantic view under the published name reads NEW",OTHER,NEW,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:25:51.980
+S1.24,PASS,"After swap, the moved (old) schema's view reads its own OLD sibling",OLD,OLD,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:25:53.906
+S1.25,PASS,CONTROL: fully qualified view follows the build NAME after swap and reads stale OLD (the hazard SLD 10.5 removes),OLD,OLD,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:25:55.469
+S1.26,PASS,Cross-unit fully qualified view is unaffected by the swap,OTHER,OTHER,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:25:56.981
+S1.30,PASS,"Cycle 2: untouched cloned view, after swap, reads NEWER",NEWER,NEWER,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:26:03.737
+S1.31,FAIL,"Cycle 2: untouched cloned semantic view, after swap, reads NEWER",OTHER,NEWER,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:26:04.989
+S1.32,PASS,Cycle 2: moved schema holds the previous version,NEW,NEW,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:26:06.560
+S1.40,PASS,Semantic view in the build schema can reference the PUBLISHED table name,Semantic view SV_PUB successfully created.,!ERROR:%,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:26:12.354
+S1.41,PASS,Before swap: build-schema semantic view reads the currently published table (NEWER),NEWER,NEWER,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:26:13.613
+S1.42,PASS,"KEY: after swap, semantic view referencing the published name reads the newly published table",E_NEW,E_NEW,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:26:15.939
+S1.43,INFO,Stored text of the published-name semantic view,"create or replace semantic view SV_PUB
+	tables (
+		SILVER.S1_PUB.T primary key (ID)
+	)
+	dimensions (
+		T.MARKER_DIM as marker
+	)
+	metrics (
+		T.ROW_COUNT as count(*)
+	);",,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:26:17.641
+S1.44,PASS,Limitation: published-name semantic view cannot use a column that exists only in the build,"ERROR: SQL compilation error: error line 3 at position 34
+invalid identifier 'EXTRA'",ERROR:%,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:26:23.319

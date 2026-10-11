@@ -1,0 +1,17 @@
+CASE_ID,OUTCOME,DESCRIPTION,OBSERVED,ROLE_NAME,SECONDARY_ROLES,OBSERVED_AT
+S8b.A1,FAIL,Both units logged PUBLISHED since the tasks started,0,SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-06 23:46:14.027
+S8b.A2,FAIL,Their runs overlapped in time (STARTED of each before PUBLISHED of the other),SERIAL,SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-06 23:46:18.834
+S8b.A3,INFO,Timeline of the two runs,silver.erp STARTED 23:43:21.4 | silver.crm STARTED 23:43:23.9 | silver.erp FAILED 23:43:24.8 | silver.crm FAILED 23:43:26.9,SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-06 23:46:23.952
+S8b.A4,FAIL,Any FAILED event in the two runs (exception text if so),"silver.erp: SQL compilation error:
+Schema 'ERP__BUILD' already exists, but current role has no privileges on it. If this is unexpected and you cannot resolve this problem, contact your system administrator. ACCOUNTADMIN role may be required to manage the privileges on the object. | silver.crm: SQL compilation error:
+Schema 'CRM__BUILD' already exists, but current role has no privileges on it. If this is unexpected and you cannot resolve this problem, contact your system administrator. ACCOUNTADMIN role may be required to manage the privileges on the object.",SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-06 23:46:25.485
+S8b.A5,PASS,Leases of both units are free,0,SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-06 23:46:26.901
+S8b.A6,INFO,Each unit holds its own data: ERP current orders and CRM contacts,"ERROR: SQL compilation error:
+Schema 'SILVER.ERP' does not exist or not authorized. Your primary role SILVER_STEWARD must have USAGE or any other privilege granted on SCHEMA SILVER.ERP.",SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-06 23:46:29.548
+S8b.A7,FAIL,"The two PUBLISHED events carry distinct canonical state query ids, both compiled ok",<NULL>,SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-06 23:46:31.924
+S8b.B1,INFO,EXECUTE DBT PROJECT statements in the last 10 minutes and the most in progress together,,ACCOUNTADMIN,"{""roles"":"""",""value"":""""}",2026-10-06 23:46:33.565
+S8b.C1,PASS,"Task run of the ERP task (state, error, scheduled and completed time)",SUCCEEDED | - | 16:43:16 to 16:43:25,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 23:46:35.918
+S8b.C2,PASS,"Task run of the CRM task (state, error, scheduled and completed time)",SUCCEEDED | - | 16:43:18 to 16:43:28,SVC_SILVER_CRM,"{""roles"":"""",""value"":""""}",2026-10-06 23:46:38.105
+S8b.D1,INFO,SYSTEM$DBT_GET_LAST_SUCCESSFUL_RUN_TARGET after the two runs (which unit does it point at?),snow://dbt/SILVER.OPS.SILVER_LAYER/results/query_id_01c78ef7-0004-2187-0003-5b0a00054192/target/,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 23:46:41.093
+S8b.D2,INFO,LOCATE_DBT_ARTIFACTS for the ERP canonical query id,snow://dbt/SILVER.OPS.SILVER_LAYER/results/query_id_01c78ef7-0004-2187-0003-5b0a00054192/,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 23:46:46.545
+S8b.D3,INFO,LOCATE_DBT_ARTIFACTS for the CRM canonical query id,ERROR: DBT project not found or access denied,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 23:46:47.752

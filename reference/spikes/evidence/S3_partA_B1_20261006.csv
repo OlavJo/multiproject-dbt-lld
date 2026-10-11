@@ -1,0 +1,74 @@
+CASE_ID,OUTCOME,DESCRIPTION,OBSERVED,ROLE_NAME,OBSERVED_AT
+S3.A00a,PASS,Setup: managed-access clone of the published schema,Schema ERP__BUILD successfully created.,SVC_SILVER_ERP,2026-10-06 22:43:34.758
+S3.A00b,PASS,Setup: run-operation freeze_sources succeeds,success=true,SVC_SILVER_ERP,2026-10-06 22:43:56.106
+S3.A01,PASS,build: everything passes,success=true,SVC_SILVER_ERP,2026-10-06 22:44:20.374
+S3.A02,FAIL,build: a model fails in the warehouse (division by zero),"RAISED: DBT job failed: 1 model(s) failed out of 14 total (total time: 13.74s)
+First error in model 'inj_sql_error': Database Error in model inj_sql_error (models/erp/inject/inj_sql_error.sql)
+  100051 (22012): DML operation to table CF72262.SILVER.ERP__BUILD.INJ_SQL_ERROR failed on column X with error: Division by zero
+  compiled code at target/erp/run/silver/models/erp/inject/inj_sql_error.sql. 
+Context: DBT 1.12.3, Command: dbt build.
+ Run select system$get_dbt_log('01c78ed4-0004-216f-0003-5b0a0004e3da') for more details.",SVC_SILVER_ERP,2026-10-06 22:44:52.461
+S3.A03,FAIL,build: an output test at error severity fails,"RAISED: DBT job failed. Last output lines:
+[0m22:45:10  Finished running 1 incremental model, 1 table model, 10 data tests, 2 view models in 0 hours 0 minutes and 8.07 seconds (8.07s).
+[0m22:45:10  
+[0m22:45:10  [31mCompleted with 1 error, 0 partial successes, and 0 warnings:[0m
+[0m22:45:10  
+[0m22:45:10  [[31mERROR[0m]: in test inj_output_test_error (models/erp/schema.yml)
+[0m22:45:10    Got 12 results, configured to fail if != 0
+[0m22:45:10  
+[0m22:45:10    compiled code at target/erp/compiled/silver/models/erp/schema.yml/inj_output_test_error.sql
+[0m22:45:10  
+[0m22:45:10  Done. PASS=13 WARN=0 ERROR=1 SKIP=0 NO-OP=0 REUSED=0 TOTAL=14.
+ Run select system$get_dbt_log('01c78ed4-0004-216f-0003-5b0a0004e6b6') for more details.",SVC_SILVER_ERP,2026-10-06 22:45:12.216
+S3.A04,PASS,build: a test at warn severity fails (warning only),success=true,SVC_SILVER_ERP,2026-10-06 22:45:41.944
+S3.A05,FAIL,build: a jinja compile error in a model,"RAISED: DBT job failed: 1 model(s) failed out of 14 total (total time: 10.73s)
+First error in model 'inj_compile_error': Compilation Error in model inj_compile_error (models/erp/inject/inj_compile_error.sql)
+  's3_undefined_macro' is undefined. This can happen when calling a macro that does not exist. Check for typos and/or install package dependencies with ""dbt deps"".. 
+Context: DBT 1.12.3, Command: dbt build.
+ Run select system$get_dbt_log('01c78ed5-0004-2187-0003-5b0a0004db2a') for more details.",SVC_SILVER_ERP,2026-10-06 22:46:12.606
+S3.A06,FAIL,build: the selector does not exist,"RAISED: DBT job failed with exception: Runtime Error
+  Could not find selector named unit_nope, expected one of ['unit_erp', 'unit_crm'].
+ Run select system$get_dbt_log('01c78ed6-0004-216f-0003-5b0a0004ecbe') for more details.",SVC_SILVER_ERP,2026-10-06 22:46:24.153
+S3.A07,FAIL,run-operation: the macro raises (no tables declared for the unit),"RAISED: DBT job failed: 1 macro(s) failed out of 1 total (total time: 0.55s)
+First error in macro 'freeze_sources': Compilation Error in macro freeze_sources (macros/freeze_sources.sql)
+  freeze_sources: no tables declared for source nope_raw
+  
+  > in macro freeze_sources (macros/freeze_sources.sql)
+  > called by macro freeze_sources (macros/freeze_sources.sql). 
+Context: DBT 1.12.3, Command: dbt run-operation.
+ Run select system$get_dbt_log('01c78ed6-0004-2187-0003-5b0a0004de22') for more details.",SVC_SILVER_ERP,2026-10-06 22:46:42.909
+S3.A08,FAIL,run-operation: the macro does not exist,"RAISED: DBT job failed with exception: Compilation Error
+  dbt could not find a macro with the name 'no_such_macro' in any package. This can happen when calling a macro that does not exist. Check for typos and/or install package dependencies with ""dbt deps""..
+ Run select system$get_dbt_log('01c78ed6-0004-2187-0003-5b0a0004de86') for more details.",SVC_SILVER_ERP,2026-10-06 22:46:59.903
+S3.A09,FAIL,run-operation: the clone fails in the warehouse (watermark before the table existed),"RAISED: DBT job failed: 1 macro(s) failed out of 1 total (total time: 1.00s)
+First error in macro 'freeze_sources': Database Error
+  000707 (02000): Time travel data is not available for table ACCOUNTS. The requested time is either beyond the allowed time travel period or before the object creation time.. 
+Context: DBT 1.12.3, Command: dbt run-operation.
+ Run select system$get_dbt_log('01c78ed7-0004-216f-0003-5b0a0004ed16') for more details.",SVC_SILVER_ERP,2026-10-06 22:47:15.739
+S3.A10,PASS,compile: succeeds,success=true,SVC_SILVER_ERP,2026-10-06 22:47:30.851
+S3.A11,FAIL,compile: a jinja compile error,"RAISED: DBT job failed with exception: Runtime Error
+  Compilation Error in model inj_compile_error (models/erp/inject/inj_compile_error.sql)
+    's3_undefined_macro' is undefined. This can happen when calling a macro that does not exist. Check for typos and/or install package dependencies with ""dbt deps""..
+ Run select system$get_dbt_log('01c78ed7-0004-216f-0003-5b0a0004ee06') for more details.",SVC_SILVER_ERP,2026-10-06 22:47:44.458
+S3.A12,PASS,source freshness on the live raw source (loaded_at_query on the landing records),success=true,SVC_SILVER_ERP,2026-10-06 22:47:59.981
+S3.A13,FAIL,not a dbt command,RAISED: DBT command nonsense is not supported.,SVC_SILVER_ERP,2026-10-06 22:48:01.594
+S3.B00,PASS,Baseline publish through the procedure,PUBLISHED,SVC_SILVER_ERP,2026-10-06 22:49:04.620
+S3.B10,PASS,B1: source test fails: the procedure reports the build failure,FAILED:build,SVC_SILVER_ERP,2026-10-06 22:49:51.625
+S3.B11,PASS,B1: published data unchanged,UNCHANGED,SVC_SILVER_ERP,2026-10-06 22:49:57.882
+S3.B12,PASS,B1: lease released,FREE,SVC_SILVER_ERP,2026-10-06 22:49:59.912
+S3.B13,INFO,B1: FAILED event: stage and failure class,build / unclassified,SVC_SILVER_ERP,2026-10-06 22:50:03.622
+S3.B14,INFO,B1: FAILED event: exception text,"DBT job failed. Last output lines:
+[0m22:49:48  Finished running 1 incremental model, 1 table model, 9 data tests, 2 view models in 0 hours 0 minutes and 7.27 seconds (7.27s).
+[0m22:49:48  
+[0m22:49:48  [31mCompleted with 1 error, 0 partial successes, and 0 warnings:[0m
+[0m22:49:48  
+[0m22:49:48  [[31mERROR[0m]: in test source_not_null_erp_frozen_orders_order_id (models/erp/sources.yml)
+[0m22:49:48    Got 1 result, configured to fail if != 0
+[0m22:49:48  
+[0m22:49:48    compiled code at target/erp/compiled/silver/models/erp/sources.yml/source_not_null_erp_frozen_orders_order_id.sql
+[0m22:49:48  
+[0m22:49:48  Done. PASS=8 WARN=0 ERROR=1 SKIP=4 NO-OP=0 REUSED=0 TOTAL=13.
+ Run select system$get_dbt_log('01c78ed9-0004-2187-0003-5b0a0004f3c2') for more details.",SVC_SILVER_ERP,2026-10-06 22:50:06.583
+S3.B15,INFO,B1: FAILED event: STDOUT tail (does it name the failing source test?),<NULL>,SVC_SILVER_ERP,2026-10-06 22:50:08.660
+S3.B16,PASS,B1: consumer still reads masked PII from the last good version,***MASKED***,ANALYST_TIER1,2026-10-06 22:50:12.376
+S3.B17,PASS,B1: after the bad row is removed and a new batch lands: recovers,PUBLISHED,SVC_SILVER_ERP,2026-10-06 22:51:10.060

@@ -1,0 +1,5 @@
+CASE_ID,OUTCOME,DESCRIPTION,OBSERVED,ROLE_NAME,SECONDARY_ROLES,OBSERVED_AT
+P3b.01,PASS,Publish after the fix,PUBLISHED,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 22:33:39.530
+P3b.02,PASS,Canonical compile recorded as ok in the PUBLISHED event,true,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 22:33:45.650
+P3b.03,INFO,State query id recorded,01c78ec9-0004-216f-0003-5b0a0004e212,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 22:33:47.364
+P3b.04,INFO,SYSTEM$LOCATE_DBT_ARTIFACTS on the canonical query id,snow://dbt/SILVER.OPS.SILVER_LAYER/results/query_id_01c78ec9-0004-216f-0003-5b0a0004e212/,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 22:33:50.416

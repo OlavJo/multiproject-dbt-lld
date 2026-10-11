@@ -1,0 +1,8 @@
+CASE_ID,OUTCOME,DESCRIPTION,OBSERVED,ROLE_NAME,OBSERVED_AT
+P2.01,PASS,ERP service role reads the landing-complete view,2,SVC_SILVER_ERP,2026-10-06 21:31:37.672
+P2.02,PASS,ERP service role reads raw accounts clear (policy reveals SVC_SILVER_ERP),user1@example.com,SVC_SILVER_ERP,2026-10-06 21:31:39.574
+P2.03,PASS,ERP orders: CDC versions of the oldest order (original plus one per batch),3,SVC_SILVER_ERP,2026-10-06 21:31:41.589
+P2.04,PASS,CRM service role reads raw contacts,2,SVC_SILVER_CRM,2026-10-06 21:31:43.731
+P2.05,PASS,CRM service role cannot read ERP raw orders,"ERROR: SQL compilation error:
+Object 'RAW.ERP.ORDERS' does not exist or not authorized. Your primary role SVC_SILVER_CRM must have at least one privilege granted on TABLE RAW.ERP.ORDERS.",SVC_SILVER_CRM,2026-10-06 21:31:45.274
+P2.06,INFO,unit_status lists raw and silver units,7,SILVER_STEWARD,2026-10-06 21:31:47.370

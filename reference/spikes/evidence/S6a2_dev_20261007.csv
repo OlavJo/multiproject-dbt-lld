@@ -1,0 +1,8 @@
+CASE_ID,OUTCOME,DESCRIPTION,OBSERVED,ROLE_NAME,SECONDARY_ROLES,OBSERVED_AT
+S6a2.10,PASS,dev: freeze into the developer schema (no publish_unit variable),true,SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-07 01:28:04.056
+S6a2.11,PASS,dev: build the ERP unit,true,SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-07 01:28:23.795
+S6a2.12,INFO,dev: objects land in silver.dev_erp (not in silver.erp or an erp__build schema),"ERP_ACCOUNTS, ERP_ORDERS_CURRENT, RAW__ACCOUNTS, RAW__ORDERS, STG_ERP__ACCOUNTS, STG_ERP__ORDERS, _FREEZE",SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-07 01:28:26.542
+S6a2.13,PASS,dev: a base view keeps its bare identifier (S1 rule),BARE,SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-07 01:28:27.841
+S6a2.14,PASS,"dev: the table reads the dev view, not the published one",ROWS,SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-07 01:28:29.561
+S6a2.15,PASS,dev: PII is masked for the developer (the steward role),***MASKED***,SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-07 01:28:31.361
+S6a2.17,PASS,The published ERP schema was not touched by the dev run,UNTOUCHED,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-07 01:28:34.027

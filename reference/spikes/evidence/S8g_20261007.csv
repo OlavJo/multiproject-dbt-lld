@@ -1,0 +1,10 @@
+CASE_ID,OUTCOME,DESCRIPTION,OBSERVED,ROLE_NAME,SECONDARY_ROLES,OBSERVED_AT
+S8g.01,INFO,Grants on the object after the first ADD VERSION (no re-grant),"rows=3; grantees=SILVER_STEWARD:OWNERSHIP, SVC_SILVER_CRM:USAGE, SVC_SILVER_ERP:USAGE",SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-07 00:39:45.105
+S8g.02,INFO,The object after the first ADD VERSION (all columns in DETAIL),default_version=LIVE; dbt_version=1.12.3,SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-07 00:39:48.808
+S8g.03,INFO,Locate the canonical execution from BEFORE the first ADD VERSION,snow://dbt/SILVER.OPS.SILVER_LAYER/results/query_id_01c78f36-0004-2402-0003-5b0a00055d32/,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-07 00:39:51.796
+S8g.04,PASS,A unit role executes the object after the first ADD VERSION (grant kept?),true,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-07 00:40:10.264
+S8g.10,PASS,ADD VERSION with new files (the S4 models and macros),Successfully deployed new files to the live version.,SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-07 00:40:45.855
+S8g.11,INFO,Grants on the object after the second ADD VERSION (no re-grant),"rows=3; grantees=SILVER_STEWARD:OWNERSHIP, SVC_SILVER_CRM:USAGE, SVC_SILVER_ERP:USAGE",SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-07 00:40:47.492
+S8g.12,INFO,Locate the canonical execution from before BOTH deployments,snow://dbt/SILVER.OPS.SILVER_LAYER/results/query_id_01c78f36-0004-2402-0003-5b0a00055d32/,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-07 00:40:49.761
+S8g.13,PASS,The new code is live: list the S4 unit (selector unit_s4 exists),true,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-07 00:41:03.291
+S8g.14,PASS,The ERP unit still compiles after the second ADD VERSION,true,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-07 00:41:18.446

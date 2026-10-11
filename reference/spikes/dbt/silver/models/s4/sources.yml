@@ -1,0 +1,32 @@
+version: 2
+
+sources:
+  - name: s4_raw
+    database: raw
+    schema: s4
+    tables:
+      - name: orders_cdc
+      - name: customers
+
+  - name: s4_frozen
+    database: silver
+    schema: s4   # redirected to s4__build by the source() override
+    tables:
+      - name: orders_cdc
+        identifier: raw__orders_cdc
+        columns:
+          - name: order_id
+            data_tests: [not_null]
+          - name: _seq
+            data_tests: [not_null]
+          - name: _commit_ts
+            data_tests: [not_null]
+          - name: _op
+            data_tests:
+              - accepted_values:
+                  arguments: {values: ['I', 'U', 'D']}
+      - name: customers
+        identifier: raw__customers
+        columns:
+          - name: customer_id
+            data_tests: [not_null, unique]

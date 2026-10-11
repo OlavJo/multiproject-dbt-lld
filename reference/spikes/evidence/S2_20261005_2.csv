@@ -1,0 +1,39 @@
+CASE_ID,OUTCOME,DESCRIPTION,OBSERVED,EXPECTED,ROLE_NAME,SECONDARY_ROLES,OBSERVED_AT
+S2.01,PASS,A baseline: consumer reads published table,V1,V1,ANALYST_TIER1,"{""roles"":"""",""value"":""""}",2026-10-05 04:36:48.286
+S2.02,PASS,A baseline: consumer cannot read internal table,"ERROR: SQL compilation error:
+Object 'SILVER.S2.INT_T' does not exist or not authorized. Your primary role ANALYST_TIER1 must have at least one privilege granted on TABLE SILVER.S2.INT_T.",ERROR:%,ANALYST_TIER1,"{""roles"":"""",""value"":""""}",2026-10-05 04:36:49.677
+S2.03,INFO,A after clone: schema-level grants on the build schema,OWNERSHIP -> ROLE SVC_SILVER_ERP,,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:36:55.337
+S2.04,PASS,A after clone: object grants copied onto cloned child objects,OWNERSHIP -> ROLE SVC_SILVER_ERP; SELECT -> DATABASE_ROLE READER,%SELECT -> DATABASE_ROLE%READER%,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:36:56.955
+S2.05,PASS,A after clone: consumer has no access to the build schema,"ERROR: SQL compilation error:
+Schema 'SILVER.S2__BUILD' does not exist or not authorized. Your primary role ANALYST_TIER1 must have USAGE or any other privilege granted on SCHEMA SILVER.S2__BUILD.",ERROR:%,ANALYST_TIER1,"{""roles"":"""",""value"":""""}",2026-10-05 04:36:58.792
+S2.06,PASS,A before swap: consumer still cannot read the built table in the build schema,"ERROR: SQL compilation error:
+Schema 'SILVER.S2__BUILD' does not exist or not authorized. Your primary role ANALYST_TIER1 must have USAGE or any other privilege granted on SCHEMA SILVER.S2__BUILD.",ERROR:%,ANALYST_TIER1,"{""roles"":"""",""value"":""""}",2026-10-05 04:37:04.308
+S2.07,PASS,A before swap: consumer reads the last good version,V1,V1,ANALYST_TIER1,"{""roles"":"""",""value"":""""}",2026-10-05 04:37:06.307
+S2.08,INFO,A after swap: schema-level grants on the PUBLISHED name,OWNERSHIP -> ROLE SVC_SILVER_ERP,,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:37:10.016
+S2.09,INFO,A after swap: schema-level grants on the BUILD name,OWNERSHIP -> ROLE SVC_SILVER_ERP; USAGE -> DATABASE_ROLE READER,,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:37:11.648
+S2.10,FAIL,"KEY A: after a plain swap, consumer reads the NEW published table (USAGE stayed with the name)","ERROR: SQL compilation error:
+Schema 'SILVER.S2' does not exist or not authorized. Your primary role ANALYST_TIER1 must have USAGE or any other privilege granted on SCHEMA SILVER.S2.",V2,ANALYST_TIER1,"{""roles"":"""",""value"":""""}",2026-10-05 04:37:13.073
+S2.11,FAIL,A after swap: consumer reads the untouched table that travelled by clone and swap,"ERROR: SQL compilation error:
+Schema 'SILVER.S2' does not exist or not authorized. Your primary role ANALYST_TIER1 must have USAGE or any other privilege granted on SCHEMA SILVER.S2.",V1,ANALYST_TIER1,"{""roles"":"""",""value"":""""}",2026-10-05 04:37:14.461
+S2.12,FAIL,A after swap: consumer cannot read the previous version now in the build schema,V1,ERROR:%,ANALYST_TIER1,"{""roles"":"""",""value"":""""}",2026-10-05 04:37:16.049
+S2.13,PASS,A after swap: consumer still cannot read the internal table,"ERROR: SQL compilation error:
+Schema 'SILVER.S2' does not exist or not authorized. Your primary role ANALYST_TIER1 must have USAGE or any other privilege granted on SCHEMA SILVER.S2.",ERROR:%,ANALYST_TIER1,"{""roles"":"""",""value"":""""}",2026-10-05 04:37:17.182
+S2.20,PASS,B: consumer reads NEW after grant-swap-revoke,V2,V2,ANALYST_TIER1,"{""roles"":"""",""value"":""""}",2026-10-05 04:37:33.048
+S2.21,PASS,B: consumer has no access to the build schema after revoke,"ERROR: SQL compilation error:
+Schema 'SILVER.S2__BUILD' does not exist or not authorized. Your primary role ANALYST_TIER1 must have USAGE or any other privilege granted on SCHEMA SILVER.S2__BUILD.",ERROR:%,ANALYST_TIER1,"{""roles"":"""",""value"":""""}",2026-10-05 04:37:34.730
+S2.29,PASS,C control: the source schema is managed access,MANAGED ACCESS,%MANAGED ACCESS%,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:37:44.588
+S2.30,FAIL,C: clone of a managed-access schema is itself managed access,<none>,%MANAGED ACCESS%,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:37:48.207
+S2.31,PASS,C: schema-owning service role can grant SELECT in a managed-access build schema (dbt grants step),Statement executed successfully.,!ERROR:%,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:37:51.377
+S2.32,FAIL,"KEY C: managed access, after a plain swap, consumer reads NEW","ERROR: SQL compilation error:
+Schema 'SILVER.S2M' does not exist or not authorized. Your primary role ANALYST_TIER1 must have USAGE or any other privilege granted on SCHEMA SILVER.S2M.",V2,ANALYST_TIER1,"{""roles"":"""",""value"":""""}",2026-10-05 04:37:56.189
+S2.33,FAIL,C: consumer has no access to the managed-access build schema,V1,ERROR:%,ANALYST_TIER1,"{""roles"":"""",""value"":""""}",2026-10-05 04:37:58.094
+S2.34,FAIL,C after swap: the PUBLISHED schema is still managed access,<none>,%MANAGED ACCESS%,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:37:54.012
+S2.40,FAIL,D: unit service role can enable managed access on its cloned build schema,"ERROR: SQL access control error:
+Insufficient privileges to operate on schema 'S2D__BUILD'. Your primary role SVC_SILVER_ERP must have MANAGE GRANTS granted on ACCOUNT CF72262.",!ERROR:%,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:38:08.187
+S2.41,FAIL,D: build schema is managed access after ENABLE,<none>,%MANAGED ACCESS%,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:38:09.958
+S2.42,FAIL,D after swap: the PUBLISHED schema is managed access,<none>,%MANAGED ACCESS%,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:38:16.625
+S2.43,PASS,KEY D: consumer reads NEW after the full sequence,V2,V2,ANALYST_TIER1,"{""roles"":"""",""value"":""""}",2026-10-05 04:38:18.428
+S2.44,PASS,D: consumer has no access to the build schema,"ERROR: SQL compilation error:
+Schema 'SILVER.S2D__BUILD' does not exist or not authorized. Your primary role ANALYST_TIER1 must have USAGE or any other privilege granted on SCHEMA SILVER.S2D__BUILD.",ERROR:%,ANALYST_TIER1,"{""roles"":"""",""value"":""""}",2026-10-05 04:38:19.630
+S2.45,PASS,D: consumer cannot read the internal table,"ERROR: SQL compilation error:
+Object 'SILVER.S2D.INT_T' does not exist or not authorized. Your primary role ANALYST_TIER1 must have at least one privilege granted on TABLE SILVER.S2D.INT_T.",ERROR:%,ANALYST_TIER1,"{""roles"":"""",""value"":""""}",2026-10-05 04:38:20.942

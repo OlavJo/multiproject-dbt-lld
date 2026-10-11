@@ -1,0 +1,34 @@
+EVENT_TS,UNIT,EVENT_TYPE,STAGE,CLASS,EXCEPTION
+2026-10-06 23:26:41.676,silver.crm,FAILED,freeze,source,"DBT job failed: 1 macro(s) failed out of 1 total (total time: 0.69s)
+First error in macro 'freeze_sources': Database Error
+  002003 (02000): SQL compilation error:
+  Schema 'SILVER.CRM__BUILD' does not exist or not authorized. Your primary role SVC_SILVER_CRM must have USAGE or any other privilege granted on SCHEMA SILVER.CRM__BUILD.. 
+Context: DBT 1.12.3, Command: dbt run-operation.
+ Run select system$get_dbt_log('01c78efe-0004-2402-0003-5b0a00055066') for more details."
+2026-10-06 23:26:40.278,silver.erp,FAILED,freeze,source,"DBT job failed: 1 macro(s) failed out of 1 total (total time: 0.73s)
+First error in macro 'freeze_sources': Database Error
+  002003 (02000): SQL compilation error:
+  Schema 'SILVER.ERP__BUILD' does not exist or not authorized. Your primary role SVC_SILVER_ERP must have USAGE or any other privilege granted on SCHEMA SILVER.ERP__BUILD.. 
+Context: DBT 1.12.3, Command: dbt run-operation.
+ Run select system$get_dbt_log('01c78efe-0004-2402-0003-5b0a0005506a') for more details."
+2026-10-06 23:26:24.486,silver.crm,STARTED,,,
+2026-10-06 23:26:23.918,silver.erp,STARTED,,,
+2026-10-06 23:19:23.762,silver.erp,PUBLISHED,,,
+2026-10-06 23:18:35.574,silver.erp,STARTED,,,
+2026-10-06 23:18:13.598,silver.erp,FAILED,build,transform,"DBT job failed: 1 model(s) failed out of 13 total (total time: 6.12s)
+First error in model 'stg_erp__orders': Database Error in model stg_erp__orders (models/erp/stg_erp__orders.sql)
+  000904 (42000): SQL compilation error: error line 10 at position 4
+  invalid identifier 'STATUS'
+  compiled code at target/erp/run/silver/models/erp/stg_erp__orders.sql. 
+Context: DBT 1.12.3, Command: dbt build.
+ Run select system$get_dbt_log('01c78ef5-0004-2402-0003-5b0a00051d3e') for more details."
+2026-10-06 23:17:41.203,silver.erp,STARTED,,,
+2026-10-06 23:17:33.163,silver.erp,PUBLISHED,,,
+2026-10-06 23:16:46.695,silver.erp,STARTED,,,
+2026-10-06 23:16:31.565,silver.erp,FAILED,freeze,source,"DBT job failed: 1 macro(s) failed out of 1 total (total time: 1.85s)
+First error in macro 'freeze_sources': Database Error
+  002003 (42S02): SQL compilation error:
+  Object 'RAW.ERP.ORDERS' does not exist or not authorized. Your primary role SVC_SILVER_ERP must have at least one privilege granted on TABLE RAW.ERP.ORDERS.. 
+Context: DBT 1.12.3, Command: dbt run-operation.
+ Run select system$get_dbt_log('01c78ef4-0004-2187-0003-5b0a0004fd26') for more details."
+2026-10-06 23:16:16.522,silver.erp,STARTED,,,

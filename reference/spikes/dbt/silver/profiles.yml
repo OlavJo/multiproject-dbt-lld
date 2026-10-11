@@ -1,0 +1,46 @@
+# dbt Projects on Snowflake take account and user from the session; the keys
+# must still be present. The role is per target: one target per unit service
+# role (SLD 10.4, "per-unit service role"). Whether a single shared executing
+# role is preferable is part of spike S8.
+silver:
+  target: prod_erp
+  outputs:
+    prod_erp: &prod
+      type: snowflake
+      account: not_needed
+      user: not_needed
+      role: SVC_SILVER_ERP
+      warehouse: SPIKE_WH
+      database: SILVER
+      schema: erp
+      threads: 4
+    prod_crm:
+      <<: *prod
+      role: SVC_SILVER_CRM
+      schema: crm
+    # The Core module (Tier 0.5): reads published Silver outputs, never raw
+    prod_core:
+      <<: *prod
+      role: SVC_SILVER_CORE
+      schema: core
+    # Spike S4 unit (CDC history and snapshots), run by the ERP unit's service role
+    prod_s4:
+      <<: *prod
+      role: SVC_SILVER_ERP
+      schema: s4
+    # CI (spike S6): everything lands in ci_<unit>; run by the unit's service role, which can read
+    # the published schemas (deferred relations) and raw (the frozen inputs of the CI schema)
+    ci:
+      <<: *prod
+      role: SVC_SILVER_ERP
+      schema: ci
+    # Development: everything lands in <schema>_<unit> in the steward's own schemas
+    dev:
+      type: snowflake
+      account: not_needed
+      user: not_needed
+      role: SILVER_STEWARD
+      warehouse: SPIKE_WH
+      database: SILVER
+      schema: dev
+      threads: 4
