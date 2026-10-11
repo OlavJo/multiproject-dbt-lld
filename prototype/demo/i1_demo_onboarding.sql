@@ -19,12 +19,12 @@
 -- =============================================================================
 
 use secondary roles none;
-use warehouse lld_wh;
 set me = (select current_user());
 set run_id = (select uuid_string());
 
 -- Part 0: reset the demo units (configuration first, so nothing has dependents) -----------
 use role silver_steward;
+use warehouse lld_wh;   -- after USE ROLE: the role in force must have USAGE
 delete from analytics_ops.control.unit_dependencies
   where unit in ('silver.erp', 'silver.crm', 'silver.hr', 'silver.core');
 delete from analytics_ops.control.units

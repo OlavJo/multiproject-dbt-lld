@@ -24,10 +24,10 @@
 -- =============================================================================
 
 use secondary roles none;
-use warehouse lld_wh;
 
 -- Part A: the steward grants the provisioner, the unit base role and the operator ------
 use role silver_steward;
+use warehouse lld_wh;   -- after USE ROLE: the role in force must have USAGE
 
 -- Procedures and (from Increment 2) the project object. Not managed access: the
 -- provisioner grants USAGE on the procedures it owns.
