@@ -1,0 +1,26 @@
+CASE_ID,OUTCOME,DESCRIPTION,OBSERVED,EXPECTED,ROLE_NAME,SECONDARY_ROLES,OBSERVED_AT
+S9.00,INFO,B: session timezone before the freeze,America/Los_Angeles,,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 05:14:13.543
+S9.10,INFO,B: CLONE AT (TIMESTAMP => UTC NTZ watermark) under the default session timezone,Table RAW__CUSTOMERS successfully created.,,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 05:14:16.161
+S9.11,INFO,B: rows in that clone (3 expected if the watermark was read as UTC),3,,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 05:14:17.866
+S9.12,PASS,B: CLONE AT (TIMESTAMP => UTC NTZ watermark) with session TIMEZONE = UTC,Table RAW__CUSTOMERS successfully created.,!ERROR:%,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 05:14:20.656
+S9.13,PASS,KEY B: frozen input holds exactly the rows as of the watermark,3,3,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 05:14:22.163
+S9.14,PASS,B: live raw meanwhile holds the late row too,4,4,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 05:14:24.003
+S9.15,PASS,B: the frozen input is a transient table (no Fail-safe storage),TRANSIENT,TRANSIENT,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 05:14:25.910
+S9.20,PASS,D: frozen input clone carries the raw PII tag on email,email,email,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 05:14:45.914
+S9.21,PASS,D: frozen input clone carries the raw PII_AUTO tag on phone,phone,phone,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 05:14:46.738
+S9.22,PASS,D: CTAS does NOT carry the plain PII tag (SLD 6.3 premise),<NULL>,<NULL>,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 05:14:47.568
+S9.23,PASS,D: post-hook carries the PII tag onto the materialised email column,email,email,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 05:14:48.424
+S9.24,PASS,KEY D: PII_AUTO propagates onto the CTAS phone column without a post-hook,phone,phone,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 05:14:49.269
+S9.25,PASS,D: the frozen input has no grants except ownership,OWNERSHIP -> ROLE SVC_SILVER_ERP,OWNERSHIP -> ROLE SVC_SILVER_ERP,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 05:14:51.048
+S9.26,PASS,D control: Silver service role reads email unmasked via the base view,ana@example.com,ana@example.com,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 05:14:52.576
+S9.30,PASS,E: consumer cannot read the frozen input,"ERROR: SQL compilation error:
+Object 'SILVER.S9.RAW__CUSTOMERS' does not exist or not authorized. Your primary role ANALYST_TIER1 must have at least one privilege granted on TABLE SILVER.S9.RAW__CUSTOMERS.",ERROR:%,ANALYST_TIER1,"{""roles"":"""",""value"":""""}",2026-10-05 05:14:53.983
+S9.31,PASS,E: consumer cannot read raw,"ERROR: SQL compilation error:
+Database 'RAW' does not exist or not authorized. Your primary role ANALYST_TIER1 must have USAGE or any other privilege granted on DATABASE RAW.",ERROR:%,ANALYST_TIER1,"{""roles"":"""",""value"":""""}",2026-10-05 05:14:55.567
+S9.32,PASS,E: consumer reads the base view (rows as of the watermark),3,3,ANALYST_TIER1,"{""roles"":"""",""value"":""""}",2026-10-05 05:14:57.305
+S9.33,PASS,KEY E: email masked through the base view (policy carried by clone),***MASKED***,***MASKED***,ANALYST_TIER1,"{""roles"":"""",""value"":""""}",2026-10-05 05:14:58.902
+S9.34,PASS,E: phone masked through the base view,***MASKED***,***MASKED***,ANALYST_TIER1,"{""roles"":"""",""value"":""""}",2026-10-05 05:15:00.672
+S9.35,PASS,E: email masked in the materialised table with the post-hook,***MASKED***,***MASKED***,ANALYST_TIER1,"{""roles"":"""",""value"":""""}",2026-10-05 05:15:02.432
+S9.36,PASS,E: phone masked in the materialised table (propagation),***MASKED***,***MASKED***,ANALYST_TIER1,"{""roles"":"""",""value"":""""}",2026-10-05 05:15:03.795
+S9.37,PASS,HAZARD E: email in clear in the materialised table WITHOUT the post-hook (SLD 6.3 premise),ana@example.com,ana@example.com,ANALYST_TIER1,"{""roles"":"""",""value"":""""}",2026-10-05 05:15:05.628
+S9.38,PASS,"KEY E: phone masked WITHOUT any post-hook, by tag propagation",***MASKED***,***MASKED***,ANALYST_TIER1,"{""roles"":"""",""value"":""""}",2026-10-05 05:15:07.121

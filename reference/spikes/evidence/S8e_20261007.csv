@@ -1,0 +1,11 @@
+CASE_ID,OUTCOME,DESCRIPTION,OBSERVED,ROLE_NAME,SECONDARY_ROLES,OBSERVED_AT
+S8e.A1,INFO,"ERP shared-path execution: success, partial-parse warning, writeback lines",success=true; unable_partial=true; writeback=[],SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-07 00:13:21.103
+S8e.A2,INFO,"CRM shared-path execution: success, partial-parse warning, writeback lines",success=true; unable_partial=false; writeback=[],SVC_SILVER_CRM,"{""roles"":"""",""value"":""""}",2026-10-07 00:13:25.920
+S8e.B1,INFO,Locate an execution from BEFORE the s08d redeploy (hypothesis: denied),ERROR: DBT project not found or access denied,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-07 00:13:30.006
+S8e.B2,INFO,Locate an execution from AFTER the s08d redeploy (expected: found),snow://dbt/SILVER.OPS.SILVER_LAYER/results/query_id_01c78f28-0004-216f-0003-5b0a000524fe/,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-07 00:13:31.551
+S8e.B3,PASS,Redeploy the project object (CREATE OR REPLACE) without re-granting,SILVER_LAYER successfully created.,SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-07 00:14:08.115
+S8e.D2,INFO,Grants on the project object after CREATE OR REPLACE and no re-grant,rows=1; grantees=SILVER_STEWARD:OWNERSHIP,SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-07 00:14:10.039
+S8e.D3,INFO,A unit role executes the redeployed object WITHOUT a re-grant (does it still have USAGE?),"ERROR: SQL compilation error:
+DBT PROJECT 'SILVER.OPS.SILVER_LAYER' does not exist or not authorized. Your primary role SVC_SILVER_ERP must have at least one privilege granted on DBT PROJECT SILVER.OPS.SILVER_LAYER.",SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-07 00:14:11.486
+S8e.B4,INFO,"Locate the ""after"" execution again, now after a second redeploy (hypothesis: denied)",ERROR: DBT project not found or access denied,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-07 00:14:12.633
+S8e.D4,PASS,After re-granting: a unit role executes the object again,true,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-07 00:14:29.222

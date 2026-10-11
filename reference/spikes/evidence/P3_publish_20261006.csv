@@ -1,0 +1,21 @@
+CASE_ID,OUTCOME,DESCRIPTION,OBSERVED,ROLE_NAME,SECONDARY_ROLES,OBSERVED_AT
+P3.A1,PASS,"First call publishes ERP (gate: DEPLOYED event, upstream fresh)",PUBLISHED,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 22:20:53.655
+P3.A2,PASS,Log: last events for silver.erp are STARTED then PUBLISHED,"STARTED,PUBLISHED",SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 22:20:57.687
+P3.A3,PASS,PUBLISHED watermark equals the raw ERP watermark (latest landing-complete),EQUAL,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 22:21:00.851
+P3.A4,INFO,Canonical compile after the swap: result recorded in the PUBLISHED event,"{""canonical_error"":""Boolean value '01c78ebc-0004-216f-0003-5b0a0004c47a' is not recognized"",""canonical_ok"":false,""state_query_id"":""01c78ebc-0004-216f-0003-5b0a0004c47a""}",SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 22:21:04.139
+P3.A5,PASS,Lease is free after the run,FREE,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 22:21:05.485
+P3.B1,PASS,Second call immediately: nothing new to build,SKIPPED:nothing_new,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 22:21:10.901
+P3.B2,PASS,Lease free after a skipped run,FREE,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 22:21:13.616
+P3.C1,PASS,After a new ERP batch: publishes again,PUBLISHED,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 22:22:12.948
+P3.C2,PASS,Consumer reads the new batch (4 batches landed: 8 orders),8,ANALYST_TIER1,"{""roles"":"""",""value"":""""}",2026-10-06 22:22:21.716
+P3.C3,PASS,Consumer sees the email masked after the procedure publish,***MASKED***,ANALYST_TIER1,"{""roles"":"""",""value"":""""}",2026-10-06 22:22:23.073
+P3.D1,PASS,Another run holds the lease,true,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 22:22:34.110
+P3.D2,PASS,"Call while the lease is held: skipped, not queued",SKIPPED:locked,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 22:22:38.648
+P3.D3,PASS,The holder is still the other run,other-run,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 22:22:40.394
+P3.D4,PASS,Release by the holder,true,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 22:22:42.848
+P3.E1,PASS,Upstream older than tolerance: skipped,SKIPPED:stale_upstream,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 22:22:52.219
+P3.E2,PASS,Tolerance restored: the waiting batch publishes (5 batches: 10 orders),PUBLISHED,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 22:23:55.008
+P3.F1,PASS,CRM unit publishes under SVC_SILVER_CRM (prod_crm),PUBLISHED,SVC_SILVER_CRM,"{""roles"":"""",""value"":""""}",2026-10-06 22:25:02.145
+P3.F2,PASS,Consumer reads published CRM contacts,2,ANALYST_TIER1,"{""roles"":"""",""value"":""""}",2026-10-06 22:25:07.000
+P3.G1,INFO,Events per type for the two Silver units,silver.crm:DEPLOYED=1; silver.crm:PUBLISHED=1; silver.crm:STARTED=1; silver.erp:DEPLOYED=1; silver.erp:PUBLISHED=3; silver.erp:SKIPPED=3; silver.erp:STARTED=3,SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-06 22:25:09.272
+P3.G2,INFO,unit_status after the run,units=12,SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-06 22:25:11.018

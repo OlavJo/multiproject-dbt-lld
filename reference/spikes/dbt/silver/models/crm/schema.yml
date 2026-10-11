@@ -1,0 +1,7 @@
+version: 2
+
+models:
+  - name: crm_contacts
+    columns:
+      - name: contact_id
+        data_tests: [unique, not_null]

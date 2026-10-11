@@ -1,0 +1,36 @@
+CASE_ID,OUTCOME,DESCRIPTION,OBSERVED,ROLE_NAME,SECONDARY_ROLES,OBSERVED_AT
+P2.S3.00,PASS,Round 3: clone published schema to build schema,Schema ERP__BUILD successfully created.,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 22:09:10.856
+P2.S3.01,PASS,Round 3: freeze_sources run-operation via EXECUTE IMMEDIATE,true,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 22:09:27.320
+P2.S3.02,PASS,Round 3: frozen accounts in the build schema (transient clone),6,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 22:09:28.882
+P2.S3.03,PASS,Round 3: frozen orders rows,9,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 22:09:30.783
+P2.S3.04,PASS,Round 3: frozen tables are transient,YES,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 22:09:33.278
+P2.S3.05,PASS,Round 3: dbt build --selector unit_erp succeeds,true,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 22:09:54.652
+P2.S3.06,PASS,Round 3: current-state rows in the build schema (one per order),6,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 22:09:56.220
+P2.S3.07,PASS,Round 3: order 1 is at its latest version (CDC order by source seq),SHIPPED,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 22:09:57.527
+P2.S3.08,PASS,Round 3: base view in the build schema uses a bare identifier (S1 rule),"create or replace view STG_ERP__ORDERS(
+	ORDER_ID,
+	ACCOUNT_ID,
+	STATUS,
+	AMOUNT,
+	SOURCE_SEQ,
+	LOADED_AT
+) as (
+    select
+    order_id::number(38, 0)       as order_id,
+    account_id::number(38, 0)     as account_id,
+    status::varchar               as status,
+    amount::number(18, 2)         as amount,
+    _seq::number(38, 0)           as source_seq,
+    _loaded_at::timestamp_ntz     as loaded_at
+from raw__orders
+  )
+/* {""app"": ""dbt"", ""dbt_version"": ""1.12.3"", ""profile_name"": ""silver"", ""target_name"": ""prod_erp"", ""node_id"": ""model.silver.stg_erp__orders""} */;",SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 22:09:59.136
+P2.S3.09,PASS,Round 3: base view reads the frozen input before the swap,9,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 22:10:01.020
+P2.S3.10,PASS,Round 3: swap build schema with published schema,Statement executed successfully.,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 22:10:06.294
+P2.S3.11,PASS,Round 3: published base view reads the swapped frozen input,9,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 22:10:08.572
+P2.S3.12,PASS,Round 3: consumer reads published current-state table,6,ANALYST_TIER1,"{""roles"":"""",""value"":""""}",2026-10-06 22:10:10.190
+P2.S3.13,PASS,Round 3: consumer sees PII masked in a materialised model (propagation),***MASKED***,ANALYST_TIER1,"{""roles"":"""",""value"":""""}",2026-10-06 22:10:11.630
+P2.S3.14,PASS,Round 3: consumer cannot read the frozen input,"ERROR: SQL compilation error:
+Object 'SILVER.ERP.RAW__ORDERS' does not exist or not authorized. Your primary role ANALYST_TIER1 must have at least one privilege granted on TABLE SILVER.ERP.RAW__ORDERS.",ANALYST_TIER1,"{""roles"":"""",""value"":""""}",2026-10-06 22:10:12.583
+P2.S3.15,PASS,Round 3: consumer cannot read the build schema,"ERROR: SQL compilation error:
+Schema 'SILVER.ERP__BUILD' does not exist or not authorized. Your primary role ANALYST_TIER1 must have USAGE or any other privilege granted on SCHEMA SILVER.ERP__BUILD.",ANALYST_TIER1,"{""roles"":"""",""value"":""""}",2026-10-06 22:10:13.897

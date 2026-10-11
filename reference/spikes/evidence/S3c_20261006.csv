@@ -1,0 +1,76 @@
+CASE_ID,OUTCOME,DESCRIPTION,OBSERVED,ROLE_NAME,SECONDARY_ROLES,OBSERVED_AT
+S3c.00,PASS,Baseline publish through the procedure,PUBLISHED,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 23:14:03.629
+S3c.B10,PASS,B1: source test fails: the procedure reports the build failure,FAILED:build,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 23:14:49.657
+S3c.B11,PASS,B1: published data unchanged,UNCHANGED,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 23:14:52.884
+S3c.B12,PASS,B1: lease released,FREE,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 23:14:56.410
+S3c.B13,PASS,B1: FAILED event: stage and failure class,build / source,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 23:14:58.212
+S3c.B14,INFO,B1: FAILED event: exception text,"DBT job failed. Last output lines:
+[0m23:14:45  Finished running 1 incremental model, 1 table model, 9 data tests, 2 view models in 0 hours 0 minutes and 8.19 seconds (8.19s).
+[0m23:14:46  
+[0m23:14:46  [31mCompleted with 1 error, 0 partial successes, and 0 warnings:[0m
+[0m23:14:46  
+[0m23:14:46  [[31mERROR[0m]: in test source_not_null_erp_frozen_orders_order_id (models/erp/sources.yml)
+[0m23:14:46    Got 1 result, configured to fail if != 0
+[0m23:14:46  
+[0m23:14:46    compiled code at target/erp/compiled/silver/models/erp/sources.yml/source_not_null_erp_frozen_orders_order_id.sql
+[0m23:14:46  
+[0m23:14:46  Done. PASS=8 WARN=0 ERROR=1 SKIP=4 NO-OP=0 REUSED=0 TOTAL=13.
+ Run select system$get_dbt_log('01c78ef2-0004-2402-0003-5b0a0005123e') for more details.",SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 23:15:00.117
+S3c.B15,INFO,B1: FAILED event: STDOUT tail (does it name the failing source test?),"6808 [debug] [Thread-4 (]: Finished running node test.silver.not_null_erp_accounts_account_id.2679d63812
+[0m16:14:45.961625 [debug] [Thread-3 (]: SQL status: SUCCESS 1 in 0.761 seconds
+[0m16:14:45.963983 [info ] [Thread-3 (]: 13 of 13 PASS unique_erp_accounts_account_id ................................... [[32mPASS[0m in 0.79s]
+[0m16:14:45.965064 [debug] [Thread-3 (]: Finished running node test.silver.unique_erp_accounts_account_id.4b63f8274c
+[0m16:14:45.969287 [debug] [Dummy-2   ]: Connection 'master' was properly closed.
+[0m16:14:45.970127 [debug] [Dummy-2   ]: Connection 'test.silver.not_null_erp_accounts_account_id.2679d63812' was properly closed.
+[0m16:14:45.970888 [debug] [Dummy-2   ]: Connection 'test.silver.unique_erp_accounts_account_id.4b63f8274c' was properly closed.
+[0m16:14:45.971673 [debug] [Dummy-2   ]: Connection 'test.silver.source_unique_erp_frozen_accounts_account_id.37aeb77caa' was properly closed.
+[0m16:14:45.972389 [debug] [Dummy-2   ]: Connection 'model.silver.erp_accounts' was properly closed.
+[0m16:14:45.973179 [info ] [Dummy-2   ]: 
+[0m16:14:45.973997 [info ] [Dummy-2   ]: Finished running 1 incremental model, 1 table model, 9 data tests, 2 view models in 0 hours 0 minutes and 8.19 seconds (8.19s).
+[0m16:14:45.976099 [debug] [Dummy-2   ]: Command end result
+[0m16:14:46.018346 [debug] [Dummy-2   ]: Wrote artifact WritableManifest to /tmp/dbt/target/erp/manifest.json
+[0m16:14:46.021632 [debug] [Dummy-2   ]: Wrote artifact SemanticManifes",SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 23:15:01.486
+S3c.B16,PASS,B1: consumer still reads masked PII from the last good version,***MASKED***,ANALYST_TIER1,"{""roles"":"""",""value"":""""}",2026-10-06 23:15:03.987
+S3c.B17,PASS,B1: after the bad row is removed and a new batch lands: recovers,PUBLISHED,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 23:16:05.584
+S3c.B20,PASS,B2: a raw table is missing: the procedure reports the freeze failure,FAILED:freeze,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 23:16:32.946
+S3c.B21,PASS,B2: published data unchanged,UNCHANGED,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 23:16:35.043
+S3c.B22,PASS,B2: lease released,FREE,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 23:16:36.519
+S3c.B23,PASS,B2: FAILED event: stage and failure class,freeze / source,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 23:16:38.482
+S3c.B24,INFO,B2: FAILED event: exception text and STDOUT tail,"DBT job failed: 1 macro(s) failed out of 1 total (total time: 1.85s)
+First error in macro 'freeze_sources': Database Error
+  002003 (42S02): SQL compilation error:
+  Object 'RAW.ERP.ORDERS' does not exist or not authorized. Your primary role SVC_SILVER_ERP must have at least one privilege granted on TABLE RAW.ERP.ORDERS.. 
+Context: DBT 1.12.3, Command: dbt run-operation.
+ Run select system$get_dbt_log('01c78ef4-0004-2187-0003-5b0a0004fd26') for more details. |     return self.connections.execute(sql=sql, auto_begin=auto_begin, fetch=fetch, limit=limit)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/usr/lib/python_udf/f68334a689ec4b841f04c6b469cbf40c1b99f546443a51a19535f7836c2871d6/lib/python3.11/site-packages/dbt/adapters/snowflake/connections.py"", line 618, in execute
+    _, cursor = self.add_query(sql, auto_begin)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/usr/lib/python_udf/f68334a689ec4b841f04c6b469cbf40c1b99f546443a51a19535f7836c2871d6/lib/python3.11/site-packages/dbt/adapters/snowflake/connections.py"", line 655, in add_query
+    connection, cursor = self._add_standard_queries(
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/usr/lib/python_udf/f68334a689ec4b841f04c6b469cbf40c1b99f546443a51a19535f7836c2871d6/lib/python3.11/site-packages/dbt/adapters/snowflake/connections.py"", line 714, in _add_standard_queries
+    connection, cursor = self.add_standard_query(query, **kwargs)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/usr/lib/python_udf/f68334a689ec4b841f04c6b469cbf40c1b99f546443a51a19535f7836c2871d6/lib/python3.11/site-",SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 23:16:40.267
+S3c.B25,PASS,B2: after the table is restored and a new batch lands: recovers,PUBLISHED,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 23:17:34.598
+S3c.B30,PASS,B3: a raw column is renamed: the procedure reports the build failure,FAILED:build,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 23:18:14.974
+S3c.B31,PASS,B3: published data unchanged,UNCHANGED,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 23:18:20.291
+S3c.B32,PASS,B3: lease released,FREE,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 23:18:21.958
+S3c.B33,PASS,B3: FAILED event: stage and failure class,build / transform,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 23:18:24.712
+S3c.B34,INFO,B3: FAILED event: STDOUT tail (does it name the model that failed?),"m16:18:11.605294 [debug] [Thread-6 (]: SQL status: SUCCESS 1 in 0.693 seconds
+[0m16:18:11.607739 [info ] [Thread-6 (]: 13 of 13 PASS unique_erp_accounts_account_id ................................... [[32mPASS[0m in 0.73s]
+[0m16:18:11.608826 [debug] [Thread-6 (]: Finished running node test.silver.unique_erp_accounts_account_id.4b63f8274c
+[0m16:18:11.612803 [debug] [Dummy-2   ]: Connection 'master' was properly closed.
+[0m16:18:11.613586 [debug] [Dummy-2   ]: Connection 'model.silver.erp_accounts' was properly closed.
+[0m16:18:11.614363 [debug] [Dummy-2   ]: Connection 'test.silver.not_null_erp_accounts_account_id.2679d63812' was properly closed.
+[0m16:18:11.615028 [debug] [Dummy-2   ]: Connection 'model.silver.stg_erp__orders' was properly closed.
+[0m16:18:11.615707 [debug] [Dummy-2   ]: Connection 'test.silver.unique_erp_accounts_account_id.4b63f8274c' was properly closed.
+[0m16:18:11.616526 [info ] [Dummy-2   ]: 
+[0m16:18:11.617312 [info ] [Dummy-2   ]: Finished running 1 incremental model, 1 table model, 9 data tests, 2 view models in 0 hours 0 minutes and 6.12 seconds (6.12s).
+[0m16:18:11.619310 [debug] [Dummy-2   ]: Command end result
+[0m16:18:11.662423 [debug] [Dummy-2   ]: Wrote artifact WritableManifest to /tmp/dbt/target/erp/manifest.json
+[0m16:18:11.665707 [debug] [Dummy-2   ]: Wrote artifact SemanticManifest to /tmp/dbt/target/erp/semantic_manifest.json
+[0m16:18:11.668624 [debug] [Dummy-2   ]: Wrote artifact OsiDocument to /tmp/dbt/target/erp/osi_doc",SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 23:18:26.334
+S3c.B35,PASS,B3: after the column is restored and a new batch lands: recovers,PUBLISHED,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 23:19:25.153
+S3c.90,PASS,"FAILED events: stage / class / dbt log fetched (latest three, oldest first)",build / source / true | freeze / source / true | build / transform / true,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 23:19:28.382

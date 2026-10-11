@@ -556,7 +556,7 @@ Alternatives for the Silver Layer's internal mechanisms are recorded in SLD Sect
 
 ## Appendix A. Validation Status (v1.4)
 
-Version 1.3 was validated by spikes on a Snowflake Enterprise trial account (Azure Australia East, dbt Core 1.12.3). Evidence, scripts and write-ups are in the `dbt-spikes-2026` repository (`docs/spike-log.md`, `spikes/`, `evidence/`). The full list of changes is in `CHANGES-v1.4.md`; the per-spike table is in SLD Section 14.
+Version 1.3 was validated by spikes on a Snowflake Enterprise trial account (Azure Australia East, dbt Core 1.12.3). Evidence, scripts and write-ups are in the `dbt-spikes-2026` repository (`docs/spike-log.md`, `spikes/`, `evidence/`), snapshot in `reference/spikes/` of the LLD repository. The full list of changes is in `CHANGES-v1.4.md`; the per-spike table is in SLD Section 14.
 
 | Design claim | Result |
 |---|---|

@@ -2,7 +2,7 @@
 
 A working prototype of the Low Level Design (`docs/lld/`), built on the trial account in **increments**. Each increment is a small piece of working value that can be demonstrated, tested and discussed on its own, and is reviewed as one pull request.
 
-The approach and its guardrails are in `docs/lld/README.md` ("Approach"). In short: the code implements decided designs and names the decision ids; spike scripts (`setup/`, `spikes/`) stay untouched as evidence; observations are recorded with the spike evidence convention; trial-account shortcuts are listed below, not absorbed.
+The approach and its guardrails are in `docs/lld/README.md` ("Approach"). In short: the code implements decided designs and names the decision ids; spike scripts (`reference/spikes/`) stay untouched as evidence; observations are recorded with the spike evidence convention; trial-account shortcuts are listed below, not absorbed.
 
 ## Layout
 
@@ -10,7 +10,8 @@ Scripts are organised by LLD component, and numbered `i<increment>_<step>` so th
 
 ```
 prototype/
-  00_teardown_spikes.sql      Increment 0: remove the spike objects
+  00_lab_foundation.sql       Increment 0: lab scaffolding (warehouse, cost guard, evidence store, PROBE, RECORD)
+  00_teardown_spikes.sql      Increment 0: remove the spike objects (trial account only)
   01_identity/                Component 1: roles, provisioning
   06_run_control/             Component 6: run-control tables and procedures
   10_external/                Component 10: the simulated platform landing (raw)
@@ -23,7 +24,7 @@ Further component folders (`02_governance/`, `05_publication/`, ...) appear with
 
 | # | Increment | Value demonstrated | Verifies | Status |
 |---|---|---|---|---|
-| 0 | Clean slate | The spike objects are gone; evidence, warehouse and Git objects kept | | Scripts ready |
+| 0 | Clean slate | The spike objects are gone; evidence, warehouse and Git objects kept; the lab scaffolding is defined in this repository | | Scripts ready |
 | 1 | **Unit onboarding** | Stewards onboard and retire Silver units themselves: a role per unit, reader roles, a sensitive source kept out of the aggregate reader, refusals for bad input | V-IA-9; IA-1, IA-3 | Scripts ready |
 | 2 | First publication under the new roles | ERP lands, freezes, builds and publishes through the publish procedure, run by its own task; a consumer reads it through the reader database role | V-IA-1, V-IA-7 | Planned |
 | 3 | Consistent reads through the clone procedure | Core builds from input clones taken by `SILVER_CLONER`, reading upstream published objects only | V-IA-2, V-IA-3; IA-2 | Planned |
@@ -40,7 +41,8 @@ As with the spikes, scripts run in Snowsight worksheets (or any client that supp
 
 | Step | Script | Runs as |
 |---|---|---|
-| 0 | `00_teardown_spikes.sql` (edit `v_confirm` to `YES`) | `ACCOUNTADMIN` |
+| 0.a | `00_teardown_spikes.sql` (edit `v_confirm` to `YES`); trial account only, skip on a new account | `ACCOUNTADMIN` |
+| 0.b | `00_lab_foundation.sql`; on a new account, run it first | `SYSADMIN`, `ACCOUNTADMIN` (switches itself) |
 | 1.10 | `01_identity/i1_10_foundation.sql` | `USERADMIN`, `SECURITYADMIN`, `ACCOUNTADMIN`, `SYSADMIN`, `SILVER_PROVISIONER` (switches itself) |
 | 1.20 | `10_external/i1_20_platform_raw.sql` | `PLATFORM_INGEST` |
 | 1.30 | `06_run_control/i1_30_control_tables.sql` | `SILVER_STEWARD` |
@@ -60,5 +62,5 @@ Recorded so the production build replaces each one deliberately (guardrail 5).
 | T3 | One warehouse, `SPIKE_WH`, for every role | `i1_10` | Warehouses per OC-1 |
 | T4 | Git access through a personal access token kept from the spikes | Increment 2 | CD-3 |
 | T5 | One account holds what will be several environments | everywhere | EN-1 |
-| T6 | Evidence store and probe procedures in `SPIKE_LAB` | everywhere | Not needed in production; CI tests take their place |
+| T6 | Evidence store and probe procedures in `SPIKE_LAB` | `00_lab_foundation.sql`, everywhere | Not needed in production; CI tests take their place |
 | T7 | Raw landing simulated by the prototype | `10_external/` | The platform team's landing (EX-1) |

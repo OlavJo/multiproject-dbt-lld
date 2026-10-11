@@ -1,0 +1,47 @@
+name: silver
+version: "0.1.0"
+config-version: 2
+profile: silver
+
+model-paths: ["models"]
+macro-paths: ["macros"]
+test-paths: ["tests"]
+snapshot-paths: ["snapshots"]
+
+# One project, one folder per source system (SLD 5.1). The custom schema of a
+# model names its publication unit; generate_schema_name turns it into the
+# published schema or, for the unit being published, its __build schema.
+models:
+  silver:
+    erp:
+      +schema: erp
+      +materialized: view
+      +transient: true
+    crm:
+      +schema: crm
+      +materialized: view
+      +transient: true
+    s4:
+      +schema: s4
+      +materialized: view
+      +transient: true
+    core:
+      +schema: core
+      +materialized: table
+      +transient: true
+
+# A tag on every model of a unit lets one selector pick the unit (selectors.yml)
+vars:
+  # Set per execution: --vars '{publish_unit: erp}'. Unset means "no unit is
+  # being built": every relation resolves to its published schema.
+  publish_unit: null
+  # Control database used by the sources' freshness query
+  ops_database: analytics_ops
+  # Spike S10: units that read other Silver units' published schemas read zero-copy clones of them
+  # taken at the gate (SLD 10.9): while <unit> is published, a reference to an upstream unit resolves
+  # to <unit>__in_<upstream> (macros/unit_schemas.sql)
+  input_clones:
+    core: [erp, crm]
+  # Spike S10: a pause between the two reads of upstream data in the core unit, so that an upstream
+  # publication can land between them
+  core_wait_seconds: 70

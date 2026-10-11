@@ -1,0 +1,9 @@
+CASE_ID,OUTCOME,DESCRIPTION,OBSERVED,ROLE_NAME,SECONDARY_ROLES,OBSERVED_AT
+S8d.01,PASS,Redeploy the project object while the ERP run is in progress,SILVER_LAYER successfully created.,SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-07 00:06:11.612
+S8d.02,INFO,Timeline of the run (events since the start),silver.erp STARTED 00:05:20.0 | silver.erp PUBLISHED 00:06:11.5,SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-07 00:07:49.556
+S8d.03,INFO,"Outcome of the run in progress (PUBLISHED, or the failure text)",PUBLISHED,SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-07 00:07:52.020
+S8d.04,INFO,Task run of the ERP task: state and error,SUCCEEDED | -,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-07 00:07:54.851
+S8d.05,PASS,Lease released after the run,FREE,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-07 00:07:57.286
+S8d.06,PASS,A new batch publishes on the redeployed object,SKIPPED:nothing_new,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-07 00:08:01.953
+S8d.07,PASS,After a new batch: publishes on the redeployed object,PUBLISHED,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-07 00:09:02.628
+S8d.08,INFO,Last successful run target after the redeploy and the new publication,snow://dbt/SILVER.OPS.SILVER_LAYER/results/query_id_01c78f28-0004-216f-0003-5b0a000524fe/target/,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-07 00:09:05.467

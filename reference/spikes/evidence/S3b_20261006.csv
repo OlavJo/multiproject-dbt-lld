@@ -1,0 +1,21 @@
+CASE_ID,OUTCOME,DESCRIPTION,OBSERVED,ROLE_NAME,SECONDARY_ROLES,OBSERVED_AT
+S3.B20,PASS,B2: a raw table is missing: the procedure reports the freeze failure,FAILED:freeze,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 23:05:40.828
+S3.B21,PASS,B2: published data unchanged,UNCHANGED,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 23:05:43.493
+S3.B22,PASS,B2: lease released,FREE,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 23:05:46.842
+S3.B23,INFO,B2: FAILED event: stage and failure class,freeze / source,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 23:05:49.354
+S3.B24,INFO,B2: FAILED event: exception text and STDOUT tail,"DBT job failed: 1 macro(s) failed out of 1 total (total time: 2.62s)
+First error in macro 'freeze_sources': Database Error
+  002003 (42S02): SQL compilation error:
+  Object 'RAW.ERP.ORDERS' does not exist or not authorized. Your primary role SVC_SILVER_ERP must have at least one privilege granted on TABLE RAW.ERP.ORDERS.. 
+Context: DBT 1.12.3, Command: dbt run-operation.
+ Run select system$get_dbt_log('01c78ee9-0004-216f-0003-5b0a0005051a') for more details. | <null>",SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 23:05:52.133
+S3.B25,PASS,B2: after the table is restored and a new batch lands: recovers,PUBLISHED,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 23:06:53.486
+S3.B30,PASS,B3: a raw column is renamed: the procedure reports the build failure,FAILED:build,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 23:07:36.341
+S3.B31,PASS,B3: published data unchanged,UNCHANGED,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 23:07:40.246
+S3.B32,PASS,B3: lease released,FREE,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 23:07:42.371
+S3.B33,INFO,B3: FAILED event: stage and failure class,build / unclassified,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 23:07:44.028
+S3.B34,INFO,B3: FAILED event: STDOUT tail (does it name the model that failed?),<NULL>,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 23:07:45.901
+S3.B35,PASS,B3: after the column is restored and a new batch lands: recovers,PUBLISHED,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 23:08:43.929
+S3.B40,INFO,Run control: events of the three failed runs and the recoveries,"SKIPPED:nothing_new, STARTED:, PUBLISHED:, SKIPPED:locked, SKIPPED:stale_upstream, STARTED:, PUBLISHED:, STARTED:, PUBLISHED:, DEPLOYED:, STARTED:, PUBLISHED:, STARTED:, FAILED:build, STARTED:, PUBLISHED:, STARTED:, FAILED:freeze, STARTED:, PUBLISHED:, STARTED:, FAILED:build, STARTED:, PUBLISHED:",SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 23:08:48.067
+S3.B41,FAIL,Run control: no stale STARTED after the failures,"ERROR: SQL compilation error:
+Object 'ANALYTICS_OPS.CONTROL.UNIT_STALE' does not exist or not authorized. Your primary role SVC_SILVER_ERP must have at least one privilege granted on TABLE ANALYTICS_OPS.CONTROL.UNIT_STALE.",SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 23:08:49.569

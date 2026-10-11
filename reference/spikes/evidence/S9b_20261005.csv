@@ -1,0 +1,407 @@
+CASE_ID,OUTCOME,DESCRIPTION,OBSERVED,EXPECTED,ROLE_NAME,OBSERVED_AT,DETAIL
+S9b.11a,INFO,Tags on t1_incremental (immediately),PHONE=PII_AUTO:phone,,SVC_SILVER_ERP,2026-10-05 05:20:32.423,"[
+  {
+    ""APPLY_METHOD"": ""PROPAGATED"",
+    ""COLUMN_NAME"": ""PHONE"",
+    ""DOMAIN"": ""COLUMN"",
+    ""LEVEL"": ""COLUMN"",
+    ""OBJECT_DATABASE"": ""SILVER"",
+    ""OBJECT_NAME"": ""T1_INCREMENTAL"",
+    ""OBJECT_SCHEMA"": ""S9B"",
+    ""TAG_DATABASE"": ""GOVERNANCE"",
+    ""TAG_NAME"": ""PII_AUTO"",
+    ""TAG_SCHEMA"": ""POLICIES"",
+    ""TAG_VALUE"": ""phone""
+  }
+]"
+S9b.11b,INFO,Tags on t1_incremental (after 10 s),PHONE=PII_AUTO:phone,,SVC_SILVER_ERP,2026-10-05 05:20:45.164,"[
+  {
+    ""APPLY_METHOD"": ""PROPAGATED"",
+    ""COLUMN_NAME"": ""PHONE"",
+    ""DOMAIN"": ""COLUMN"",
+    ""LEVEL"": ""COLUMN"",
+    ""OBJECT_DATABASE"": ""SILVER"",
+    ""OBJECT_NAME"": ""T1_INCREMENTAL"",
+    ""OBJECT_SCHEMA"": ""S9B"",
+    ""TAG_DATABASE"": ""GOVERNANCE"",
+    ""TAG_NAME"": ""PII_AUTO"",
+    ""TAG_SCHEMA"": ""POLICIES"",
+    ""TAG_VALUE"": ""phone""
+  }
+]"
+S9b.12a,INFO,Tags on t1b_incremental_ddl (immediately),PHONE=PII_AUTO:phone,,SVC_SILVER_ERP,2026-10-05 05:20:32.423,"[
+  {
+    ""APPLY_METHOD"": ""PROPAGATED"",
+    ""COLUMN_NAME"": ""PHONE"",
+    ""DOMAIN"": ""COLUMN"",
+    ""LEVEL"": ""COLUMN"",
+    ""OBJECT_DATABASE"": ""SILVER"",
+    ""OBJECT_NAME"": ""T1B_INCREMENTAL_DDL"",
+    ""OBJECT_SCHEMA"": ""S9B"",
+    ""TAG_DATABASE"": ""GOVERNANCE"",
+    ""TAG_NAME"": ""PII_AUTO"",
+    ""TAG_SCHEMA"": ""POLICIES"",
+    ""TAG_VALUE"": ""phone""
+  }
+]"
+S9b.12b,INFO,Tags on t1b_incremental_ddl (after 10 s),PHONE=PII_AUTO:phone,,SVC_SILVER_ERP,2026-10-05 05:20:45.164,"[
+  {
+    ""APPLY_METHOD"": ""PROPAGATED"",
+    ""COLUMN_NAME"": ""PHONE"",
+    ""DOMAIN"": ""COLUMN"",
+    ""LEVEL"": ""COLUMN"",
+    ""OBJECT_DATABASE"": ""SILVER"",
+    ""OBJECT_NAME"": ""T1B_INCREMENTAL_DDL"",
+    ""OBJECT_SCHEMA"": ""S9B"",
+    ""TAG_DATABASE"": ""GOVERNANCE"",
+    ""TAG_NAME"": ""PII_AUTO"",
+    ""TAG_SCHEMA"": ""POLICIES"",
+    ""TAG_VALUE"": ""phone""
+  }
+]"
+S9b.13a,INFO,Tags on t2_insert (immediately),PHONE=PII_AUTO:phone,,SVC_SILVER_ERP,2026-10-05 05:20:32.423,"[
+  {
+    ""APPLY_METHOD"": ""PROPAGATED"",
+    ""COLUMN_NAME"": ""PHONE"",
+    ""DOMAIN"": ""COLUMN"",
+    ""LEVEL"": ""COLUMN"",
+    ""OBJECT_DATABASE"": ""SILVER"",
+    ""OBJECT_NAME"": ""T2_INSERT"",
+    ""OBJECT_SCHEMA"": ""S9B"",
+    ""TAG_DATABASE"": ""GOVERNANCE"",
+    ""TAG_NAME"": ""PII_AUTO"",
+    ""TAG_SCHEMA"": ""POLICIES"",
+    ""TAG_VALUE"": ""phone""
+  }
+]"
+S9b.13b,INFO,Tags on t2_insert (after 10 s),PHONE=PII_AUTO:phone,,SVC_SILVER_ERP,2026-10-05 05:20:45.164,"[
+  {
+    ""APPLY_METHOD"": ""PROPAGATED"",
+    ""COLUMN_NAME"": ""PHONE"",
+    ""DOMAIN"": ""COLUMN"",
+    ""LEVEL"": ""COLUMN"",
+    ""OBJECT_DATABASE"": ""SILVER"",
+    ""OBJECT_NAME"": ""T2_INSERT"",
+    ""OBJECT_SCHEMA"": ""S9B"",
+    ""TAG_DATABASE"": ""GOVERNANCE"",
+    ""TAG_NAME"": ""PII_AUTO"",
+    ""TAG_SCHEMA"": ""POLICIES"",
+    ""TAG_VALUE"": ""phone""
+  }
+]"
+S9b.14a,INFO,Tags on t3_expr (immediately),PHONE_COALESCE=PII_AUTO:phone; PHONE_CONCAT_LITERAL=PII_AUTO:phone; PHONE_LENGTH=PII_AUTO:phone; PHONE_LOWER=PII_AUTO:phone; PHONE_PREFIX=PII_AUTO:phone; PHONE_SHA2=PII_AUTO:phone,,SVC_SILVER_ERP,2026-10-05 05:20:32.423,"[
+  {
+    ""APPLY_METHOD"": ""PROPAGATED"",
+    ""COLUMN_NAME"": ""PHONE_LOWER"",
+    ""DOMAIN"": ""COLUMN"",
+    ""LEVEL"": ""COLUMN"",
+    ""OBJECT_DATABASE"": ""SILVER"",
+    ""OBJECT_NAME"": ""T3_EXPR"",
+    ""OBJECT_SCHEMA"": ""S9B"",
+    ""TAG_DATABASE"": ""GOVERNANCE"",
+    ""TAG_NAME"": ""PII_AUTO"",
+    ""TAG_SCHEMA"": ""POLICIES"",
+    ""TAG_VALUE"": ""phone""
+  },
+  {
+    ""APPLY_METHOD"": ""PROPAGATED"",
+    ""COLUMN_NAME"": ""PHONE_SHA2"",
+    ""DOMAIN"": ""COLUMN"",
+    ""LEVEL"": ""COLUMN"",
+    ""OBJECT_DATABASE"": ""SILVER"",
+    ""OBJECT_NAME"": ""T3_EXPR"",
+    ""OBJECT_SCHEMA"": ""S9B"",
+    ""TAG_DATABASE"": ""GOVERNANCE"",
+    ""TAG_NAME"": ""PII_AUTO"",
+    ""TAG_SCHEMA"": ""POLICIES"",
+    ""TAG_VALUE"": ""phone""
+  },
+  {
+    ""APPLY_METHOD"": ""PROPAGATED"",
+    ""COLUMN_NAME"": ""PHONE_PREFIX"",
+    ""DOMAIN"": ""COLUMN"",
+    ""LEVEL"": ""COLUMN"",
+    ""OBJECT_DATABASE"": ""SILVER"",
+    ""OBJECT_NAME"": ""T3_EXPR"",
+    ""OBJECT_SCHEMA"": ""S9B"",
+    ""TAG_DATABASE"": ""GOVERNANCE"",
+    ""TAG_NAME"": ""PII_AUTO"",
+    ""TAG_SCHEMA"": ""POLICIES"",
+    ""TAG_VALUE"": ""phone""
+  },
+  {
+    ""APPLY_METHOD"": ""PROPAGATED"",
+    ""COLUMN_NAME"": ""PHONE_LENGTH"",
+    ""DOMAIN"": ""COLUMN"",
+    ""LEVEL"": ""COLUMN"",
+    ""OBJECT_DATABASE"": ""SILVER"",
+    ""OBJECT_NAME"": ""T3_EXPR"",
+    ""OBJECT_SCHEMA"": ""S9B"",
+    ""TAG_DATABASE"": ""GOVERNANCE"",
+    ""TAG_NAME"": ""PII_AUTO"",
+    ""TAG_SCHEMA"": ""POLICIES"",
+    ""TAG_VALUE"": ""phone""
+  },
+  {
+    ""APPLY_METHOD"": ""PROPAGATED"",
+    ""COLUMN_NAME"": ""PHONE_COALESCE"",
+    ""DOMAIN"": ""COLUMN"",
+    ""LEVEL"": ""COLUMN"",
+    ""OBJECT_DATABASE"": ""SILVER"",
+    ""OBJECT_NAME"": ""T3_EXPR"",
+    ""OBJECT_SCHEMA"": ""S9B"",
+    ""TAG_DATABASE"": ""GOVERNANCE"",
+    ""TAG_NAME"": ""PII_AUTO"",
+    ""TAG_SCHEMA"": ""POLICIES"",
+    ""TAG_VALUE"": ""phone""
+  },
+  {
+    ""APPLY_METHOD"": ""PROPAGATED"",
+    ""COLUMN_NAME"": ""PHONE_CONCAT_LITERAL"",
+    ""DOMAIN"": ""COLUMN"",
+    ""LEVEL"": ""COLUMN"",
+    ""OBJECT_DATABASE"": ""SILVER"",
+    ""OBJECT_NAME"": ""T3_EXPR"",
+    ""OBJECT_SCHEMA"": ""S9B"",
+    ""TAG_DATABASE"": ""GOVERNANCE"",
+    ""TAG_NAME"": ""PII_AUTO"",
+    ""TAG_SCHEMA"": ""POLICIES"",
+    ""TAG_VALUE"": ""phone""
+  }
+]"
+S9b.14b,INFO,Tags on t3_expr (after 10 s),PHONE_COALESCE=PII_AUTO:phone; PHONE_CONCAT_LITERAL=PII_AUTO:phone; PHONE_LENGTH=PII_AUTO:phone; PHONE_LOWER=PII_AUTO:phone; PHONE_PREFIX=PII_AUTO:phone; PHONE_SHA2=PII_AUTO:phone,,SVC_SILVER_ERP,2026-10-05 05:20:45.164,"[
+  {
+    ""APPLY_METHOD"": ""PROPAGATED"",
+    ""COLUMN_NAME"": ""PHONE_LOWER"",
+    ""DOMAIN"": ""COLUMN"",
+    ""LEVEL"": ""COLUMN"",
+    ""OBJECT_DATABASE"": ""SILVER"",
+    ""OBJECT_NAME"": ""T3_EXPR"",
+    ""OBJECT_SCHEMA"": ""S9B"",
+    ""TAG_DATABASE"": ""GOVERNANCE"",
+    ""TAG_NAME"": ""PII_AUTO"",
+    ""TAG_SCHEMA"": ""POLICIES"",
+    ""TAG_VALUE"": ""phone""
+  },
+  {
+    ""APPLY_METHOD"": ""PROPAGATED"",
+    ""COLUMN_NAME"": ""PHONE_SHA2"",
+    ""DOMAIN"": ""COLUMN"",
+    ""LEVEL"": ""COLUMN"",
+    ""OBJECT_DATABASE"": ""SILVER"",
+    ""OBJECT_NAME"": ""T3_EXPR"",
+    ""OBJECT_SCHEMA"": ""S9B"",
+    ""TAG_DATABASE"": ""GOVERNANCE"",
+    ""TAG_NAME"": ""PII_AUTO"",
+    ""TAG_SCHEMA"": ""POLICIES"",
+    ""TAG_VALUE"": ""phone""
+  },
+  {
+    ""APPLY_METHOD"": ""PROPAGATED"",
+    ""COLUMN_NAME"": ""PHONE_PREFIX"",
+    ""DOMAIN"": ""COLUMN"",
+    ""LEVEL"": ""COLUMN"",
+    ""OBJECT_DATABASE"": ""SILVER"",
+    ""OBJECT_NAME"": ""T3_EXPR"",
+    ""OBJECT_SCHEMA"": ""S9B"",
+    ""TAG_DATABASE"": ""GOVERNANCE"",
+    ""TAG_NAME"": ""PII_AUTO"",
+    ""TAG_SCHEMA"": ""POLICIES"",
+    ""TAG_VALUE"": ""phone""
+  },
+  {
+    ""APPLY_METHOD"": ""PROPAGATED"",
+    ""COLUMN_NAME"": ""PHONE_LENGTH"",
+    ""DOMAIN"": ""COLUMN"",
+    ""LEVEL"": ""COLUMN"",
+    ""OBJECT_DATABASE"": ""SILVER"",
+    ""OBJECT_NAME"": ""T3_EXPR"",
+    ""OBJECT_SCHEMA"": ""S9B"",
+    ""TAG_DATABASE"": ""GOVERNANCE"",
+    ""TAG_NAME"": ""PII_AUTO"",
+    ""TAG_SCHEMA"": ""POLICIES"",
+    ""TAG_VALUE"": ""phone""
+  },
+  {
+    ""APPLY_METHOD"": ""PROPAGATED"",
+    ""COLUMN_NAME"": ""PHONE_COALESCE"",
+    ""DOMAIN"": ""COLUMN"",
+    ""LEVEL"": ""COLUMN"",
+    ""OBJECT_DATABASE"": ""SILVER"",
+    ""OBJECT_NAME"": ""T3_EXPR"",
+    ""OBJECT_SCHEMA"": ""S9B"",
+    ""TAG_DATABASE"": ""GOVERNANCE"",
+    ""TAG_NAME"": ""PII_AUTO"",
+    ""TAG_SCHEMA"": ""POLICIES"",
+    ""TAG_VALUE"": ""phone""
+  },
+  {
+    ""APPLY_METHOD"": ""PROPAGATED"",
+    ""COLUMN_NAME"": ""PHONE_CONCAT_LITERAL"",
+    ""DOMAIN"": ""COLUMN"",
+    ""LEVEL"": ""COLUMN"",
+    ""OBJECT_DATABASE"": ""SILVER"",
+    ""OBJECT_NAME"": ""T3_EXPR"",
+    ""OBJECT_SCHEMA"": ""S9B"",
+    ""TAG_DATABASE"": ""GOVERNANCE"",
+    ""TAG_NAME"": ""PII_AUTO"",
+    ""TAG_SCHEMA"": ""POLICIES"",
+    ""TAG_VALUE"": ""phone""
+  }
+]"
+S9b.15a,INFO,Tags on t4_join (immediately),ALT_PHONE=PII_AUTO:alt_phone; PHONE=PII_AUTO:phone,,SVC_SILVER_ERP,2026-10-05 05:20:32.423,"[
+  {
+    ""APPLY_METHOD"": ""PROPAGATED"",
+    ""COLUMN_NAME"": ""ALT_PHONE"",
+    ""DOMAIN"": ""COLUMN"",
+    ""LEVEL"": ""COLUMN"",
+    ""OBJECT_DATABASE"": ""SILVER"",
+    ""OBJECT_NAME"": ""T4_JOIN"",
+    ""OBJECT_SCHEMA"": ""S9B"",
+    ""TAG_DATABASE"": ""GOVERNANCE"",
+    ""TAG_NAME"": ""PII_AUTO"",
+    ""TAG_SCHEMA"": ""POLICIES"",
+    ""TAG_VALUE"": ""alt_phone""
+  },
+  {
+    ""APPLY_METHOD"": ""PROPAGATED"",
+    ""COLUMN_NAME"": ""PHONE"",
+    ""DOMAIN"": ""COLUMN"",
+    ""LEVEL"": ""COLUMN"",
+    ""OBJECT_DATABASE"": ""SILVER"",
+    ""OBJECT_NAME"": ""T4_JOIN"",
+    ""OBJECT_SCHEMA"": ""S9B"",
+    ""TAG_DATABASE"": ""GOVERNANCE"",
+    ""TAG_NAME"": ""PII_AUTO"",
+    ""TAG_SCHEMA"": ""POLICIES"",
+    ""TAG_VALUE"": ""phone""
+  }
+]"
+S9b.15b,INFO,Tags on t4_join (after 10 s),ALT_PHONE=PII_AUTO:alt_phone; PHONE=PII_AUTO:phone,,SVC_SILVER_ERP,2026-10-05 05:20:45.164,"[
+  {
+    ""APPLY_METHOD"": ""PROPAGATED"",
+    ""COLUMN_NAME"": ""ALT_PHONE"",
+    ""DOMAIN"": ""COLUMN"",
+    ""LEVEL"": ""COLUMN"",
+    ""OBJECT_DATABASE"": ""SILVER"",
+    ""OBJECT_NAME"": ""T4_JOIN"",
+    ""OBJECT_SCHEMA"": ""S9B"",
+    ""TAG_DATABASE"": ""GOVERNANCE"",
+    ""TAG_NAME"": ""PII_AUTO"",
+    ""TAG_SCHEMA"": ""POLICIES"",
+    ""TAG_VALUE"": ""alt_phone""
+  },
+  {
+    ""APPLY_METHOD"": ""PROPAGATED"",
+    ""COLUMN_NAME"": ""PHONE"",
+    ""DOMAIN"": ""COLUMN"",
+    ""LEVEL"": ""COLUMN"",
+    ""OBJECT_DATABASE"": ""SILVER"",
+    ""OBJECT_NAME"": ""T4_JOIN"",
+    ""OBJECT_SCHEMA"": ""S9B"",
+    ""TAG_DATABASE"": ""GOVERNANCE"",
+    ""TAG_NAME"": ""PII_AUTO"",
+    ""TAG_SCHEMA"": ""POLICIES"",
+    ""TAG_VALUE"": ""phone""
+  }
+]"
+S9b.16a,INFO,Tags on t5_conflict (immediately),BOTH_PHONES=PII_AUTO:CONFLICT,,SVC_SILVER_ERP,2026-10-05 05:20:32.423,"[
+  {
+    ""APPLY_METHOD"": ""PROPAGATED"",
+    ""COLUMN_NAME"": ""BOTH_PHONES"",
+    ""DOMAIN"": ""COLUMN"",
+    ""LEVEL"": ""COLUMN"",
+    ""OBJECT_DATABASE"": ""SILVER"",
+    ""OBJECT_NAME"": ""T5_CONFLICT"",
+    ""OBJECT_SCHEMA"": ""S9B"",
+    ""TAG_DATABASE"": ""GOVERNANCE"",
+    ""TAG_NAME"": ""PII_AUTO"",
+    ""TAG_SCHEMA"": ""POLICIES"",
+    ""TAG_VALUE"": ""CONFLICT""
+  }
+]"
+S9b.16b,INFO,Tags on t5_conflict (after 10 s),BOTH_PHONES=PII_AUTO:CONFLICT,,SVC_SILVER_ERP,2026-10-05 05:20:45.164,"[
+  {
+    ""APPLY_METHOD"": ""PROPAGATED"",
+    ""COLUMN_NAME"": ""BOTH_PHONES"",
+    ""DOMAIN"": ""COLUMN"",
+    ""LEVEL"": ""COLUMN"",
+    ""OBJECT_DATABASE"": ""SILVER"",
+    ""OBJECT_NAME"": ""T5_CONFLICT"",
+    ""OBJECT_SCHEMA"": ""S9B"",
+    ""TAG_DATABASE"": ""GOVERNANCE"",
+    ""TAG_NAME"": ""PII_AUTO"",
+    ""TAG_SCHEMA"": ""POLICIES"",
+    ""TAG_VALUE"": ""CONFLICT""
+  }
+]"
+S9b.17a,INFO,Tags on t6_agg (immediately),PHONE_COUNT=PII_AUTO:phone; PHONE_MAX=PII_AUTO:phone,,SVC_SILVER_ERP,2026-10-05 05:20:32.423,"[
+  {
+    ""APPLY_METHOD"": ""PROPAGATED"",
+    ""COLUMN_NAME"": ""PHONE_COUNT"",
+    ""DOMAIN"": ""COLUMN"",
+    ""LEVEL"": ""COLUMN"",
+    ""OBJECT_DATABASE"": ""SILVER"",
+    ""OBJECT_NAME"": ""T6_AGG"",
+    ""OBJECT_SCHEMA"": ""S9B"",
+    ""TAG_DATABASE"": ""GOVERNANCE"",
+    ""TAG_NAME"": ""PII_AUTO"",
+    ""TAG_SCHEMA"": ""POLICIES"",
+    ""TAG_VALUE"": ""phone""
+  },
+  {
+    ""APPLY_METHOD"": ""PROPAGATED"",
+    ""COLUMN_NAME"": ""PHONE_MAX"",
+    ""DOMAIN"": ""COLUMN"",
+    ""LEVEL"": ""COLUMN"",
+    ""OBJECT_DATABASE"": ""SILVER"",
+    ""OBJECT_NAME"": ""T6_AGG"",
+    ""OBJECT_SCHEMA"": ""S9B"",
+    ""TAG_DATABASE"": ""GOVERNANCE"",
+    ""TAG_NAME"": ""PII_AUTO"",
+    ""TAG_SCHEMA"": ""POLICIES"",
+    ""TAG_VALUE"": ""phone""
+  }
+]"
+S9b.17b,INFO,Tags on t6_agg (after 10 s),PHONE_COUNT=PII_AUTO:phone; PHONE_MAX=PII_AUTO:phone,,SVC_SILVER_ERP,2026-10-05 05:20:45.164,"[
+  {
+    ""APPLY_METHOD"": ""PROPAGATED"",
+    ""COLUMN_NAME"": ""PHONE_COUNT"",
+    ""DOMAIN"": ""COLUMN"",
+    ""LEVEL"": ""COLUMN"",
+    ""OBJECT_DATABASE"": ""SILVER"",
+    ""OBJECT_NAME"": ""T6_AGG"",
+    ""OBJECT_SCHEMA"": ""S9B"",
+    ""TAG_DATABASE"": ""GOVERNANCE"",
+    ""TAG_NAME"": ""PII_AUTO"",
+    ""TAG_SCHEMA"": ""POLICIES"",
+    ""TAG_VALUE"": ""phone""
+  },
+  {
+    ""APPLY_METHOD"": ""PROPAGATED"",
+    ""COLUMN_NAME"": ""PHONE_MAX"",
+    ""DOMAIN"": ""COLUMN"",
+    ""LEVEL"": ""COLUMN"",
+    ""OBJECT_DATABASE"": ""SILVER"",
+    ""OBJECT_NAME"": ""T6_AGG"",
+    ""OBJECT_SCHEMA"": ""S9B"",
+    ""TAG_DATABASE"": ""GOVERNANCE"",
+    ""TAG_NAME"": ""PII_AUTO"",
+    ""TAG_SCHEMA"": ""POLICIES"",
+    ""TAG_VALUE"": ""phone""
+  }
+]"
+S9b.20,PASS,T1: phone after incremental MERGE inserts (row 2),***MASKED***,***MASKED***,ANALYST_TIER1,2026-10-05 05:20:50.848,
+S9b.21,PASS,T1: phone after incremental MERGE update (row 1),***MASKED***,***MASKED***,ANALYST_TIER1,2026-10-05 05:20:53.204,
+S9b.22,PASS,T1b: phone after MERGE into a DDL-created table,***MASKED***,***MASKED***,ANALYST_TIER1,2026-10-05 05:20:54.989,
+S9b.23,PASS,T2: phone after INSERT ... SELECT,***MASKED***,***MASKED***,ANALYST_TIER1,2026-10-05 05:20:56.378,
+S9b.24,INFO,T3: lower(phone),***MASKED***,,ANALYST_TIER1,2026-10-05 05:20:58.486,
+S9b.25,INFO,T3: sha2(phone),***MASKED***,,ANALYST_TIER1,2026-10-05 05:20:59.615,
+S9b.26,INFO,"T3: left(phone, 4)",***MASKED***,,ANALYST_TIER1,2026-10-05 05:21:01.246,
+S9b.27,INFO,T3: length(phone) (numeric; the masking policy is for strings),14,,ANALYST_TIER1,2026-10-05 05:21:02.695,
+S9b.28,INFO,"T3: coalesce(phone, ...)",***MASKED***,,ANALYST_TIER1,2026-10-05 05:21:04.878,
+S9b.29,INFO,T3: 'x' || phone,***MASKED***,,ANALYST_TIER1,2026-10-05 05:21:06.439,
+S9b.30,PASS,T4: phone through a join,***MASKED***,***MASKED***,ANALYST_TIER1,2026-10-05 05:21:07.782,
+S9b.31,PASS,T4: alt_phone through a join,***MASKED***,***MASKED***,ANALYST_TIER1,2026-10-05 05:21:09.282,
+S9b.32,INFO,T5: column combining two differently tagged columns,***MASKED***,,ANALYST_TIER1,2026-10-05 05:21:10.846,
+S9b.33,INFO,T6: max(phone),***MASKED***,,ANALYST_TIER1,2026-10-05 05:21:12.610,

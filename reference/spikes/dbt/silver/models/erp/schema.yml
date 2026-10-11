@@ -1,0 +1,40 @@
+version: 2
+
+models:
+  - name: erp_orders_current
+    config:
+      contract: {enforced: true}
+    columns:
+      - name: order_id
+        data_type: number(38, 0)
+        data_tests: [unique, not_null]
+      - name: account_id
+        data_type: number(38, 0)
+      - name: status
+        data_type: varchar
+      - name: amount
+        data_type: number(18, 2)
+      - name: source_seq
+        data_type: number(38, 0)
+      - name: loaded_at
+        data_type: timestamp_ntz
+  - name: erp_accounts
+    columns:
+      - name: account_id
+        data_tests: [unique, not_null]
+      - name: account_name
+        data_tests:
+          # Failure injection for spike S3 (disabled unless the variable selects it):
+          # an output test at error severity, and one at warn severity, that cannot pass.
+          - accepted_values:
+              name: inj_output_test_error
+              arguments: {values: ['__never__']}
+              config:
+                severity: error
+                enabled: "{{ var('inject_failure', '') == 'output_test' }}"
+          - accepted_values:
+              name: inj_output_test_warn
+              arguments: {values: ['__never__']}
+              config:
+                severity: warn
+                enabled: "{{ var('inject_failure', '') == 'warn_test' }}"

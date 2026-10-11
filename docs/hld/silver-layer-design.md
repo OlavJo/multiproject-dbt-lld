@@ -857,7 +857,7 @@ A full refresh of a published Silver incremental is a coordinated event (Overvie
 
 ## 14. Spikes and Their Results
 
-The spikes were run on a Snowflake Enterprise trial account against a walking skeleton: three Source Entity units (ERP, CRM, S4 with CDC), the Core unit, the run-control schema, the publish procedure and the shared dbt project (dbt Core 1.12.3). Production volumes and anything needing a second account were out of scope. Evidence, scripts and write-ups are in the `dbt-spikes-2026` repository (`docs/spike-log.md`, `spikes/`, `evidence/`); `CHANGES-v1.4.md` maps each finding to the edits in this version.
+The spikes were run on a Snowflake Enterprise trial account against a walking skeleton: three Source Entity units (ERP, CRM, S4 with CDC), the Core unit, the run-control schema, the publish procedure and the shared dbt project (dbt Core 1.12.3). Production volumes and anything needing a second account were out of scope. Evidence, scripts and write-ups are in the `dbt-spikes-2026` repository (`docs/spike-log.md`, `spikes/`, `evidence/`), snapshot in `reference/spikes/` of the LLD repository; `CHANGES-v1.4.md` maps each finding to the edits in this version.
 
 |   | Spike | Result | Effect on this document |
 |---|---|---|---|

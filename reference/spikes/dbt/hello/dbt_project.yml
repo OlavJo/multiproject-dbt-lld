@@ -1,0 +1,10 @@
+name: hello
+version: "1.0.0"
+config-version: 2
+profile: hello
+
+model-paths: ["models"]
+
+models:
+  hello:
+    +materialized: table

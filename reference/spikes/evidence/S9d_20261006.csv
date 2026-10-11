@@ -1,0 +1,18 @@
+CASE_ID,OUTCOME,DESCRIPTION,OBSERVED,ROLE_NAME,SECONDARY_ROLES,OBSERVED_AT
+S9d.01,PASS,Baseline: propagated tag on t_set.phone,PHONE=PII_AUTO:phone,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 20:37:01.534
+S9d.02,PASS,Baseline: propagated tag on t_unset.phone,PHONE=PII_AUTO:phone,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 20:37:03.454
+S9d.10,INFO,Override by SET TAG value on a propagated tag,Statement executed successfully.,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 20:37:05.017
+S9d.11,INFO,Tag value on t_set.phone after the SET,PII_AUTO:reviewed:MANUAL,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 20:37:07.313
+S9d.20,INFO,Override by UNSET TAG on a propagated tag,Statement executed successfully.,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 20:37:09.473
+S9d.21,PASS,Tags on t_unset.phone after the UNSET (expected none),0,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 20:37:11.656
+S9d.22,INFO,Consumer reads t_unset.phone after UNSET (clear = declassified),+64 21 000 001,ANALYST_TIER1,"{""roles"":"""",""value"":""""}",2026-10-06 20:37:13.733
+S9d.30,INFO,After MERGE: tags on t_set.phone,PII_AUTO:reviewed:MANUAL,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 20:37:28.362
+S9d.31,INFO,After MERGE: tags on t_unset.phone (does propagation reapply?),1,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 20:37:29.655
+S9d.32,INFO,After MERGE: consumer reads t_set.phone,***MASKED***,ANALYST_TIER1,"{""roles"":"""",""value"":""""}",2026-10-06 20:37:33.284
+S9d.33,INFO,After MERGE: consumer reads t_unset.phone,***MASKED***,ANALYST_TIER1,"{""roles"":"""",""value"":""""}",2026-10-06 20:37:34.752
+S9d.40,INFO,After INSERT SELECT: tags on t_set.phone,PII_AUTO:reviewed:MANUAL,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 20:37:48.712
+S9d.41,INFO,After INSERT SELECT: tags on t_unset.phone,1,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 20:37:50.562
+S9d.50,INFO,Schema clone: tags on t_set.phone in the clone,PII_AUTO:reviewed:MANUAL,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 20:37:54.229
+S9d.51,INFO,Schema clone: tags on t_unset.phone in the clone,1,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 20:37:56.037
+S9d.60,INFO,After full-refresh CTAS: tags on t_set.phone (override lost?),PII_AUTO:phone:PROPAGATED,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 20:38:09.741
+S9d.61,INFO,After full-refresh CTAS: tags on t_unset.phone (override lost?),1,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 20:38:12.341

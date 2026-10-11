@@ -1,0 +1,53 @@
+CASE_ID,OUTCOME,DESCRIPTION,OBSERVED,ROLE_NAME,SECONDARY_ROLES,OBSERVED_AT
+S6b.00,INFO,"Q0, the canonical state recorded before the change",01c78f61-0004-2187-0003-5b0a000592ea,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-07 01:07:08.951
+S6b.01,PASS,Deploy the changed code in place (ADD VERSION),Successfully deployed new files to the live version.,SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-07 01:07:43.994
+S6b.02,INFO,Q0 still locates after the deployment,snow://dbt/SILVER.OPS.SILVER_LAYER/results/query_id_01c78f61-0004-2187-0003-5b0a000592ea/,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-07 01:07:47.894
+S6b.state_form_0,INFO,The --state form fails: snow://dbt/SILVER.OPS.SILVER_LAYER/results/query_id_01c78f61-0004-2187-0003-5b0a000592ea/,"ERROR: DBT job failed with exception: Runtime Error
+  Got a state selector method, but no comparison manifest.
+ Run select system$get_dbt_log('01c78f63-0004-2418-0003-5b0a0005a096') for more details.",SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-07 01:08:01.388
+S6b.state_form_1,INFO,The --state form fails: snow://dbt/SILVER.OPS.SILVER_LAYER/results/query_id_01c78f61-0004-2187-0003-5b0a000592ea/target/,"ERROR: DBT job failed with exception: Runtime Error
+  Got a state selector method, but no comparison manifest.
+ Run select system$get_dbt_log('01c78f64-0004-2418-0003-5b0a0005a0ce') for more details.",SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-07 01:08:11.440
+S6b.state_form_2,INFO,The --state form fails: snow://dbt/SILVER.OPS.SILVER_LAYER/results/query_id_01c78f61-0004-2187-0003-5b0a000592ea/target,"ERROR: DBT job failed with exception: Runtime Error
+  Got a state selector method, but no comparison manifest.
+ Run select system$get_dbt_log('01c78f64-0004-2418-0003-5b0a0005a106') for more details.",SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-07 01:08:21.124
+S6b.state_form_3,INFO,The --state form fails: snow://dbt/SILVER.OPS.SILVER_LAYER/results/query_id_01c78f61-0004-2187-0003-5b0a000592ea/target/,"ERROR: DBT job failed with exception: Runtime Error
+  Got a state selector method, but no comparison manifest.
+ Run select system$get_dbt_log('01c78f64-0004-2418-0003-5b0a0005a13e') for more details.",SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-07 01:08:30.097
+S6b.03,FAIL,The --state form that works (NONE: none of the candidates),NONE,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-07 01:08:34.394
+S6.B30,FAIL,prod target: state:modified (only the changed model expected),"RAISED: DBT job failed with exception: Runtime Error
+  Got a state selector method, but no comparison manifest.
+ Run select system$get_dbt_log('01c78f64-0004-2418-0003-5b0a0005a17e') for more details.",SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-07 01:08:45.179
+S6.B40,FAIL,ci target: state:modified (do all models differ in relation?),"RAISED: DBT job failed with exception: Runtime Error
+  Got a state selector method, but no comparison manifest.
+ Run select system$get_dbt_log('01c78f64-0004-2418-0003-5b0a0005a1ba') for more details.",SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-07 01:08:56.348
+S6.B41,FAIL,ci target: state:modified.body (the real change only),"RAISED: DBT job failed with exception: Runtime Error
+  Got a state selector method, but no comparison manifest.
+ Run select system$get_dbt_log('01c78f64-0004-2418-0003-5b0a0005a1fa') for more details.",SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-07 01:09:07.187
+S6.B42,FAIL,ci target: state:modified.body+ (the change and what depends on it),"RAISED: DBT job failed with exception: Runtime Error
+  Got a state selector method, but no comparison manifest.
+ Run select system$get_dbt_log('01c78f65-0004-2419-0003-5b0a00058a32') for more details.",SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-07 01:09:18.026
+S6b.50,FAIL,ci: freeze into ci_erp,"ERROR: DBT job failed: 1 macro(s) failed out of 1 total (total time: 0.68s)
+First error in macro 'freeze_sources': Database Error
+  002003 (02000): SQL compilation error:
+  Schema 'SILVER.CI_ERP' does not exist or not authorized. Your primary role SVC_SILVER_ERP must have USAGE or any other privilege granted on SCHEMA SILVER.CI_ERP.. 
+Context: DBT 1.12.3, Command: dbt run-operation.
+ Run select system$get_dbt_log('01c78f65-0004-2419-0003-5b0a00058a76') for more details.",SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-07 01:09:33.327
+S6b.51,PASS,ci: build erp_accounts WITHOUT --defer fails (the parent view is not in ci_erp),"ERROR: DBT job failed: 1 model(s) failed out of 3 total (total time: 2.96s)
+First error in model 'erp_accounts': Database Error in model erp_accounts (models/erp/erp_accounts.sql)
+  002003 (42S02): SQL compilation error:
+  Object 'SILVER.CI_ERP.STG_ERP__ACCOUNTS' does not exist or not authorized. Your primary role SVC_SILVER_ERP must have at least one privilege granted on TABLE SILVER.CI_ERP.STG_ERP__ACCOUNTS.
+  compiled code at target/ci/run/silver/models/erp/erp_accounts.sql. 
+Context: DBT 1.12.3, Command: dbt build.
+ Run select system$get_dbt_log('01c78f65-0004-2418-0003-5b0a0005a23e') for more details.",SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-07 01:09:48.351
+S6b.52,FAIL,ci: build erp_accounts WITH --defer succeeds (the parent is read from the published schema),"ERROR: DBT job failed with exception: Runtime Error
+  Could not find manifest in --state path: ""NONE"".
+ Run select system$get_dbt_log('01c78f65-0004-2187-0003-5b0a00059702') for more details.",SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-07 01:09:58.913
+S6b.53,FAIL,ci: only the selected table was built in ci_erp; the deferred parent was not built there,,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-07 01:10:01.993
+S6b.54,FAIL,ci: the CI table equals the published one (same rows),"ERROR: SQL compilation error:
+Object 'SILVER.CI_ERP.ERP_ACCOUNTS' does not exist or not authorized. Your primary role SVC_SILVER_ERP must have at least one privilege granted on TABLE SILVER.CI_ERP.ERP_ACCOUNTS.",SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-07 01:10:03.310
+S6b.55,FAIL,"ci: slim build, state:modified.body+ with --defer","ERROR: DBT job failed with exception: Runtime Error
+  Got a state selector method, but no comparison manifest.
+ Run select system$get_dbt_log('01c78f66-0004-2418-0003-5b0a0005a386') for more details.",SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-07 01:10:15.306
+S6b.56,FAIL,"ci: the changed view and its dependent table are in ci_erp, the unchanged orders models are not",,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-07 01:10:18.198
+S6b.57,PASS,The published ERP schema was not touched by the CI run,UNTOUCHED,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-07 01:10:21.555

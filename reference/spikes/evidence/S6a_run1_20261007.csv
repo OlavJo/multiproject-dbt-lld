@@ -1,0 +1,30 @@
+CASE_ID,OUTCOME,DESCRIPTION,OBSERVED,ROLE_NAME,SECONDARY_ROLES,OBSERVED_AT
+S6a.01,PASS,Publish the ERP unit (canonical state of the deployed code),PUBLISHED,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-07 01:05:37.769
+S6a.02,INFO,Canonical state query id Q0 (used by s06b),01c78f61-0004-2187-0003-5b0a000592ea,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-07 01:05:43.213
+S6a.03,INFO,Q0 can be located,snow://dbt/SILVER.OPS.SILVER_LAYER/results/query_id_01c78f61-0004-2187-0003-5b0a000592ea/,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-07 01:05:46.045
+S6a.10,FAIL,dev: freeze into the developer schema (no publish_unit variable),"ERROR: DBT job failed: 1 macro(s) failed out of 1 total (total time: 0.78s)
+First error in macro 'freeze_sources': Database Error
+  002003 (02000): SQL compilation error:
+  Schema 'SILVER.DEV_ERP' does not exist or not authorized. Your primary role SILVER_STEWARD must have USAGE or any other privilege granted on SCHEMA SILVER.DEV_ERP.. 
+Context: DBT 1.12.3, Command: dbt run-operation.
+ Run select system$get_dbt_log('01c78f61-0004-2419-0003-5b0a00058936') for more details.",SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-07 01:06:02.841
+S6a.11,FAIL,dev: build the ERP unit,"ERROR: DBT job failed. Last output lines:
+[0m01:06:17  
+[0m01:06:17  [[31mERROR[0m]: in test source_unique_erp_frozen_accounts_account_id (models/erp/sources.yml)
+[0m01:06:17    Database Error in test source_unique_erp_frozen_accounts_account_id (models/erp/sources.yml)
+  002003 (42S02): SQL compilation error:
+  Object 'SILVER.DEV_ERP.RAW__ACCOUNTS' does not exist or not authorized. Your primary role SILVER_STEWARD must have at least one privilege granted on TABLE SILVER.DEV_ERP.RAW__ACCOUNTS.
+  compiled code at target/dev/run/silver/models/erp/sources.yml/source_unique_erp_frozen_accounts_account_id.sql
+[0m01:06:17  
+[0m01:06:17    compiled code at target/dev/compiled/silver/models/erp/sources.yml/source_unique_erp_frozen_accounts_account_id.sql
+[0m01:06:17  
+[0m01:06:17  Done. PASS=0 WARN=0 ERROR=5 SKIP=8 NO-OP=0 REUSED=0 TOTAL=13.
+ Run select system$get_dbt_log('01c78f62-0004-2187-0003-5b0a000593e6') for more details.",SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-07 01:06:18.515
+S6a.12,INFO,dev: objects land in silver.dev_erp (not in silver.erp or an erp__build schema),,SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-07 01:06:20.961
+S6a.13,FAIL,dev: a base view keeps its bare identifier (S1 rule),"ERROR: SQL compilation error:
+View 'SILVER.DEV_ERP.STG_ERP__ORDERS' does not exist or not authorized. Your primary role SILVER_STEWARD must have at least one privilege granted on TABLE SILVER.DEV_ERP.STG_ERP__ORDERS.",SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-07 01:06:22.984
+S6a.14,FAIL,"dev: the table reads the dev view, not the published one","ERROR: SQL compilation error:
+Object 'SILVER.DEV_ERP.ERP_ACCOUNTS' does not exist or not authorized. Your primary role SILVER_STEWARD must have at least one privilege granted on TABLE SILVER.DEV_ERP.ERP_ACCOUNTS.",SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-07 01:06:24.971
+S6a.15,FAIL,dev: PII is masked for the developer (the steward role),"ERROR: SQL compilation error:
+Object 'SILVER.DEV_ERP.ERP_ACCOUNTS' does not exist or not authorized. Your primary role SILVER_STEWARD must have at least one privilege granted on TABLE SILVER.DEV_ERP.ERP_ACCOUNTS.",SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-07 01:06:26.452
+S6a.17,PASS,The published ERP schema was not touched by the dev run,UNTOUCHED,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-07 01:06:30.011

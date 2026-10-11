@@ -1,0 +1,14 @@
+EVENT_TS,EVENT_TYPE,STAGE,CLASS,EXCEPTION
+2026-10-07 01:49:57.894,FAILED,build,unclassified,"DBT job failed with exception: Database Error
+  003041 (42710): SQL compilation error:
+  Schema 'CORE' already exists, but current role has no privileges on it. If this is unexpected and you cannot resolve this problem, contact your system administrator. ACCOUNTADMIN role may be required to manage the privileges on the object..
+ Run select system$get_dbt_log('01c78f8d-0004-2402-0003-5b0a0005677e') for more details."
+2026-10-07 01:47:33.550,FAILED,build,unclassified,"DBT job failed with exception: Database Error
+  003041 (42710): SQL compilation error:
+  Schema 'CORE' already exists, but current role has no privileges on it. If this is unexpected and you cannot resolve this problem, contact your system administrator. ACCOUNTADMIN role may be required to manage the privileges on the object..
+ Run select system$get_dbt_log('01c78f8b-0004-2170-0003-5b0a0004061e') for more details."
+2026-10-07 01:45:50.665,FAILED,build,unclassified,"DBT job failed with exception: Database Error
+  003041 (42710): SQL compilation error:
+  Schema 'CORE' already exists, but current role has no privileges on it. If this is unexpected and you cannot resolve this problem, contact your system administrator. ACCOUNTADMIN role may be required to manage the privileges on the object..
+ Run select system$get_dbt_log('01c78f89-0004-2171-0003-5b0a0003fa5a') for more details."
+2026-10-07 00:08:00.470,SKIPPED,,,

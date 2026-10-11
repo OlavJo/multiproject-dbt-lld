@@ -15,9 +15,9 @@
 --   integration SPIKE_GIT_API, so the token need not be entered again. Their
 --   ownership moves from SILVER_STEWARD to SYSADMIN before that role is dropped.
 --
--- The spike evidence is committed under evidence/ in the spikes repository
--- (OlavJo/dbt-spikes-2026), and its spike scripts can rebuild the spike
--- objects (setup/00 to 10), so nothing is lost. Dropped
+-- The spike evidence is committed under reference/spikes/evidence/, and the
+-- spike scripts can rebuild the spike objects (reference/spikes/setup/00 to 10),
+-- so nothing is lost. Dropped
 -- databases stay recoverable with UNDROP for their Time Travel period.
 --
 -- SAFETY: the drops run only if v_confirm below is edited to 'YES'.

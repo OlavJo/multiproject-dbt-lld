@@ -19,7 +19,7 @@
 -- here (T1); SPIKE_WH serves every role (T3).
 --
 -- Run as: USERADMIN, SECURITYADMIN, ACCOUNTADMIN, SYSADMIN (switches itself).
--- Requires: 00_teardown_spikes.sql. Idempotent.
+-- Requires: 00_lab_foundation.sql (and, on the trial account, 00_teardown_spikes.sql). Idempotent.
 -- =============================================================================
 
 use secondary roles none;
@@ -87,35 +87,7 @@ grant usage on warehouse spike_wh to role analyst_all;
 grant usage on warehouse spike_wh to role analyst_hr;
 
 -- Evidence store: every prototype role may record observations ------------------------
--- RECORD is the companion of PROBE for observations read from SHOW output:
---   show ...; set obs = (select ... from table(result_scan(last_query_id())));
---   call spike_lab.evidence.record($run_id, 'INC1', 'INC1.10', 'what', 'show ...', '<ILIKE pattern>', $obs);
-create or replace procedure spike_lab.evidence.record(
-    run_id varchar, spike varchar, case_id varchar, description varchar,
-    sql_text varchar, expected varchar, observed varchar)
-  returns varchar
-  language sql
-  execute as caller
-as
-$$
-declare
-  v_obs     varchar;
-  v_outcome varchar;
-begin
-  v_obs := nvl(observed, '<NULL>');
-  select case
-           when :expected is null                                         then 'INFO'
-           when left(:expected, 1) = '!' and not (:v_obs ilike substr(:expected, 2)) then 'PASS'
-           when left(:expected, 1) = '!'                                  then 'FAIL'
-           when :v_obs ilike :expected                                    then 'PASS'
-           else 'FAIL'
-         end into :v_outcome;
-  insert into spike_lab.evidence.observation
-    select :run_id, :spike, :case_id, :description, :sql_text, :expected, :v_obs, :v_outcome,
-           current_role(), current_secondary_roles(), sysdate(), current_version(), null;
-  return v_outcome || ' | ' || case_id || ' | ' || v_obs;
-end;
-$$;
+-- PROBE and RECORD are created by 00_lab_foundation.sql.
 
 declare
   c_roles cursor for

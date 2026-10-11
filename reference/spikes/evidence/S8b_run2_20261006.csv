@@ -1,0 +1,16 @@
+CASE_ID,OUTCOME,DESCRIPTION,OBSERVED,ROLE_NAME,SECONDARY_ROLES,OBSERVED_AT
+S8b.A1,PASS,Both units logged PUBLISHED since the tasks started,2,SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-06 23:55:13.856
+S8b.A2,PASS,Their runs overlapped in time (STARTED of each before PUBLISHED of the other),OVERLAP,SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-06 23:55:15.999
+S8b.A3,INFO,Timeline of the two runs,silver.crm STARTED 23:52:24.1 | silver.erp STARTED 23:52:25.7 | silver.crm PUBLISHED 23:53:09.2 | silver.erp PUBLISHED 23:53:14.2,SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-06 23:55:17.976
+S8b.A4,FAIL,Any FAILED event in the two runs (exception text if so),,SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-06 23:55:19.789
+S8b.A5,PASS,Leases of both units are free,0,SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-06 23:55:21.185
+S8b.A6a,INFO,ERP unit data: current orders,22,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 23:55:22.809
+S8b.A6b,INFO,CRM unit data: contacts,8,SVC_SILVER_CRM,"{""roles"":"""",""value"":""""}",2026-10-06 23:55:25.607
+S8b.A7,PASS,"The two PUBLISHED events carry distinct canonical state query ids, both compiled ok","2 ids, ok=2",SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-06 23:55:28.089
+S8b.B1,INFO,EXECUTE DBT PROJECT statements in the last 10 minutes and the most in progress together,statements=6; max_concurrent=3,ACCOUNTADMIN,"{""roles"":"""",""value"":""""}",2026-10-06 23:55:29.731
+S8b.C1,PASS,"Task run of the ERP task (state, error, scheduled and completed time)",SUCCEEDED | - | 16:52:19 to 16:53:15,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 23:55:34.137
+S8b.C2,PASS,"Task run of the CRM task (state, error, scheduled and completed time)",SUCCEEDED | - | 16:52:20 to 16:53:10,SVC_SILVER_CRM,"{""roles"":"""",""value"":""""}",2026-10-06 23:55:36.300
+S8b.D1,INFO,SYSTEM$DBT_GET_LAST_SUCCESSFUL_RUN_TARGET after the two runs (which unit does it point at?),snow://dbt/SILVER.OPS.SILVER_LAYER/results/query_id_01c78f19-0004-2170-0003-5b0a0004045a/target/,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 23:55:37.979
+S8b.D2,INFO,LOCATE_DBT_ARTIFACTS for the ERP canonical query id,snow://dbt/SILVER.OPS.SILVER_LAYER/results/query_id_01c78f19-0004-2170-0003-5b0a0004045a/,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-06 23:55:43.222
+S8b.D3,INFO,"LOCATE_DBT_ARTIFACTS for the CRM canonical query id, called by the CRM role",snow://dbt/SILVER.OPS.SILVER_LAYER/results/query_id_01c78f18-0004-2171-0003-5b0a0003f446/,SVC_SILVER_CRM,"{""roles"":"""",""value"":""""}",2026-10-06 23:55:45.565
+S8b.D4,INFO,"LOCATE_DBT_ARTIFACTS for the ERP canonical query id, called by the CRM role (run 1: the other role was denied)",snow://dbt/SILVER.OPS.SILVER_LAYER/results/query_id_01c78f19-0004-2170-0003-5b0a0004045a/,SVC_SILVER_CRM,"{""roles"":"""",""value"":""""}",2026-10-06 23:55:46.835

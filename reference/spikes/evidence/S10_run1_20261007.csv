@@ -1,0 +1,23 @@
+CASE_ID,OUTCOME,DESCRIPTION,OBSERVED,ROLE_NAME,SECONDARY_ROLES,OBSERVED_AT
+S10.A0,PASS,Setup: build schema for the Core unit (clone of its published schema),Schema CORE__BUILD successfully created.,SVC_SILVER_CORE,"{""roles"":"""",""value"":""""}",2026-10-07 01:45:10.277
+S10.A1,FAIL,Core built WITHOUT input clones while ERP publishes in the middle: the consistency test fails,true,SVC_SILVER_CORE,"{""roles"":"""",""value"":""""}",2026-10-07 01:46:42.719
+S10.A2,INFO,The two reads of the same upstream data (orders seen by core_orders_a and by core_orders_b),"a=30 orders, b=30 orders",SVC_SILVER_CORE,"{""roles"":"""",""value"":""""}",2026-10-07 01:46:45.813
+S10.A3,INFO,"Timeline (UTC): ERP swap, and when the two Core models were created",ERP PUBLISHED 01:05:36 | CORE_ORDERS_A created 01:45:26 | CORE_ORDERS_B created 01:46:38,SVC_SILVER_CORE,"{""roles"":"""",""value"":""""}",2026-10-07 01:46:48.592
+S10.B1,PASS,Publish the Core unit through the procedure (input clones) while ERP publishes in the middle,PUBLISHED,SVC_SILVER_CORE,"{""roles"":"""",""value"":""""}",2026-10-07 01:48:53.849
+S10.B2,PASS,The two reads agree in the published Core unit,CONSISTENT,SVC_SILVER_CORE,"{""roles"":"""",""value"":""""}",2026-10-07 01:48:56.340
+S10.B3,FAIL,Core data is OLDER than upstream now (ERP published after the clone was taken),SAME_AS_UPSTREAM,SVC_SILVER_CORE,"{""roles"":"""",""value"":""""}",2026-10-07 01:49:00.137
+S10.B4,FAIL,"The ERP swap fell inside the Core run (STARTED < ERP PUBLISHED < Core PUBLISHED), after the clone",NO_OVERLAP; clone after the swap,SVC_SILVER_CORE,"{""roles"":"""",""value"":""""}",2026-10-07 01:49:02.365
+S10.B5,FAIL,The PUBLISHED event records the input clones,"core__in_crm,core__in_erp",SVC_SILVER_CORE,"{""roles"":"""",""value"":""""}",2026-10-07 01:49:04.468
+S10.B6,PASS,The input clones are dropped after the run,0,SVC_SILVER_CORE,"{""roles"":"""",""value"":""""}",2026-10-07 01:49:06.054
+S10.B7,INFO,Core watermark (the minimum of its upstream watermarks at the gate) and the upstream watermarks,core=23:52:17 erp=01:04:36 crm=23:52:17,SVC_SILVER_CORE,"{""roles"":"""",""value"":""""}",2026-10-07 01:49:08.157
+S10.B8,PASS,The Core unit has no frozen inputs and no raw access (no freeze ran),0,SVC_SILVER_CORE,"{""roles"":"""",""value"":""""}",2026-10-07 01:49:10.349
+S10.C1,PASS,A consumer role cannot clone an upstream unit schema,"ERROR: SQL access control error:
+Insufficient privileges to operate on database 'SILVER'. Your primary role ANALYST_TIER1 must have CREATE SCHEMA granted on DATABASE SILVER.",ANALYST_TIER1,"{""roles"":"""",""value"":""""}",2026-10-07 01:49:12.167
+S10.C2,PASS,Another unit role cannot clone the ERP unit schema,"ERROR: SQL compilation error:
+Schema 'SILVER.ERP' does not exist or not authorized. Your primary role SVC_SILVER_CRM must have USAGE or any other privilege granted on SCHEMA SILVER.ERP.",SVC_SILVER_CRM,"{""roles"":"""",""value"":""""}",2026-10-07 01:49:14.490
+S10.C3,PASS,"The Core role (inherits the unit roles) can clone it, frozen inputs included",Schema S10_PROBE_IN_ERP successfully created.,SVC_SILVER_CORE,"{""roles"":"""",""value"":""""}",2026-10-07 01:49:20.677
+S10.C4,PASS,The clone contains the frozen inputs (visible to the cloning role),FROZEN_INPUTS_CLONED,SVC_SILVER_CORE,"{""roles"":"""",""value"":""""}",2026-10-07 01:49:22.315
+S10.C5,FAIL,ERP publishes again (through the procedure),FAILED:build,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-07 01:49:59.075
+S10.C6,FAIL,"A base view in the clone reads the frozen input of the clone, not the published one (S1 rebinding), so it lags",FOLLOWS_PUBLISHED,SVC_SILVER_CORE,"{""roles"":"""",""value"":""""}",2026-10-07 01:50:04.245
+S10.C7,PASS,The view definition in the clone is unchanged (bare identifier),BARE,SVC_SILVER_CORE,"{""roles"":"""",""value"":""""}",2026-10-07 01:50:06.567
+S10.D1,INFO,"Schema clone statements in the last 45 minutes: count, and elapsed time (ms)",clones=3; elapsed_ms avg=2773 max=3407,ACCOUNTADMIN,"{""roles"":"""",""value"":""""}",2026-10-07 01:50:08.970

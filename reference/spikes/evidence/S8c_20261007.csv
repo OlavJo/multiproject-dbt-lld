@@ -1,0 +1,11 @@
+CASE_ID,OUTCOME,DESCRIPTION,OBSERVED,ROLE_NAME,SECONDARY_ROLES,OBSERVED_AT
+S8c.E1,INFO,"ERP task, shared target path: state, error, times",SUCCEEDED | - | 17:01:48 to 17:02:04,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-07 00:03:11.377
+S8c.E1b,INFO,"ERP task output: success flag, partial-parse warning, writeback lines","ERROR: SQL compilation error: error line 3 at position 19
+Invalid argument types for function '||': (VARCHAR(8), BOOLEAN, VARCHAR(17), BOOLEAN, VARCHAR(13), VARCHAR(134217728), VARCHAR(1))",SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-07 00:03:16.498
+S8c.E2,INFO,"CRM task, shared target path: state, error, times",SUCCEEDED | - | 17:01:50 to 17:02:05,SVC_SILVER_CRM,"{""roles"":"""",""value"":""""}",2026-10-07 00:03:20.835
+S8c.E2b,INFO,"CRM task output: success flag, partial-parse warning, writeback lines","ERROR: SQL compilation error: error line 3 at position 19
+Invalid argument types for function '||': (VARCHAR(8), BOOLEAN, VARCHAR(17), BOOLEAN, VARCHAR(13), VARCHAR(134217728), VARCHAR(1))",SVC_SILVER_CRM,"{""roles"":"""",""value"":""""}",2026-10-07 00:03:24.253
+S8c.E3,PASS,A later single execution on the shared target path,true,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-07 00:03:41.211
+S8c.D5,INFO,"ERP role locates the latest CRM canonical execution (denied once, run 2)",snow://dbt/SILVER.OPS.SILVER_LAYER/results/query_id_01c78f18-0004-2171-0003-5b0a0003f446/,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-07 00:03:43.933
+S8c.D6,INFO,ERP role locates the OLDEST CRM canonical execution (the one denied in run 2 was an older one),ERROR: DBT project not found or access denied,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-07 00:03:47.271
+S8c.D7,INFO,CRM role locates its own OLDEST canonical execution,ERROR: DBT project not found or access denied,SVC_SILVER_CRM,"{""roles"":"""",""value"":""""}",2026-10-07 00:03:49.590

@@ -1,0 +1,146 @@
+RUN_ID,SPIKE,CASE_ID,DESCRIPTION,SQL_TEXT,EXPECTED,OBSERVED,OUTCOME,ROLE_NAME,SECONDARY_ROLES,OBSERVED_AT,SF_VERSION,DETAIL
+f8642b27-d996-4503-9609-8a9278d496dd,P0,P0.00a,Probe self-test: value match,select 'hello',hello,hello,PASS,SYSADMIN,"{""roles"":"""",""value"":""""}",2026-10-05 03:14:34.964,10.35.101,
+f8642b27-d996-4503-9609-8a9278d496dd,P0,P0.00b,"Probe self-test: error captured, not raised",select * from spike_lab.evidence.no_such_table,ERROR:%,"ERROR: SQL compilation error:
+Object 'SPIKE_LAB.EVIDENCE.NO_SUCH_TABLE' does not exist or not authorized. Your primary role SYSADMIN must have at least one privilege granted on TABLE SPIKE_LAB.EVIDENCE.NO_SUCH_TABLE.",PASS,SYSADMIN,"{""roles"":"""",""value"":""""}",2026-10-05 03:14:37.860,10.35.101,
+f8642b27-d996-4503-9609-8a9278d496dd,P0,P0.00c,Probe self-test: negated pattern,select 42,!ERROR:%,42,PASS,SYSADMIN,"{""roles"":"""",""value"":""""}",2026-10-05 03:14:40.322,10.35.101,
+0842f26b-8623-486c-b56e-51b63f7eaab1,P0,P0.01,Organisation and account,select current_organization_name() || '.' || current_account_name(),,OYUHRAL.LH43664,INFO,ACCOUNTADMIN,"{""roles"":"""",""value"":""""}",2026-10-05 03:21:03.097,10.35.101,
+0842f26b-8623-486c-b56e-51b63f7eaab1,P0,P0.02,Cloud region,select current_region(),,AZURE_AUSTRALIAEAST,INFO,ACCOUNTADMIN,"{""roles"":"""",""value"":""""}",2026-10-05 03:21:05.007,10.35.101,
+0842f26b-8623-486c-b56e-51b63f7eaab1,P0,P0.03,Snowflake release,select current_version(),,10.35.101,INFO,ACCOUNTADMIN,"{""roles"":"""",""value"":""""}",2026-10-05 03:21:06.624,10.35.101,
+0842f26b-8623-486c-b56e-51b63f7eaab1,P0,P0.04,2026_06 behaviour change bundle enabled (live-version dbt project objects),select system$behavior_change_bundle_status('2026_06'),ENABLED,ERROR: String 'ENABLED' is too long and would be truncated,FAIL,ACCOUNTADMIN,"{""roles"":"""",""value"":""""}",2026-10-05 03:21:08.029,10.35.101,
+0842f26b-8623-486c-b56e-51b63f7eaab1,P0,P0.05,Supported dbt versions: 1.11.11 available,select system$supported_dbt_versions(),%1.11.11%,"[{""dbt_version"":""1.9.4"",""type"":""dbt Core""},{""dbt_version"":""1.10.15"",""type"":""dbt Core""},{""dbt_version"":""1.11.11"",""type"":""dbt Core""},{""dbt_version"":""1.12.3"",""type"":""dbt Core""},{""dbt_version"":""2.0.0-preview"",""type"":""dbt Fusion""},{""dbt_version"":""2.0.0-preview.175"",""type"":""dbt Fusion""},{""dbt_version"":""2.0.0-preview.186"",""type"":""dbt Fusion""},{""dbt_version"":""2.0.0-preview.210"",""type"":""dbt Fusion""},{""dbt_version"":""2.0.0"",""type"":""dbt Fusion""}]",PASS,ACCOUNTADMIN,"{""roles"":"""",""value"":""""}",2026-10-05 03:21:09.440,10.35.101,
+0842f26b-8623-486c-b56e-51b63f7eaab1,P0,P0.06,"Supported dbt versions: is any 1.12.x available (affects latest_version_pointer, Overview 8.2)",select system$supported_dbt_versions(),%1.12.%,"[{""dbt_version"":""1.9.4"",""type"":""dbt Core""},{""dbt_version"":""1.10.15"",""type"":""dbt Core""},{""dbt_version"":""1.11.11"",""type"":""dbt Core""},{""dbt_version"":""1.12.3"",""type"":""dbt Core""},{""dbt_version"":""2.0.0-preview"",""type"":""dbt Fusion""},{""dbt_version"":""2.0.0-preview.175"",""type"":""dbt Fusion""},{""dbt_version"":""2.0.0-preview.186"",""type"":""dbt Fusion""},{""dbt_version"":""2.0.0-preview.210"",""type"":""dbt Fusion""},{""dbt_version"":""2.0.0"",""type"":""dbt Fusion""}]",PASS,ACCOUNTADMIN,"{""roles"":"""",""value"":""""}",2026-10-05 03:21:10.619,10.35.101,
+0842f26b-8623-486c-b56e-51b63f7eaab1,P0,P0.07,Account default dbt version (used when DBT_VERSION is not pinned),show parameters like 'DEFAULT_DBT_VERSION' in account,,1.9.4,INFO,ACCOUNTADMIN,"{""roles"":"""",""value"":""""}",2026-10-05 03:21:11.587,10.35.101,
+0842f26b-8623-486c-b56e-51b63f7eaab1,P0,P0.08,DEFAULT_SECONDARY_ROLES of the spike user (scripts override with USE SECONDARY ROLES NONE),describe user,,"[""ALL""]",INFO,ACCOUNTADMIN,"{""roles"":"""",""value"":""""}",2026-10-05 03:21:13.498,10.35.101,
+0842f26b-8623-486c-b56e-51b63f7eaab1,P0,P0.09,Enterprise: Time Travel retention above 1 day,alter table spike_lab.evidence.observation set data_retention_time_in_days = 7,!ERROR:%,Statement executed successfully.,PASS,ACCOUNTADMIN,"{""roles"":"""",""value"":""""}",2026-10-05 03:21:14.991,10.35.101,
+0842f26b-8623-486c-b56e-51b63f7eaab1,P0,P0.10,"Enterprise: masking policies (tag-based masking, SLD 6.3)","create or replace masking policy spike_lab.evidence.mp_edition_check
+      as (v varchar) returns varchar -> v",!ERROR:%,Masking policy MP_EDITION_CHECK successfully created.,PASS,ACCOUNTADMIN,"{""roles"":"""",""value"":""""}",2026-10-05 03:21:16.214,10.35.101,
+0842f26b-8623-486c-b56e-51b63f7eaab1,P0,P0.11,"Enterprise: ACCESS_HISTORY readable (impact analysis, Overview 8.3)",select count(*) from snowflake.account_usage.access_history,!ERROR:%,79,PASS,ACCOUNTADMIN,"{""roles"":"""",""value"":""""}",2026-10-05 03:21:18.124,10.35.101,
+0842f26b-8623-486c-b56e-51b63f7eaab1,P0,P0.12,"Semantic views available (Overview 4.5, S1)",show semantic views in account,!ERROR:%,<no rows>,PASS,ACCOUNTADMIN,"{""roles"":"""",""value"":""""}",2026-10-05 03:21:20.038,10.35.101,
+5db22918-870d-4316-839c-1015ec12ffa5,P0,P0.00a,Probe self-test: value match,select 'hello',hello,hello,PASS,SYSADMIN,"{""roles"":"""",""value"":""""}",2026-10-05 03:29:17.208,10.35.101,
+5db22918-870d-4316-839c-1015ec12ffa5,P0,P0.00b,"Probe self-test: error captured, not raised",select * from spike_lab.evidence.no_such_table,ERROR:%,"ERROR: SQL compilation error:
+Object 'SPIKE_LAB.EVIDENCE.NO_SUCH_TABLE' does not exist or not authorized. Your primary role SYSADMIN must have at least one privilege granted on TABLE SPIKE_LAB.EVIDENCE.NO_SUCH_TABLE.",PASS,SYSADMIN,"{""roles"":"""",""value"":""""}",2026-10-05 03:29:18.858,10.35.101,
+5db22918-870d-4316-839c-1015ec12ffa5,P0,P0.00c,Probe self-test: negated pattern,select 42,!ERROR:%,42,PASS,SYSADMIN,"{""roles"":"""",""value"":""""}",2026-10-05 03:29:20.335,10.35.101,
+1c2ea2a2-9f5b-43a4-95bd-db8801b8b2ad,P0,P0.01,Organisation and account,select current_organization_name() || '.' || current_account_name(),,OYUHRAL.LH43664,INFO,ACCOUNTADMIN,"{""roles"":"""",""value"":""""}",2026-10-05 03:30:36.604,10.35.101,
+1c2ea2a2-9f5b-43a4-95bd-db8801b8b2ad,P0,P0.02,Cloud region,select current_region(),,AZURE_AUSTRALIAEAST,INFO,ACCOUNTADMIN,"{""roles"":"""",""value"":""""}",2026-10-05 03:30:38.443,10.35.101,
+1c2ea2a2-9f5b-43a4-95bd-db8801b8b2ad,P0,P0.03,Snowflake release,select current_version(),,10.35.101,INFO,ACCOUNTADMIN,"{""roles"":"""",""value"":""""}",2026-10-05 03:30:40.161,10.35.101,
+1c2ea2a2-9f5b-43a4-95bd-db8801b8b2ad,P0,P0.04,2026_06 behaviour change bundle enabled (live-version dbt project objects),select system$behavior_change_bundle_status('2026_06'),ENABLED,ERROR: String 'ENABLED' is too long and would be truncated,FAIL,ACCOUNTADMIN,"{""roles"":"""",""value"":""""}",2026-10-05 03:30:42.064,10.35.101,
+1c2ea2a2-9f5b-43a4-95bd-db8801b8b2ad,P0,P0.05,Supported dbt versions: 1.11.11 available,select system$supported_dbt_versions(),%1.11.11%,"[{""dbt_version"":""1.9.4"",""type"":""dbt Core""},{""dbt_version"":""1.10.15"",""type"":""dbt Core""},{""dbt_version"":""1.11.11"",""type"":""dbt Core""},{""dbt_version"":""1.12.3"",""type"":""dbt Core""},{""dbt_version"":""2.0.0-preview"",""type"":""dbt Fusion""},{""dbt_version"":""2.0.0-preview.175"",""type"":""dbt Fusion""},{""dbt_version"":""2.0.0-preview.186"",""type"":""dbt Fusion""},{""dbt_version"":""2.0.0-preview.210"",""type"":""dbt Fusion""},{""dbt_version"":""2.0.0"",""type"":""dbt Fusion""}]",PASS,ACCOUNTADMIN,"{""roles"":"""",""value"":""""}",2026-10-05 03:30:43.505,10.35.101,
+1c2ea2a2-9f5b-43a4-95bd-db8801b8b2ad,P0,P0.06,"Supported dbt versions: is any 1.12.x available (affects latest_version_pointer, Overview 8.2)",select system$supported_dbt_versions(),%1.12.%,"[{""dbt_version"":""1.9.4"",""type"":""dbt Core""},{""dbt_version"":""1.10.15"",""type"":""dbt Core""},{""dbt_version"":""1.11.11"",""type"":""dbt Core""},{""dbt_version"":""1.12.3"",""type"":""dbt Core""},{""dbt_version"":""2.0.0-preview"",""type"":""dbt Fusion""},{""dbt_version"":""2.0.0-preview.175"",""type"":""dbt Fusion""},{""dbt_version"":""2.0.0-preview.186"",""type"":""dbt Fusion""},{""dbt_version"":""2.0.0-preview.210"",""type"":""dbt Fusion""},{""dbt_version"":""2.0.0"",""type"":""dbt Fusion""}]",PASS,ACCOUNTADMIN,"{""roles"":"""",""value"":""""}",2026-10-05 03:30:45.844,10.35.101,
+1c2ea2a2-9f5b-43a4-95bd-db8801b8b2ad,P0,P0.07,Account default dbt version (used when DBT_VERSION is not pinned),show parameters like 'DEFAULT_DBT_VERSION' in account,,1.9.4,INFO,ACCOUNTADMIN,"{""roles"":"""",""value"":""""}",2026-10-05 03:30:47.643,10.35.101,
+1c2ea2a2-9f5b-43a4-95bd-db8801b8b2ad,P0,P0.08,DEFAULT_SECONDARY_ROLES of the spike user (scripts override with USE SECONDARY ROLES NONE),describe user,,"[""ALL""]",INFO,ACCOUNTADMIN,"{""roles"":"""",""value"":""""}",2026-10-05 03:30:50.051,10.35.101,
+1c2ea2a2-9f5b-43a4-95bd-db8801b8b2ad,P0,P0.09,Enterprise: Time Travel retention above 1 day,alter table spike_lab.evidence.observation set data_retention_time_in_days = 7,!ERROR:%,Statement executed successfully.,PASS,ACCOUNTADMIN,"{""roles"":"""",""value"":""""}",2026-10-05 03:30:52.173,10.35.101,
+1c2ea2a2-9f5b-43a4-95bd-db8801b8b2ad,P0,P0.10,"Enterprise: masking policies (tag-based masking, SLD 6.3)","create or replace masking policy spike_lab.evidence.mp_edition_check
+      as (v varchar) returns varchar -> v",!ERROR:%,Masking policy MP_EDITION_CHECK successfully created.,PASS,ACCOUNTADMIN,"{""roles"":"""",""value"":""""}",2026-10-05 03:30:53.350,10.35.101,
+1c2ea2a2-9f5b-43a4-95bd-db8801b8b2ad,P0,P0.11,"Enterprise: ACCESS_HISTORY readable (impact analysis, Overview 8.3)",select count(*) from snowflake.account_usage.access_history,!ERROR:%,140,PASS,ACCOUNTADMIN,"{""roles"":"""",""value"":""""}",2026-10-05 03:30:55.483,10.35.101,
+1c2ea2a2-9f5b-43a4-95bd-db8801b8b2ad,P0,P0.12,"Semantic views available (Overview 4.5, S1)",show semantic views in account,!ERROR:%,<no rows>,PASS,ACCOUNTADMIN,"{""roles"":"""",""value"":""""}",2026-10-05 03:30:57.352,10.35.101,
+5dbd368a-2271-4290-b520-7a490805be45,P0,P0.00a,Probe self-test: value match,select 'hello',hello,hello,PASS,SYSADMIN,"{""roles"":"""",""value"":""""}",2026-10-05 03:34:04.968,10.35.101,
+5dbd368a-2271-4290-b520-7a490805be45,P0,P0.00b,"Probe self-test: error captured, not raised",select * from spike_lab.evidence.no_such_table,ERROR:%,"ERROR: SQL compilation error:
+Object 'SPIKE_LAB.EVIDENCE.NO_SUCH_TABLE' does not exist or not authorized. Your primary role SYSADMIN must have at least one privilege granted on TABLE SPIKE_LAB.EVIDENCE.NO_SUCH_TABLE.",PASS,SYSADMIN,"{""roles"":"""",""value"":""""}",2026-10-05 03:34:06.430,10.35.101,
+5dbd368a-2271-4290-b520-7a490805be45,P0,P0.00c,Probe self-test: negated pattern,select 42,!ERROR:%,42,PASS,SYSADMIN,"{""roles"":"""",""value"":""""}",2026-10-05 03:34:07.963,10.35.101,
+301348fa-9835-47c9-a94d-78f3c99bfb23,P0,P0.04a,Declared type of SYSTEM$BEHAVIOR_CHANGE_BUNDLE_STATUS result column (diagnostic),describe result last_query_id(),,VARCHAR(1),INFO,ACCOUNTADMIN,"{""roles"":"""",""value"":""""}",2026-10-05 03:38:06.184,10.35.101,"{
+  ""kind"": ""COLUMN"",
+  ""name"": ""SYSTEM$BEHAVIOR_CHANGE_BUNDLE_STATUS('2026_06')"",
+  ""null?"": ""Y"",
+  ""primary key"": ""N"",
+  ""type"": ""VARCHAR(1)"",
+  ""unique key"": ""N""
+}"
+301348fa-9835-47c9-a94d-78f3c99bfb23,P0,P0.04,2026_06 behaviour change bundle enabled (live-version dbt project objects),select system$behavior_change_bundle_status('2026_06'),ENABLED,ENABLED,PASS,ACCOUNTADMIN,"{""roles"":"""",""value"":""""}",2026-10-05 03:38:07.693,10.35.101,
+59e7d4e6-4e34-4ea4-ada3-f70033d5c3ca,P0,P0.13,Private Git repository readable from Snowflake via PAT secret (hello project present),ls @spike_lab.git.spikes_repo/branches/main/dbt/hello/dbt_project.yml,%dbt_project.yml%,spikes_repo/branches/main/dbt/hello/dbt_project.yml,PASS,SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-05 03:49:50.392,10.35.101,
+59e7d4e6-4e34-4ea4-ada3-f70033d5c3ca,P0,P0.14,Secret exists and is owned by the steward role,show secrets like 'GITHUB_PAT' in schema spike_lab.git,%GITHUB_PAT%,2026-10-04 20:49:28.942 -0700,FAIL,SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-05 03:49:52.509,10.35.101,
+543ed7de-c13f-48e2-aa41-c870339d4d2f,P0,P0.13,Private Git repository readable from Snowflake via PAT secret (hello project present),ls @spike_lab.git.spikes_repo/branches/main/dbt/hello/dbt_project.yml,%dbt_project.yml%,spikes_repo/branches/main/dbt/hello/dbt_project.yml,PASS,SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-05 03:53:58.841,10.35.101,
+543ed7de-c13f-48e2-aa41-c870339d4d2f,P0,P0.14,Secret exists and is owned by the steward role,show secrets like 'GITHUB_PAT' in schema spike_lab.git,GITHUB_PAT owned by SILVER_STEWARD,GITHUB_PAT owned by SILVER_STEWARD,PASS,SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-05 03:54:00.448,10.35.101,
+107bf8ff-3f15-4bce-8d02-ffbb44eb459e,P0,P0.20,"Create dbt project object from Git, pinned to dbt Core 1.11.11","create or replace dbt project spike_lab.hello.hello
+      from '@spike_lab.git.spikes_repo/branches/main/dbt/hello'
+      dbt_version = '1.11.11'",!ERROR:%,HELLO successfully created.,PASS,SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-05 03:58:14.777,10.35.101,
+107bf8ff-3f15-4bce-8d02-ffbb44eb459e,P0,P0.21,New project object is a live-version object (SLD 3.2 prerequisite),show dbt projects like 'HELLO',LIVE,LIVE,PASS,SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-05 03:58:17.699,10.35.101,"{
+  ""auto_compile"": ""true"",
+  ""created_on"": ""2026-10-04 20:57:50.182 -0700"",
+  ""database_name"": ""SPIKE_LAB"",
+  ""dbt_snowflake_version"": ""1.11.5"",
+  ""dbt_version"": ""1.11.11"",
+  ""default_version"": ""LIVE"",
+  ""default_version_location_uri"": ""snow://dbt/SPIKE_LAB.HELLO.HELLO/versions/live/"",
+  ""default_version_source_location_uri"": ""@spike_lab.git.spikes_repo/branches/main/dbt/hello/"",
+  ""default_writeback"": ""true"",
+  ""last_deployed_from"": {
+    ""git_branch"": ""main"",
+    ""git_commit"": ""44bc2d310bff91df304b43841a8084cd9a9cb2ad"",
+    ""stage_url"": ""@spike_lab.git.spikes_repo/branches/main/dbt/hello"",
+    ""timestamp"": ""2026-10-05T03:57:50.168Z"",
+    ""user"": ""OLAVJO""
+  },
+  ""name"": ""HELLO"",
+  ""owner"": ""SILVER_STEWARD"",
+  ""schema_name"": ""HELLO"",
+  ""updated_on"": ""2026-10-04 20:58:14.115 -0700""
+}"
+954f2b88-e7cb-4144-a5d8-9bdebb0be278,P0,P0.20,"Create dbt project object from Git, pinned to dbt Core 1.11.11","create or replace dbt project spike_lab.hello.hello
+      from '@spike_lab.git.spikes_repo/branches/main/dbt/hello'
+      dbt_version = '1.11.11'",!ERROR:%,HELLO successfully created.,PASS,SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-05 04:01:19.925,10.35.101,
+954f2b88-e7cb-4144-a5d8-9bdebb0be278,P0,P0.21,New project object is a live-version object (SLD 3.2 prerequisite),show dbt projects like 'HELLO',LIVE,LIVE,PASS,SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-05 04:01:24.150,10.35.101,"{
+  ""auto_compile"": ""true"",
+  ""created_on"": ""2026-10-04 21:00:48.514 -0700"",
+  ""database_name"": ""SPIKE_LAB"",
+  ""dbt_snowflake_version"": ""1.11.5"",
+  ""dbt_version"": ""1.11.11"",
+  ""default_version"": ""LIVE"",
+  ""default_version_location_uri"": ""snow://dbt/SPIKE_LAB.HELLO.HELLO/versions/live/"",
+  ""default_version_source_location_uri"": ""@spike_lab.git.spikes_repo/branches/main/dbt/hello/"",
+  ""default_writeback"": ""true"",
+  ""last_deployed_from"": {
+    ""git_branch"": ""main"",
+    ""git_commit"": ""682f005054b6458d186d0d14b43ca33d41578b9b"",
+    ""stage_url"": ""@spike_lab.git.spikes_repo/branches/main/dbt/hello"",
+    ""timestamp"": ""2026-10-05T04:00:48.498Z"",
+    ""user"": ""OLAVJO""
+  },
+  ""name"": ""HELLO"",
+  ""owner"": ""SILVER_STEWARD"",
+  ""schema_name"": ""HELLO"",
+  ""updated_on"": ""2026-10-04 21:01:18.831 -0700""
+}"
+27a09cfd-8e64-4b2d-90b2-c21c61276f1f,P0,P0.20,"Create dbt project object from Git, pinned to dbt Core 1.11.11","create or replace dbt project spike_lab.hello.hello
+      from '@spike_lab.git.spikes_repo/branches/main/dbt/hello'
+      dbt_version = '1.11.11'",!ERROR:%,HELLO successfully created.,PASS,SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-05 04:02:47.830,10.35.101,
+27a09cfd-8e64-4b2d-90b2-c21c61276f1f,P0,P0.21,New project object is a live-version object (SLD 3.2 prerequisite),show dbt projects like 'HELLO',LIVE,LIVE,PASS,SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-05 04:02:51.705,10.35.101,"{
+  ""auto_compile"": ""true"",
+  ""created_on"": ""2026-10-04 21:02:30.527 -0700"",
+  ""database_name"": ""SPIKE_LAB"",
+  ""dbt_snowflake_version"": ""1.11.5"",
+  ""dbt_version"": ""1.11.11"",
+  ""default_version"": ""LIVE"",
+  ""default_version_location_uri"": ""snow://dbt/SPIKE_LAB.HELLO.HELLO/versions/live/"",
+  ""default_version_source_location_uri"": ""@spike_lab.git.spikes_repo/branches/main/dbt/hello/"",
+  ""default_writeback"": ""true"",
+  ""last_deployed_from"": {
+    ""git_branch"": ""main"",
+    ""git_commit"": ""682f005054b6458d186d0d14b43ca33d41578b9b"",
+    ""stage_url"": ""@spike_lab.git.spikes_repo/branches/main/dbt/hello"",
+    ""timestamp"": ""2026-10-05T04:02:30.508Z"",
+    ""user"": ""OLAVJO""
+  },
+  ""name"": ""HELLO"",
+  ""owner"": ""SILVER_STEWARD"",
+  ""schema_name"": ""HELLO"",
+  ""updated_on"": ""2026-10-04 21:02:47.156 -0700""
+}"
+27a09cfd-8e64-4b2d-90b2-c21c61276f1f,P0,P0.22,EXECUTE DBT PROJECT build succeeds (pinned 1.11.11),execute dbt project spike_lab.hello.hello args = 'build',true,true,PASS,SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-05 04:03:09.647,10.35.101,"{
+  ""query_id"": ""01c784d2-0004-1a94-0003-5b0a0001dbd2"",
+  ""result"": {
+    ""EXCEPTION"": ""None"",
+    ""STDOUT"": ""\u001b[0m04:03:01  Running with dbt=1.11.11\n\u001b[0m04:03:01  Registered adapter: snowflake=1.11.5\n\u001b[0m04:03:02  Found 1 model, 536 macros\n\u001b[0m04:03:02  \n\u001b[0m04:03:02  Concurrency: 1 threads (target='spike')\n\u001b[0m04:03:02  \n\u001b[0m04:03:04  1 of 1 START sql table model HELLO.hello ....................................... [RUN]\n\u001b[0m04:03:06  1 of 1 OK created sql table model HELLO.hello .................................. [\u001b[32mSUCCESS 1\u001b[0m in 1.55s]\n\u001b[0m04:03:06  \n\u001b[0m04:03:06  Finished running 1 table model in 0 hours 0 minutes and 3.62 seconds (3.62s).\n\u001b[0m04:03:06  \n\u001b[0m04:03:06  \u001b[32mCompleted successfully\u001b[0m\n\u001b[0m04:03:06  \n\u001b[0m04:03:06  Done. PASS=1 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=1\n"",
+    ""SUCCESS"": true
+  }
+}"
+27a09cfd-8e64-4b2d-90b2-c21c61276f1f,P0,P0.23,Model was built by dbt 1.11.11 (DBT_VERSION pin honoured),select dbt_version from spike_lab.hello.hello,1.11.11,1.11.11,PASS,SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-05 04:03:11.261,10.35.101,
+27a09cfd-8e64-4b2d-90b2-c21c61276f1f,P0,P0.24,Model was built under the profile role,select run_role from spike_lab.hello.hello,SILVER_STEWARD,SILVER_STEWARD,PASS,SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-05 04:03:13.598,10.35.101,
+27a09cfd-8e64-4b2d-90b2-c21c61276f1f,P0,P0.25,EXECUTE DBT PROJECT with DBT_VERSION = 1.12.3 override,execute dbt project ... dbt_version = '1.12.3',,true,INFO,SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-05 04:03:34.895,10.35.101,"{
+  ""query_id"": ""01c784d3-0004-16c5-0003-5b0a00028792"",
+  ""result"": {
+    ""EXCEPTION"": ""None"",
+    ""STDOUT"": ""\u001b[0m04:03:22  Running with dbt=1.12.3\n\u001b[0m04:03:22  [\u001b[33mWARNING\u001b[0m][EnvironmentVariableNamespaceDeprecation]: Deprecated\nfunctionality\nFound custom environment variable `DBT_ENGINE_MANAGE_STATE` in the environment.\nThe prefix `DBT_ENGINE` is reserved for dbt engine environment variables. Custom\nenvironment variables with the prefix `DBT_ENGINE` may cause collisions and\nruntime errors.\n\u001b[0m04:03:22  State adapter: dbt-state v0.0.0 is disabled\n\u001b[0m04:03:23  Registered adapter: snowflake=1.12.0\n\u001b[0m04:03:23  Unable to do partial parsing because of a version mismatch\n\u001b[0m04:03:24  Found 1 model, 545 macros\n\u001b[0m04:03:24  \n\u001b[0m04:03:24  Concurrency: 1 threads (target='spike')\n\u001b[0m04:03:24  \n\u001b[0m04:03:27  1 of 1 START sql table model HELLO.hello ....................................... [RUN]\n\u001b[0m04:03:30  1 of 1 OK created sql table model HELLO.hello .................................. [\u001b[32mSUCCESS 1\u001b[0m in 3.36s]\n\u001b[0m04:03:30  \n\u001b[0m04:03:30  Finished running 1 table model in 0 hours 0 minutes and 5.99 seconds (5.99s).\n\u001b[0m04:03:31  \n\u001b[0m04:03:31  \u001b[32mCompleted successfully\u001b[0m\n\u001b[0m04:03:31  \n\u001b[0m04:03:31  Done. PASS=1 WARN=0 ERROR=0 SKIP=0 NO-OP=0 REUSED=0 TOTAL=1\n\u001b[0m04:03:31  [\u001b[33mWARNING\u001b[0m][DeprecationsSummary]: Deprecated functionality\nSummary of encountered deprecations:\n- EnvironmentVariableNamespaceDeprecation: 1 occurrence\nTo see all deprecation instances instead of just the first occurrence of each,\nrun command again with the `--show-all-deprecations` flag. You may also need to\nrun with `--no-partial-parse` as some deprecations are only encountered during\nparsing.\n"",
+    ""SUCCESS"": true
+  }
+}"
+27a09cfd-8e64-4b2d-90b2-c21c61276f1f,P0,P0.26,Runtime that built the model after the 1.12.3 override,select dbt_version from spike_lab.hello.hello,,1.12.3,INFO,SILVER_STEWARD,"{""roles"":"""",""value"":""""}",2026-10-05 04:03:37.317,10.35.101,

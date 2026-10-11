@@ -1,0 +1,5 @@
+created_on,name,database_name,schema_name,owner,comment,allowed_values,owner_role_type,propagate,on_conflict,multi_value
+2026-10-04 22:00:40.726 -0700,PII,GOVERNANCE,POLICIES,GOVERNANCE_ADMIN,PII classification; carried onto derived columns explicitly (dbt post-hook),,ROLE,NONE,,false
+2026-10-04 22:03:05.279 -0700,PII_AUTO,GOVERNANCE,POLICIES,GOVERNANCE_ADMIN,PII classification; propagated automatically on CTAS and DML,,ROLE,ON_DATA_MOVEMENT,,false
+2026-10-06 13:47:25.833 -0700,PII_DECL,GOVERNANCE,POLICIES,GOVERNANCE_ADMIN,S9e: propagating PII tag; value declassified reveals the column,,ROLE,ON_DATA_MOVEMENT,,false
+2026-10-06 15:00:17.923 -0700,PII_DEP,GOVERNANCE,POLICIES,GOVERNANCE_ADMIN,S9f: propagates through views and on data movement; value declassified reveals,,ROLE,ON_DEPENDENCY_AND_DATA_MOVEMENT,,false

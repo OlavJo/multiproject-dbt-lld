@@ -1,0 +1,35 @@
+CASE_ID,OUTCOME,DESCRIPTION,OBSERVED,EXPECTED,ROLE_NAME,SECONDARY_ROLES,OBSERVED_AT
+S1.01,PASS,CREATE VIEW accepts a bare (unqualified) identifier,View V successfully created.,%successfully created%,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:18:31.976
+S1.02,PASS,"Bare identifier resolves in the VIEW's schema, not the session schema (session = s1_other)",OLD,OLD,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:18:34.028
+S1.03,PASS,Stored view text keeps the bare identifier (binding is not expanded at creation),"create or replace view V(
+	ID,
+	MARKER
+) as select id, marker from t;",%from t%,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:18:36.209
+S1.04,PASS,No fallback to the session schema: a name that exists only in the session schema is rejected,"ERROR: SQL compilation error:
+Object 'SILVER.S1_PUB.U' does not exist or not authorized. Your primary role SVC_SILVER_ERP must have at least one privilege granted on TABLE SILVER.S1_PUB.U.",ERROR:%,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:18:38.283
+S1.05,PASS,CREATE SEMANTIC VIEW accepts a bare table name,Semantic view SV successfully created.,!ERROR:%,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:18:40.647
+S1.06,FAIL,Semantic view with bare table name resolves in its own schema,OTHER,OLD,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:18:41.809
+S1.07,INFO,Stored semantic view text keeps the bare table name,"create or replace semantic view SV
+	tables (
+		SILVER.S1_OTHER.T primary key (ID)
+	)
+	dimensions (
+		T.MARKER_DIM as marker
+	)
+	metrics (
+		T.ROW_COUNT as count(*)
+	);",,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:18:43.130
+S1.10,PASS,"Cloned view reads the CLONE's T, not the source schema's T",CLONED,CLONED,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:18:48.699
+S1.11,PASS,Cloned view-on-view reads the clone's siblings,CLONED,CLONED,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:18:50.168
+S1.12,FAIL,Cloned semantic view reads the clone's T,OTHER,CLONED,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:18:51.560
+S1.13,PASS,Source schema unaffected by the clone,OLD,OLD,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:18:52.752
+S1.20,PASS,Before swap: published view still reads OLD,OLD,OLD,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:19:01.303
+S1.21,PASS,"KEY: after swap, bare-identifier view under the published name reads the NEW sibling",NEW,NEW,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:19:03.840
+S1.22,PASS,"After swap, view-on-view under the published name reads NEW",NEW,NEW,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:19:05.241
+S1.23,FAIL,"After swap, semantic view under the published name reads NEW",OLD,NEW,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:19:06.538
+S1.24,PASS,"After swap, the moved (old) schema's view reads its own OLD sibling",OLD,OLD,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:19:07.729
+S1.25,PASS,CONTROL: fully qualified view follows the build NAME after swap and reads stale OLD (the hazard SLD 10.5 removes),OLD,OLD,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:19:10.056
+S1.26,PASS,Cross-unit fully qualified view is unaffected by the swap,OTHER,OTHER,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:19:11.183
+S1.30,PASS,"Cycle 2: untouched cloned view, after swap, reads NEWER",NEWER,NEWER,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:19:16.285
+S1.31,FAIL,"Cycle 2: untouched cloned semantic view, after swap, reads NEWER",NEW,NEWER,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:19:17.703
+S1.32,PASS,Cycle 2: moved schema holds the previous version,NEW,NEW,SVC_SILVER_ERP,"{""roles"":"""",""value"":""""}",2026-10-05 04:19:18.780

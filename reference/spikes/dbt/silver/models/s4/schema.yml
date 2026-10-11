@@ -1,0 +1,31 @@
+version: 2
+
+models:
+  - name: s4_orders_history
+    data_tests:
+      - history_contiguous:
+          arguments: {key: order_id, valid_from: valid_from, valid_to: valid_to, seq: source_seq}
+      - one_open_version:
+          arguments: {key: order_id, valid_to: valid_to}
+    columns:
+      - name: order_id
+        data_tests: [not_null]
+  - name: s4_orders_current
+    data_tests:
+      - current_matches_history:
+          arguments:
+            history: "{{ ref('s4_orders_history') }}"
+            key: order_id
+            columns: [order_id, status, amount, source_seq]
+    columns:
+      - name: order_id
+        data_tests: [unique, not_null]
+      - name: status
+        data_tests:
+          # Failure injection for spike S4 (disabled unless the variable selects it)
+          - accepted_values:
+              name: inj_s4_output_test
+              arguments: {values: ['__never__']}
+              config:
+                severity: error
+                enabled: "{{ var('inject_failure', '') == 'output_test' }}"
