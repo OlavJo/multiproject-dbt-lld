@@ -1,6 +1,6 @@
 # Access map
 
-A quick reference to the roles, what they hold, what they own and what they may do, **as built in the prototype** (Increment 1, 2026-10-12). The design and its reasons are in [`01-identity-and-access.md`](01-identity-and-access.md); this page shows the result. It is updated in every increment's pull request that changes a role, an ownership or a grant.
+A quick reference to the roles, what they hold, what they own and what they may do, **as built in the prototype** (Increments 1 and 2, 2026-10-12). The design and its reasons are in [`01-identity-and-access.md`](01-identity-and-access.md); this page shows the result. It is updated in every increment's pull request that changes a role, an ownership or a grant.
 
 Ownership is drawn as a privilege (`OWNERSHIP`), as Snowflake treats it: thick arrows are `OWNERSHIP`, thin arrows are other privileges. `<unit>` stands for each Silver unit (`erp`, `crm`, `hr`, `core`), `<source>` for each raw source.
 
@@ -28,6 +28,8 @@ flowchart TB
   SYSADMIN --> STEWARD["SILVER_STEWARD"]:::own
   SYSADMIN --> PROV["SILVER_PROVISIONER"]:::util
   SYSADMIN --> SVC["SVC_SILVER_&lt;UNIT&gt;<br/>one per unit"]:::svc
+  SYSADMIN --> SCHED["SILVER_SCHEDULER"]:::util
+  SCHED -->|every unit role| SVC
 
   SVC --> BASE["SILVER_UNIT_BASE"]:::util
   SVC --> TASKR["TASK_RUNNER"]:::util
@@ -38,7 +40,9 @@ flowchart TB
   AHR -->|a sensitive unit, e.g. HR| SR
 ```
 
-Examples from the demo: `SVC_SILVER_CORE` holds `silver.reader_erp` and `silver.reader_crm` (its declared upstreams), not `silver.reader_hr`. `silver.reader` holds the readers of ERP, CRM and Core; HR is sensitive, so only `ANALYST_HR` reaches `silver.reader_hr`.
+`SILVER_SCHEDULER` holds every unit role because, in its managed-access schema `silver.tasks`, a task can be handed only to a role below the schema owner (INC2.10, first run).
+
+Examples from the demos: `SVC_SILVER_CORE` holds `silver.reader_erp` and `silver.reader_crm` (its declared upstreams), not `silver.reader_hr`. `silver.reader` holds the readers of ERP, CRM and Core; HR is sensitive, so only `ANALYST_HR` reaches `silver.reader_hr`.
 
 ## 2. Owners, provisioning and operation
 
@@ -68,7 +72,33 @@ flowchart LR
   PROV -->|"SELECT config,<br/>lease DML, USAGE log_event"| AOPS[("analytics_ops.control")]:::obj
 ```
 
-## 3. A unit and its readers
+## 3. Publication: the steward's objects and the scheduler
+
+```mermaid
+flowchart LR
+  classDef own fill:#fff3e0,stroke:#fb8c00,color:#e65100
+  classDef util fill:#f3e5f5,stroke:#8e24aa,color:#4a148c
+  classDef func fill:#e3f2fd,stroke:#1e88e5,color:#0d47a1
+  classDef obj fill:#ffffff,stroke:#9e9e9e,color:#212121
+
+  STEWARD["SILVER_STEWARD"]:::own
+  SCHED["SILVER_SCHEDULER"]:::util
+  OPERATOR["SILVER_OPERATOR"]:::func
+  PUB[("silver.ops: silver_layer project object,<br/>publish_unit; analytics_ops.control:<br/>status views, lease procedures")]:::obj
+  TASKS[("silver.tasks<br/>managed access")]:::obj
+  PROV2[("silver.ops.provision_unit_task")]:::obj
+  TASK[("silver.tasks.publish_&lt;unit&gt;")]:::obj
+
+  STEWARD ==>|OWNERSHIP| PUB
+  SCHED ==>|OWNERSHIP| TASKS
+  SCHED ==>|OWNERSHIP| PROV2
+  OPERATOR -->|USAGE| PROV2
+  OPERATOR -->|OPERATE, MONITOR| TASK
+```
+
+The scheduler creates each task and hands it to the unit role; the operator starts it with `EXECUTE TASK`, and the run is the unit role's (INC2.15, INC2.19).
+
+## 4. A unit and its readers
 
 ```mermaid
 flowchart LR
@@ -91,6 +121,8 @@ flowchart LR
   RAW[("raw.&lt;source&gt;<br/>schema and tables")]:::obj
 
   SVC ==>|OWNERSHIP| UNITSCH
+  SVC ==>|OWNERSHIP| TASK[("silver.tasks.publish_&lt;unit&gt;")]:::obj
+  BASE -->|"USAGE on the project object,<br/>publish_unit, lease procedures"| PUB[("silver.ops, analytics_ops.control<br/>publication objects")]:::obj
   BASE -->|"USAGE, CREATE SCHEMA on silver;<br/>USAGE on silver.ops"| SILVER
   BASE -->|"SELECT units, unit_dependencies,<br/>publish_log; USAGE log_event"| AOPS
   BASE -->|USAGE| WH
@@ -99,22 +131,23 @@ flowchart LR
   SR -->|"USAGE (granted at each publication),<br/>SELECT on published objects"| UNITSCH
 ```
 
-## 4. Matrix
+## 5. Matrix
 
 | Role | Kind | Holds | `OWNERSHIP` of | Other privileges |
 |---|---|---|---|---|
 | `SYSADMIN` | System | Every account role below | `LLD_WH`, `LLD_LAB` | |
-| `PLATFORM_INGEST` | Owner | | `raw` database, `raw.<source>` schemas and tables, `raw.reader_<source>` | `USAGE` on `LLD_WH` |
-| `SILVER_STEWARD` | Owner | | `silver` database, `silver.ops`, `analytics_ops` and everything in `analytics_ops.control` (tables, `log_event`) | `USAGE` on `LLD_WH` |
+| `PLATFORM_INGEST` | Owner | | `raw` database, `raw.<source>` schemas and tables, `raw.reader_<source>`; `raw.control` (`landing_complete`, `land_batch`) | `USAGE` on `LLD_WH`; grants `SELECT` on `landing_complete` to `SILVER_STEWARD` |
+| `SILVER_STEWARD` | Owner | | `silver` database, `silver.ops`; the project object `silver.ops.silver_layer` and `silver.ops.publish_unit`; `analytics_ops` and everything in `analytics_ops.control` (tables, status views, `log_event`, lease procedures) | `READ` on `LLD_LAB.GIT.LLD_REPO`; `USAGE` on `LLD_WH` |
 | `SILVER_PROVISIONER` | Utility | | `SILVER_UNIT_BASE`, `TASK_RUNNER`, every `SVC_SILVER_<UNIT>`; `silver.reader`, every `silver.reader_<unit>`; the procedures in `silver.ops` | `CREATE ROLE` on the account; `USAGE`, `CREATE SCHEMA`, `CREATE DATABASE ROLE` on `silver`; `USAGE`, `CREATE PROCEDURE` on `silver.ops`; `SELECT` on `units`, `unit_dependencies`; `SELECT`, `INSERT`, `DELETE` on `unit_lease`; `USAGE` on `log_event`; `USAGE` on `LLD_WH` |
-| `SILVER_UNIT_BASE` | Access | | | `USAGE`, `CREATE SCHEMA` on `silver`; `USAGE` on `silver.ops`; `USAGE` on `analytics_ops`, `analytics_ops.control`; `SELECT` on `units`, `unit_dependencies`, `publish_log`; `USAGE` on `log_event`; `USAGE` on `LLD_WH` |
+| `SILVER_SCHEDULER` | Utility | Every `SVC_SILVER_<UNIT>` (granted by `onboard_unit`) | `silver.tasks` (managed access); `silver.ops.provision_unit_task` | `USAGE`, `CREATE SCHEMA` on `silver`; `USAGE`, `CREATE PROCEDURE` on `silver.ops`; `SELECT` on `units`, `unit_lease`; `USAGE` on `log_event`; `USAGE` on `LLD_WH`; as schema owner, grants `OPERATE`, `MONITOR` on each task |
+| `SILVER_UNIT_BASE` | Access | | | `USAGE`, `CREATE SCHEMA` on `silver`; `USAGE` on `silver.ops`, `silver.tasks`; `USAGE` on the project object and `publish_unit`; `USAGE` on `analytics_ops`, `analytics_ops.control`; `SELECT` on `units`, `unit_dependencies`, `publish_log`, `unit_status`, `unit_has_new_input`, `v_landing_complete`; `USAGE` on `log_event`, `acquire_lease`, `release_lease`; `USAGE` on `LLD_WH` |
 | `TASK_RUNNER` | Access | | | `EXECUTE TASK` on the account (INC1.90) |
-| `SVC_SILVER_<UNIT>` | Service | `SILVER_UNIT_BASE`, `TASK_RUNNER`; `raw.reader_<source>` (Source Entity units, from the platform); `silver.reader_<upstream>` for each declared Silver upstream | `silver.<unit>` (managed access); from Increment 2, `silver.<unit>__build` and its task | Through the roles it holds |
-| `SILVER_OPERATOR` | Functional | | | `USAGE` on `onboard_unit`, `offboard_unit`, `grant_unit_reader`, `revoke_unit_reader`; `SELECT` on `units`, `unit_dependencies`, `publish_log`, `unit_lease`; `USAGE` on `LLD_WH` |
+| `SVC_SILVER_<UNIT>` | Service | `SILVER_UNIT_BASE`, `TASK_RUNNER`; `raw.reader_<source>` (Source Entity units, from the platform); `silver.reader_<upstream>` for each declared Silver upstream | `silver.<unit>` and `silver.<unit>__build` (managed access) and every object in them; its task `silver.tasks.publish_<unit>` | Through the roles it holds; as schema owner, grants and revokes `USAGE` for its reader around each swap |
+| `SILVER_OPERATOR` | Functional | | | `USAGE` on `onboard_unit`, `offboard_unit`, `grant_unit_reader`, `revoke_unit_reader`, `provision_unit_task`; `OPERATE`, `MONITOR` on each unit task; `SELECT` on `units`, `unit_dependencies`, `publish_log`, `unit_lease`, `unit_status`, `unit_has_new_input`, `v_landing_complete`; `USAGE` on `LLD_WH` |
 | `ANALYST_ALL` | Functional (consumer) | `silver.reader` | | `USAGE` on `LLD_WH` |
 | `ANALYST_HR` | Functional (consumer) | `silver.reader_hr` | | `USAGE` on `LLD_WH` |
 | `raw.reader_<source>` | Database role | | | `USAGE` on `raw.<source>`; `SELECT` on its tables, present and future |
 | `silver.reader` | Database role | Every non-sensitive `silver.reader_<unit>` | | |
-| `silver.reader_<unit>` | Database role | | | `USAGE` on `silver.<unit>`, granted at each publication (F3; INC1.42 stands in until Increment 2); `SELECT` on published objects (dbt `grants`, Increment 2) |
+| `silver.reader_<unit>` | Database role | | | `USAGE` on `silver.<unit>`, granted by the unit role around each swap (F3; INC2.26); `SELECT` on every model in the unit's folder (dbt `grants`; INC2.25, INC2.30) |
 
 Every prototype role also has `USAGE` on `LLD_LAB.EVIDENCE` and its procedures, and `INSERT` on the evidence table (trial shortcut T6). Trial shortcut T1: the one trial user holds every role; in production people hold functional roles only.

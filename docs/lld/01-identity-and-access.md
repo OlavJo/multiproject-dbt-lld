@@ -303,7 +303,7 @@ Small checks the recommendations depend on, none covered by the spikes. They can
 | V-IA-8 | `IS_ROLE_IN_SESSION` in a masking policy reveals to a service role that holds `PII_CLEAR_<scope>`, with secondary roles off, including inside a task and an `EXECUTE DBT PROJECT` run | 6.4, GV-3 |
 | V-IA-9 | An owner's-rights procedure owned by `SILVER_PROVISIONER` creates a role, grants it privileges and `TASK_RUNNER`, creates a database role and grants it, and creates a schema as the new role (or hands it over); the least privileges `SILVER_PROVISIONER` needs | 7.1.1 |
 
-**Results.** V-IA-9 **Observed** (Increment 1, 2026-10-12; Section 11): yes, with one constraint. The hand-over of the schema must carry no grants, because `GRANT OWNERSHIP ... COPY CURRENT GRANTS` in an owner's-rights procedure needs `MANAGE GRANTS`.
+**Results.** V-IA-1 **Observed** (Increment 2, 2026-10-12; INC2.25, INC2.30): dbt `grants` grant `SELECT` to a reader database role, and the grant survives clone, build and swap on an incremental model; dbt never revokes a database-role grant (from the dbt-snowflake code, not tested). V-IA-7 **Observed** (INC2.15, INC2.19): `OPERATE` on a task lets `SILVER_OPERATOR` run it with `EXECUTE TASK`, and the run is the owner's. A unit's task is created and handed over by `SILVER_SCHEDULER` (Section 5.4), because in a managed-access schema an object can be handed only to a role below the schema owner (INC2.10, first run). V-IA-9 **Observed** (Increment 1, 2026-10-12; Section 11): yes, with one constraint. The hand-over of the schema must carry no grants, because `GRANT OWNERSHIP ... COPY CURRENT GRANTS` in an owner's-rights procedure needs `MANAGE GRANTS`.
 
 ## 9. Residual risks
 

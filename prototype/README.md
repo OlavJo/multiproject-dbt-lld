@@ -30,7 +30,7 @@ Further component folders (`02_governance/`, ...) appear with the increments tha
 |---|---|---|---|---|
 | 0 | Clean slate | The prototype's own lab (warehouse, evidence store, Git integration), independent of the spike objects; the spike databases and roles removed, the spike record (`SPIKE_LAB`) kept | | **Done** 2026-10-11 |
 | 1 | **Unit onboarding** | Stewards onboard and retire Silver units themselves: a role per unit, reader roles, a sensitive source kept out of the aggregate reader, refusals for bad input | V-IA-9; IA-1, IA-3 | **Done** 2026-10-12 |
-| 2 | First publication under the new roles | ERP lands, freezes, builds and publishes through the publish procedure, run by its own task; a consumer reads it through the reader database role | V-IA-1, V-IA-7 | Scripts ready |
+| 2 | First publication under the new roles | ERP lands, freezes, builds and publishes through the publish procedure, run by its own task; a consumer reads it through the reader database role | V-IA-1, V-IA-7 | **Done** 2026-10-12 |
 | 3 | Consistent reads through the clone procedure | Core builds from input clones taken by `SILVER_CLONER`, reading upstream published objects only | V-IA-2, V-IA-3; IA-2 | Planned |
 | 4 | Clear values and the sensitive source | Governance tags and masking with a `PII_CLEAR` access role; Core matches on clear values; HR stays restricted | V-IA-6, V-IA-8; GV-3 | Planned |
 | 5 | CI under its own role | A CI build with `IMPORTS` of canonical state and `--defer`, under `CI_SILVER` | V-IA-4, V-IA-5 | Planned |
@@ -57,6 +57,23 @@ Each increment ends with: its scripts, a demo with probes, the evidence CSV in `
 | INC1.27 | INFO, as designed: a unit role can create any schema in `silver` (LLD 01, Section 9) |
 | INC1.90 | `TASK_RUNNER` holds exactly `EXECUTE TASK` on the account |
 | Part 6 | `USE ROLE` activates any role in the user's hierarchy: with its direct grant revoked, `SVC_SILVER_CRM` was activated through `SYSADMIN` (manual check, 2026-10-12). The demo's direct grants of unit roles to the user were removed |
+
+**Increment 2** (2026-10-12, `evidence/INC2_20261012.csv`, publication log `evidence/INC2_20261012_publish_log.csv`): 26 PASS; V-IA-1 and V-IA-7 Observed. The first run (`evidence/INC2_20261012_run1*.csv`) stopped at the task hand-over.
+
+| Case | Finding |
+|---|---|
+| i2_30 | A branch name with a slash must be double-quoted in a Git stage path (`@repo/branches/"claude/..."/...`); unquoted, Snowflake looked for a branch `claude` |
+| INC2.10, 11 | First run FAIL: in a managed-access schema an object can be handed only to a role **subordinate to the schema owner**. The steward could not hand tasks to unit roles. Fixed with `SILVER_SCHEDULER`, which holds every unit role and owns `silver.tasks` (I2-1, decided for the prototype). PASS on the second run |
+| INC2.13 | Each task is owned by its unit role and suspended |
+| INC2.15, 19 | **V-IA-7 Observed**: `OPERATE` lets the operator run a task it does not own with `EXECUTE TASK`; the run is the unit role's (`STARTED` records `SVC_SILVER_ERP`) |
+| INC2.14 | The operator cannot call `publish_unit` (to a role without `USAGE` it appears not to exist) |
+| INC2.17, 18 | ERP and CRM published by their tasks, concurrently, in about 50 seconds each (freeze, build, swap, canonical compile); the second ERP publication about 56 seconds |
+| INC2.20 to 22 | `ANALYST_ALL` reads the published tables through `silver.reader`; counts match raw |
+| INC2.23, 24 | Consumers cannot read frozen inputs; `ANALYST_HR` cannot see ERP |
+| INC2.25, 30 | **V-IA-1 Observed**: dbt `grants` grant `SELECT` to the reader **database role**, and the incremental model still carries the grant after its second clone, build and swap. From the dbt-snowflake code (1.10.8): database-role grants are left out of dbt's comparison, so dbt re-grants on every run and never revokes them (not tested) |
+| INC2.26 | After the swap the reader holds no `USAGE` on the build schema (F3, with the unit's own reader role) |
+| INC2.29 | The incremental model merged the CDC update (order 1 has its latest status) |
+| INC2.31 | With no new input the task skips (gate condition 2) |
 
 ## Running an increment
 
@@ -98,7 +115,7 @@ Every script is idempotent, and the demos reset or reuse their own units, so any
 
 | # | Choice | Why |
 |---|---|---|
-| I2-1 | **Unit tasks** live in `silver.tasks`, a managed-access schema owned by a new utility role, **`SILVER_SCHEDULER`**, which holds every unit role (`onboard_unit` grants each one to it) and is never held by a person. `provision_unit_task(unit)` (scheduler, owner's rights, called by the operator after `onboard_unit`) creates `silver.tasks.publish_<unit>`, hands it to the unit role with no grants, then grants `OPERATE` and `MONITOR` to `SILVER_OPERATOR`. **Decided for the prototype 2026-10-12**; proposed for RC-1 | A task runs as its owner, so the unit role must own it. Once handed over, only the owner of a managed-access schema can still grant on it (a hand-over cannot copy grants: INC1.01). In a managed-access schema an object can be handed only to a role below the schema owner (first run, INC2.10), and unit roles must not be below the steward (F7). A unit schema cannot hold its task (it is swapped). Same pattern as `SILVER_CLONER` (IA-2 b) |
+| I2-1 | **Unit tasks** *(decided for the prototype)* live in `silver.tasks`, a managed-access schema owned by a new utility role, **`SILVER_SCHEDULER`**, which holds every unit role (`onboard_unit` grants each one to it) and is never held by a person. `provision_unit_task(unit)` (scheduler, owner's rights, called by the operator after `onboard_unit`) creates `silver.tasks.publish_<unit>`, hands it to the unit role with no grants, then grants `OPERATE` and `MONITOR` to `SILVER_OPERATOR`. **Decided for the prototype 2026-10-12**; proposed for RC-1 | A task runs as its owner, so the unit role must own it. Once handed over, only the owner of a managed-access schema can still grant on it (a hand-over cannot copy grants: INC1.01). In a managed-access schema an object can be handed only to a role below the schema owner (first run, INC2.10), and unit roles must not be below the steward (F7). A unit schema cannot hold its task (it is swapped). Same pattern as `SILVER_CLONER` (IA-2 b) |
 | I2-2 | The publish procedure grants schema `USAGE` to the unit's own reader role, `silver.reader_<unit>`, around the swap | IA-3; LLD 01, 6.2. The spike granted to `silver.reader` |
 | I2-3 | A unit with Silver upstreams is refused (`FAILED:input_clones`) until Increment 3 | IA-2 (b) needs `SILVER_CLONER`; the spike's inherited-role clones contradict IA-2 |
 | I2-4 | dbt `grants` on each unit folder, to the unit's reader database role, base views included | LLD 01, 6.2 (one setting per folder). Base views expose cleaned columns of the frozen inputs, not the inputs themselves |
