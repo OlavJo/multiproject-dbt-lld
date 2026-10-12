@@ -87,6 +87,10 @@ call lld_lab.evidence.probe($run_id, 'INC2', 'INC2.14', 'The operator cannot run
 use role platform_ingest;
 call raw.control.land_batch('ERP', false);
 call raw.control.land_batch('CRM', false);
+-- Expected values, read from raw after landing (the demo is rerunnable, so counts are not fixed)
+set exp_accounts = (select count(*)::varchar from raw.erp.accounts);
+set exp_orders   = (select count(distinct order_id)::varchar from raw.erp.orders);
+set exp_contacts = (select count(*)::varchar from raw.crm.contacts);
 
 use role silver_operator;
 set t0 = (select sysdate());
@@ -106,12 +110,12 @@ call lld_lab.evidence.probe($run_id, 'INC2', 'INC2.19', 'The ERP run was the uni
 
 -- Part 3: consumers ------------------------------------------------------------------------
 use role analyst_all;
-call lld_lab.evidence.probe($run_id, 'INC2', 'INC2.20', 'ANALYST_ALL reads the published ERP accounts (1 initial + 2 landed)',
-  $$select count(*) from silver.erp.erp_accounts$$, '3');
+call lld_lab.evidence.probe($run_id, 'INC2', 'INC2.20', 'ANALYST_ALL reads the published ERP accounts (every landed account)',
+  $$select count(*) from silver.erp.erp_accounts$$, $exp_accounts);
 call lld_lab.evidence.probe($run_id, 'INC2', 'INC2.21', 'ANALYST_ALL reads current ERP orders (CDC: one row per order)',
-  $$select count(*) from silver.erp.erp_orders_current$$, '3');
+  $$select count(*) from silver.erp.erp_orders_current$$, $exp_orders);
 call lld_lab.evidence.probe($run_id, 'INC2', 'INC2.22', 'ANALYST_ALL reads the published CRM contacts',
-  $$select count(*) from silver.crm.crm_contacts$$, '3');
+  $$select count(*) from silver.crm.crm_contacts$$, $exp_contacts);
 call lld_lab.evidence.probe($run_id, 'INC2', 'INC2.23', 'ANALYST_ALL cannot read the frozen inputs',
   $$select count(*) from silver.erp.raw__accounts$$, 'ERROR:%');
 use role analyst_hr;
@@ -144,6 +148,8 @@ call lld_lab.evidence.record($run_id, 'INC2', 'INC2.26', 'After the swap the rea
 -- Part 4: a second batch and a second ERP publication ---------------------------------------
 use role platform_ingest;
 call raw.control.land_batch('ERP', false);
+set exp_accounts = (select count(*)::varchar from raw.erp.accounts);
+set exp_status   = (select max_by(status, _seq) from raw.erp.orders where order_id = 1);
 use role silver_operator;
 set t1 = (select sysdate());
 execute task silver.tasks.publish_erp;
@@ -152,10 +158,10 @@ set obs = (select $1 from table(result_scan(last_query_id())));
 call lld_lab.evidence.record($run_id, 'INC2', 'INC2.27', 'ERP is published a second time', 'wait_for_unit(silver.erp)', 'PUBLISHED', $obs);
 
 use role analyst_all;
-call lld_lab.evidence.probe($run_id, 'INC2', 'INC2.28', 'ANALYST_ALL reads the second publication (5 accounts)',
-  $$select count(*) from silver.erp.erp_accounts$$, '5');
-call lld_lab.evidence.probe($run_id, 'INC2', 'INC2.29', 'The incremental model merged the CDC update (order 1 now RETURNED)',
-  $$select status from silver.erp.erp_orders_current where order_id = 1$$, 'RETURNED');
+call lld_lab.evidence.probe($run_id, 'INC2', 'INC2.28', 'ANALYST_ALL reads the second publication (two more accounts)',
+  $$select count(*) from silver.erp.erp_accounts$$, $exp_accounts);
+call lld_lab.evidence.probe($run_id, 'INC2', 'INC2.29', 'The incremental model merged the CDC update (order 1 has its latest status)',
+  $$select status from silver.erp.erp_orders_current where order_id = 1$$, $exp_status);
 use role sysadmin;
 declare v varchar; begin
   show grants on table silver.erp.erp_orders_current;
