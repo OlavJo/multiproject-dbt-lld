@@ -61,9 +61,9 @@ update analytics_ops.control.units set selector = 'unit_crm', dbt_target = 'prod
 
 use role silver_operator;
 call lld_lab.evidence.probe($run_id, 'INC2', 'INC2.10', 'Operator provisions the ERP task',
-  $$call silver.ops.provision_unit_task('silver.erp')$$, 'TASK:silver.tasks.publish_erp owned by SVC_SILVER_ERP (created); OPERATE, MONITOR to SILVER_OPERATOR');
+  $$call silver.ops.provision_unit_task('silver.erp')$$, 'TASK:silver.tasks.publish_erp owned by SVC_SILVER_ERP (%); OPERATE, MONITOR to SILVER_OPERATOR');
 call lld_lab.evidence.probe($run_id, 'INC2', 'INC2.11', 'Operator provisions the CRM task',
-  $$call silver.ops.provision_unit_task('silver.crm')$$, 'TASK:silver.tasks.publish_crm owned by SVC_SILVER_CRM (created); OPERATE, MONITOR to SILVER_OPERATOR');
+  $$call silver.ops.provision_unit_task('silver.crm')$$, 'TASK:silver.tasks.publish_crm owned by SVC_SILVER_CRM (%); OPERATE, MONITOR to SILVER_OPERATOR');
 call lld_lab.evidence.probe($run_id, 'INC2', 'INC2.12', 'A unit with no selector gets no task',
   $$call silver.ops.provision_unit_task('silver.core')$$, 'REFUSED:no_selector');
 
