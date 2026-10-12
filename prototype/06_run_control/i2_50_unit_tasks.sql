@@ -5,30 +5,71 @@
 -- F2). Stewards run it without holding that role: SILVER_OPERATOR gets OPERATE on the task
 -- and starts it with EXECUTE TASK; the run is still the unit role's (IA-7; V-IA-7).
 --
--- PROPOSED (RC-1, prototype choice I2-1; to confirm at the Increment 2 review):
---   * tasks live in silver.tasks, a MANAGED ACCESS schema owned by SILVER_STEWARD, not in
---     silver.ops and never in a unit schema (a unit schema is swapped every publication)
---   * silver.ops.provision_unit_task(unit), owned by SILVER_STEWARD (owner's rights) and
+-- Prototype choice I2-1 (decided for the prototype 2026-10-12, proposed for RC-1):
+--   * tasks live in silver.tasks, a MANAGED ACCESS schema owned by SILVER_SCHEDULER, a
+--     utility role that holds every unit role (onboard_unit grants each one to it) and is
+--     never held by a person
+--   * silver.ops.provision_unit_task(unit), owned by SILVER_SCHEDULER (owner's rights) and
 --     called by the operator after onboard_unit:
 --       1. creates silver.tasks.publish_<unit>
---       2. hands it to the unit role with no grants on it (the Increment 1 finding: a
---          hand-over cannot copy grants without MANAGE GRANTS)
---       3. grants OPERATE and MONITOR to SILVER_OPERATOR
---     Steps 2 and 3 rely on the schema owner's right, in a managed-access schema, to grant
---     on every object in it whoever owns the object. Object owners there cannot.
+--       2. hands it to the unit role with no grants on it (INC1.01: a hand-over cannot copy
+--          grants without MANAGE GRANTS)
+--       3. grants OPERATE and MONITOR to SILVER_OPERATOR, as the schema owner
 --   * the task carries the baseline schedule (SLD 12.7) but stays SUSPENDED; resuming
 --     schedules is RC-1's decision. The demo starts it with EXECUTE TASK.
 --
--- Run as: SILVER_STEWARD. Requires: i1_40, i2_40. Idempotent.
+-- Why a scheduler role (first run, 2026-10-12, INC2.10): in a managed-access schema an object
+-- can be handed only to a role SUBORDINATE to the schema owner ("Ownership restriction
+-- violation in a managed access schema. Grantee need to be a subordinate role of the schema
+-- owner"). Unit roles are not below SILVER_STEWARD, and must not be (F7). The scheduler holds
+-- them, like SILVER_CLONER in IA-2 (b); Increment 3 may merge the two.
+--
+-- Run as: SYSADMIN, SILVER_STEWARD, then SILVER_SCHEDULER (switches itself).
+-- Requires: i1_10 and i1_40 rerun (the scheduler role and its unit-role grants), i2_40.
+-- Idempotent.
 -- =============================================================================
 
-use role silver_steward;
 use secondary roles none;
+
+-- Part A: the steward's grants to the scheduler -----------------------------------------
+use role silver_steward;
 use warehouse lld_wh;
+
+-- First run left a steward-owned silver.tasks with two steward-owned tasks; remove it once
+declare
+  v_owner varchar;
+begin
+  show schemas like 'TASKS' in database silver;
+  select max("owner") into :v_owner from table(result_scan(last_query_id()));
+  if (v_owner = 'SILVER_STEWARD') then
+    drop schema silver.tasks;
+    return 'dropped the steward-owned silver.tasks from the first run';
+  end if;
+  return 'nothing to clean up (owner: ' || nvl(v_owner, 'none') || ')';
+end;
+-- ... and a steward-owned provision_unit_task, which the scheduler could not replace. On later
+-- runs the scheduler owns it and this drop is refused, harmlessly.
+begin
+  drop procedure if exists silver.ops.provision_unit_task(varchar);
+exception
+  when other then null;
+end;
+
+grant usage, create schema on database silver                   to role silver_scheduler;
+grant usage, create procedure on schema silver.ops              to role silver_scheduler;
+grant usage on database analytics_ops                           to role silver_scheduler;
+grant usage on schema analytics_ops.control                     to role silver_scheduler;
+grant select on table analytics_ops.control.units               to role silver_scheduler;
+grant select on table analytics_ops.control.unit_lease          to role silver_scheduler;
+grant usage on procedure analytics_ops.control.log_event(varchar, varchar, timestamp_ntz, varchar, variant) to role silver_scheduler;
+
+-- Part B: the scheduler's schema and procedure ---------------------------------------
+use role silver_scheduler;
 
 create schema if not exists silver.tasks with managed access;
 grant usage on schema silver.tasks to role silver_unit_base;
 grant usage on schema silver.tasks to role silver_operator;
+grant usage on schema silver.tasks to role silver_provisioner;   -- offboard_unit drops a retired unit's task
 
 create or replace procedure silver.ops.provision_unit_task(p_unit varchar)
   returns varchar

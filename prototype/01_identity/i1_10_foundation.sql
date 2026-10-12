@@ -5,7 +5,8 @@
 -- IA-3, IA-4 (proposed). Creates the roles that exist before any unit does:
 --
 --   owner roles      PLATFORM_INGEST (raw), SILVER_STEWARD (silver, analytics_ops)
---   utility roles    SILVER_PROVISIONER (creates and retires unit roles; CREATE ROLE)
+--   utility roles    SILVER_PROVISIONER (creates and retires unit roles; CREATE ROLE),
+--                    SILVER_SCHEDULER (owns the unit tasks' schema; holds every unit role; Increment 2)
 --   access roles     SILVER_UNIT_BASE (privileges common to every unit role),
 --                    TASK_RUNNER (EXECUTE TASK); both OWNED by the provisioner,
 --                    which is what lets it grant them to new unit roles
@@ -30,6 +31,7 @@ use role useradmin;
 create role if not exists platform_ingest    comment = 'Owner: raw landing (platform team)';
 create role if not exists silver_steward     comment = 'Owner: silver and analytics_ops databases (Silver stewards; used by deployment)';
 create role if not exists silver_provisioner comment = 'Utility: owns onboard_unit/offboard_unit and the unit roles they create. Never granted to a person in production';
+create role if not exists silver_scheduler   comment = 'Utility: owns silver.tasks (managed access) and provision_unit_task; holds every unit role so unit tasks can be handed to them (I2-1). Never granted to a person';
 create role if not exists silver_unit_base   comment = 'Access role: privileges every Silver unit service role needs';
 create role if not exists task_runner        comment = 'Access role: EXECUTE TASK on the account';
 create role if not exists silver_operator    comment = 'Functional: Silver stewards operating the platform (onboarding, access, re-runs)';
@@ -45,6 +47,7 @@ grant ownership on role task_runner      to role silver_provisioner;
 grant role platform_ingest    to role sysadmin;
 grant role silver_steward     to role sysadmin;
 grant role silver_provisioner to role sysadmin;
+grant role silver_scheduler   to role sysadmin;
 grant role silver_operator    to role sysadmin;
 grant role analyst_all        to role sysadmin;
 grant role analyst_hr         to role sysadmin;
@@ -82,6 +85,7 @@ grant ownership on database analytics_ops to role silver_steward  copy current g
 grant usage on warehouse lld_wh to role platform_ingest;
 grant usage on warehouse lld_wh to role silver_steward;
 grant usage on warehouse lld_wh to role silver_provisioner;
+grant usage on warehouse lld_wh to role silver_scheduler;
 grant usage on warehouse lld_wh to role silver_unit_base;
 grant usage on warehouse lld_wh to role silver_operator;
 grant usage on warehouse lld_wh to role analyst_all;

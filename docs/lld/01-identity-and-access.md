@@ -121,6 +121,7 @@ Because the unit role owns its managed-access schemas, it applies the dbt `grant
 | `SILVER_CLONER` *(new)* | Owns the owner's-rights procedure that takes input clones of upstream unit schemas, grants them to the downstream unit role and drops them. Never granted to a person or to a dbt target | IA-2 |
 | `SILVER_PROVISIONER` *(new)* | Owns `onboard_unit` and `offboard_unit`, which create and retire a unit's roles and grants. Holds `CREATE ROLE`; never granted to a person | IA-1, 7.1.1 |
 | `TASK_RUNNER` *(new)* | Access role holding the account privilege `EXECUTE TASK`, granted to every service role that owns a task. Owned by `SILVER_PROVISIONER` | 7.1.1 |
+| `SILVER_SCHEDULER` *(new)* | Owns `silver.tasks` (managed access) and the procedure that creates a unit's task, hands it to the unit role and grants `OPERATE` to `SILVER_OPERATOR`. Holds every unit role, because in a managed-access schema an object can be handed only to a role below the schema owner (Observed: INC2.10, first run). Never granted to a person | Prototype choice I2-1; RC-1 |
 | `SILVER_UNIT_BASE` *(new)* | Access role holding the privileges common to every Silver unit role (Section 5.3, except the unit's own schemas, raw and upstream readers). Object owners grant to it once; the provisioner, which owns it, grants it to each new unit role | 7.1.1 |
 
 ### 5.5 CI and deployment roles

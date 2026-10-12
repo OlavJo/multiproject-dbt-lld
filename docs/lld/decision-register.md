@@ -62,7 +62,7 @@ Every open design decision for the LLD, one row each. Each decision is recorded 
 
 | ID | Decision | Options | Constrained by | Status |
 |---|---|---|---|---|
-| RC-1 | Scheduling | Scheduled gated task per unit (SLD baseline); task graph; stream-driven dispatcher. Sub-question: where unit tasks live and who creates them | A task graph needs one owner (SLD 3.1); S8: task status is not publication status; a task runs as its owner, so a unit's task is owned by its unit role; INC1.01: a hand-over cannot copy grants | Open; task placement proposed for the prototype as I2-1 (`prototype/README.md`, Increment 2) |
+| RC-1 | Scheduling | Scheduled gated task per unit (SLD baseline); task graph; stream-driven dispatcher. Sub-question: where unit tasks live and who creates them | A task graph needs one owner (SLD 3.1); S8: task status is not publication status; a task runs as its owner, so a unit's task is owned by its unit role; INC1.01: a hand-over cannot copy grants; INC2.10 (first run): in a managed-access schema an object can be handed only to a role below the schema owner | Open; task placement decided for the prototype 2026-10-12 as I2-1 (`SILVER_SCHEDULER` owns `silver.tasks`; `prototype/README.md`, Increment 2) |
 | RC-2 | Alerting | Snowflake alerts on run-control views; task notifications; external | SLD 12.6 | Open |
 | RC-3 | Configuration deployment | Ops repository with seeds or DDL; review | SLD 12.3 | Open |
 | RC-4 | Location and ownership of run control | `analytics_ops.control` owned by the steward role (as tested); or a platform-wide owner | SLD 12.1 | Open |

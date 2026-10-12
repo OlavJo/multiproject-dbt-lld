@@ -83,7 +83,7 @@ As with the spikes, scripts run in Snowsight worksheets (or any client that supp
 | 2.20 | `06_run_control/i2_20_status_and_lease.sql` | `SILVER_STEWARD` |
 | 2.30 | `07_deployment/i2_30_project_object.sql` (set `$git_ref`; `main` once merged) | `SYSADMIN`, then `SILVER_STEWARD` |
 | 2.40 | `05_publication/i2_40_publish_procedure.sql` | `SILVER_STEWARD` |
-| 2.50 | `06_run_control/i2_50_unit_tasks.sql` | `SILVER_STEWARD` |
+| 2.50 | `06_run_control/i2_50_unit_tasks.sql` (first rerun `i1_10` and `i1_40`: the scheduler role and its unit-role grants) | `SILVER_STEWARD`, then `SILVER_SCHEDULER` |
 | demo | `demo/i2_demo_publication.sql` | switches itself; waits for each task run (up to 10 minutes); export to `evidence/INC2_<yyyymmdd>.csv` |
 
 Every script is idempotent, and the demos reset or reuse their own units, so any step can be rerun.
@@ -98,7 +98,7 @@ Every script is idempotent, and the demos reset or reuse their own units, so any
 
 | # | Choice | Why |
 |---|---|---|
-| I2-1 | **Unit tasks** live in `silver.tasks`, a managed-access schema owned by `SILVER_STEWARD`. `provision_unit_task(unit)` (steward, owner's rights, called by the operator after `onboard_unit`) creates `silver.tasks.publish_<unit>`, hands it to the unit role with no grants, then grants `OPERATE` and `MONITOR` to `SILVER_OPERATOR` | A task runs as its owner, so the unit role must own it. Once handed over, only the owner of a managed-access schema can still grant on it (object owners there cannot, and a hand-over cannot copy grants: INC1.01). A unit schema cannot hold its task (it is swapped). Tasks are run control, the steward's. Proposed for RC-1 |
+| I2-1 | **Unit tasks** live in `silver.tasks`, a managed-access schema owned by a new utility role, **`SILVER_SCHEDULER`**, which holds every unit role (`onboard_unit` grants each one to it) and is never held by a person. `provision_unit_task(unit)` (scheduler, owner's rights, called by the operator after `onboard_unit`) creates `silver.tasks.publish_<unit>`, hands it to the unit role with no grants, then grants `OPERATE` and `MONITOR` to `SILVER_OPERATOR`. **Decided for the prototype 2026-10-12**; proposed for RC-1 | A task runs as its owner, so the unit role must own it. Once handed over, only the owner of a managed-access schema can still grant on it (a hand-over cannot copy grants: INC1.01). In a managed-access schema an object can be handed only to a role below the schema owner (first run, INC2.10), and unit roles must not be below the steward (F7). A unit schema cannot hold its task (it is swapped). Same pattern as `SILVER_CLONER` (IA-2 b) |
 | I2-2 | The publish procedure grants schema `USAGE` to the unit's own reader role, `silver.reader_<unit>`, around the swap | IA-3; LLD 01, 6.2. The spike granted to `silver.reader` |
 | I2-3 | A unit with Silver upstreams is refused (`FAILED:input_clones`) until Increment 3 | IA-2 (b) needs `SILVER_CLONER`; the spike's inherited-role clones contradict IA-2 |
 | I2-4 | dbt `grants` on each unit folder, to the unit's reader database role, base views included | LLD 01, 6.2 (one setting per folder). Base views expose cleaned columns of the frozen inputs, not the inputs themselves |

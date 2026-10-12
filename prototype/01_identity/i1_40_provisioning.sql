@@ -126,6 +126,9 @@ begin
   -- 2. The service role, with the common privileges and the task privilege
   execute immediate 'create role if not exists ' || v_role || ' comment = ''Service role of the Silver unit ' || p_unit || '''';
   execute immediate 'grant role ' || v_role || ' to role sysadmin';
+  -- The scheduler holds every unit role: in its managed-access schema silver.tasks, a task can
+  -- only be handed to a role below the schema owner (Increment 2, first run; I2-1)
+  execute immediate 'grant role ' || v_role || ' to role silver_scheduler';
   execute immediate 'grant role silver_unit_base to role ' || v_role;
   execute immediate 'grant role task_runner to role ' || v_role;
 
@@ -219,6 +222,12 @@ begin
   -- role executing the drop, this procedure's owner, which then drops them.
   -- Dropped schemas stay recoverable with UNDROP for their retention period.
   execute immediate 'drop role if exists ' || v_role;
+  -- The unit's task (Increment 2) passed to this procedure's owner with the role; drop it
+  begin
+    execute immediate 'drop task if exists silver.tasks.publish_' || v_schema;
+  exception
+    when other then null;   -- no tasks schema before Increment 2
+  end;
   execute immediate 'drop schema if exists ' || c_db || '.' || v_schema || '__build';
   execute immediate 'drop schema if exists ' || c_db || '.' || v_schema;
   execute immediate 'drop database role if exists ' || v_reader;

@@ -2,8 +2,8 @@
 -- Prototype / Increment 2 / Demo: first publications under the unit roles
 --
 -- What it shows (LLD 01, 5.3, 6.2; verification items V-IA-1 and V-IA-7):
---   1. The operator provisions each unit's task; the task is owned by the unit role and the
---      operator holds OPERATE on it (prototype choice I2-1).
+--   1. The operator provisions each unit's task in SILVER_SCHEDULER's silver.tasks; the task is
+--      owned by the unit role and the operator holds OPERATE on it (prototype choice I2-1).
 --   2. The platform lands a batch. The operator starts the ERP task with EXECUTE TASK; the
 --      run is the unit role's (V-IA-7). It freezes, builds and publishes through
 --      silver.ops.publish_unit.
@@ -14,7 +14,7 @@
 --      across clone and swap and dbt's grant step (V-IA-1); the CDC update lands.
 --   5. With nothing new, the task skips (gate condition 2).
 --
--- Case ids INC2.10 to INC2.31 (INC2.01, 02 are in i2_30).
+-- Case ids INC2.08 to INC2.31 (INC2.01, 02 are in i2_30).
 -- Export: select * from lld_lab.evidence.observation where spike = 'INC2' order by observed_at.
 -- Requires: Increment 1 demo state (units onboarded, consumers granted), i2_10 to i2_50.
 -- Each EXECUTE TASK runs in the background; the demo waits for the unit's next terminal event
@@ -60,6 +60,11 @@ update analytics_ops.control.units set selector = 'unit_erp', dbt_target = 'prod
 update analytics_ops.control.units set selector = 'unit_crm', dbt_target = 'prod_crm' where unit = 'silver.crm';
 
 use role silver_operator;
+-- Onboarding re-applied, so units onboarded before Increment 2 are granted to SILVER_SCHEDULER
+call lld_lab.evidence.probe($run_id, 'INC2', 'INC2.08', 'Operator re-applies ERP onboarding (unit role granted to the scheduler)',
+  $$call silver.ops.onboard_unit('silver.erp')$$, 'ONBOARDED:SVC_SILVER_ERP (schema existing)');
+call lld_lab.evidence.probe($run_id, 'INC2', 'INC2.09', 'Operator re-applies CRM onboarding',
+  $$call silver.ops.onboard_unit('silver.crm')$$, 'ONBOARDED:SVC_SILVER_CRM (schema existing)');
 call lld_lab.evidence.probe($run_id, 'INC2', 'INC2.10', 'Operator provisions the ERP task',
   $$call silver.ops.provision_unit_task('silver.erp')$$, 'TASK:silver.tasks.publish_erp owned by SVC_SILVER_ERP (%); OPERATE, MONITOR to SILVER_OPERATOR');
 call lld_lab.evidence.probe($run_id, 'INC2', 'INC2.11', 'Operator provisions the CRM task',
