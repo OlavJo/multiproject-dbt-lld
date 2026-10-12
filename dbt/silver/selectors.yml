@@ -1,0 +1,14 @@
+# One selector per publication unit (SLD 10.3): the unit's folder, by path only. A unit's
+# frozen-input source must not be selected with its descendants, or a downstream unit's
+# models would be selected too (spike S10).
+selectors:
+  - name: unit_erp
+    description: "Source Entity unit ERP"
+    definition:
+      method: path
+      value: models/erp
+  - name: unit_crm
+    description: "Source Entity unit CRM"
+    definition:
+      method: path
+      value: models/crm

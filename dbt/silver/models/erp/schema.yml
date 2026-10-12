@@ -1,0 +1,11 @@
+version: 2
+
+models:
+  - name: erp_accounts
+    columns:
+      - name: account_id
+        data_tests: [unique, not_null]
+  - name: erp_orders_current
+    columns:
+      - name: order_id
+        data_tests: [unique, not_null]

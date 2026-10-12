@@ -10,7 +10,7 @@
 
 ## Next steps
 
-1. Review and merge the Increment 1 pull request; confirm the implementation choices listed in LLD 01, Section 11 (eight, including the new choice 8).
+1. Run Increment 2 (`prototype/README.md`, "Increment 2, in order"); confirm choices I2-1 to I2-7, I2-1 in particular (RC-1).
 2. Increment 2: first publication under the new roles (project object from Git with `ADD VERSION`, publish procedure, lease procedures, a task owned by the unit role, consumer reads through the reader database role). It uses the Git objects for this repository from `prototype/00_git_integration.sql` (`LLD_LAB.GIT.LLD_REPO`, integration `LLD_GIT_API`).
 3. LLD component 3 (environments and naming), which fixes the placeholder names.
 

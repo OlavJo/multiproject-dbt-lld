@@ -1,0 +1,20 @@
+# dbt Projects on Snowflake take account and user from the session; the keys must be present.
+# One target per unit: the target's role must be the role that runs the unit (LLD 01, F1),
+# which is the unit's service role, the owner of its task (Increment 2).
+# Trial shortcut T3: one warehouse for every unit (OC-1 open).
+silver:
+  target: prod_erp
+  outputs:
+    prod_erp: &prod
+      type: snowflake
+      account: not_needed
+      user: not_needed
+      role: SVC_SILVER_ERP
+      warehouse: LLD_WH
+      database: SILVER
+      schema: erp
+      threads: 4
+    prod_crm:
+      <<: *prod
+      role: SVC_SILVER_CRM
+      schema: crm
