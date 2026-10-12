@@ -56,6 +56,7 @@ Each increment ends with: its scripts, a demo with probes, the evidence CSV in `
 | INC1.42 | The unit role, as schema owner, grants `USAGE` to its reader role (the step publication will take) |
 | INC1.27 | INFO, as designed: a unit role can create any schema in `silver` (LLD 01, Section 9) |
 | INC1.90 | `TASK_RUNNER` holds exactly `EXECUTE TASK` on the account |
+| Part 6 | `USE ROLE` activates any role in the user's hierarchy: with its direct grant revoked, `SVC_SILVER_CRM` was activated through `SYSADMIN` (manual check, 2026-10-12). The demo's direct grants of unit roles to the user were removed |
 
 ## Running an increment
 

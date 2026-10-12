@@ -19,7 +19,6 @@
 -- =============================================================================
 
 use secondary roles none;
-set me = (select current_user());
 set run_id = (select uuid_string());
 
 -- Part 0: reset the demo units (configuration first, so nothing has dependents) -----------
@@ -144,11 +143,9 @@ call lld_lab.evidence.record($run_id, 'INC1', 'INC1.21', 'The aggregate reader d
   'show grants to database role silver.reader', '!%READER_HR%', $obs);
 
 -- Part 6: privileges in use, as the unit roles (trial shortcut T1) -----------------------
-use role silver_provisioner;
-grant role svc_silver_erp  to user identifier($me);
-grant role svc_silver_crm  to user identifier($me);
-grant role svc_silver_hr   to user identifier($me);
-grant role svc_silver_core to user identifier($me);
+-- No grant to the user is needed: USE ROLE accepts any role in the user's hierarchy, and every
+-- unit role is granted to SYSADMIN, which the user holds (checked 2026-10-12: SVC_SILVER_CRM
+-- activated with its direct grant revoked).
 
 -- Stand-in for the first publication (Increment 2): the unit role, as schema owner, grants
 -- USAGE on its schema to its reader role. Onboarding hands the schema over with no grants.
