@@ -90,6 +90,7 @@ declare
   v_missing     integer default 0;
   v_schema_note varchar default 'created';
   v_ups         varchar default '';
+  v_owned       integer default 0;
 begin
   -- 1. Validate: a well-formed Silver unit name, present in the reviewed configuration
   if (p_unit is null or not regexp_like(p_unit, 'silver[.][a-z][a-z0-9_]{0,40}') or contains(p_unit, '__')) then
@@ -152,17 +153,27 @@ begin
     v_ups := v_ups || iff(v_ups = '', '', ',') || r.up;
   end for;
 
-  -- 5. The published schema: created here, reader USAGE granted, then handed to the unit role.
-  -- On a rerun it exists already, owned by the unit role, and is left alone.
+  -- 5. The published schema: created here and handed to the unit role with no grants on it.
+  -- The reader role's USAGE arrives with the first publication (grant, swap, revoke; F3).
+  -- Granting it here would force COPY CURRENT GRANTS on the hand-over, which needs MANAGE
+  -- GRANTS in an owner's-rights procedure (INC1.01, first run 2026-10-12).
+  -- On a rerun the schema exists, owned by the unit role, and is left alone; one still
+  -- owned by the provisioner was left by an interrupted onboarding and is handed over.
   begin
     execute immediate 'create schema ' || c_db || '.' || v_schema || ' with managed access';
   exception
     when other then
       v_schema_note := 'existing';
   end;
-  if (v_schema_note = 'created') then
-    execute immediate 'grant usage on schema ' || c_db || '.' || v_schema || ' to database role ' || v_reader;
-    execute immediate 'grant ownership on schema ' || c_db || '.' || v_schema || ' to role ' || v_role || ' copy current grants';
+  if (v_schema_note = 'existing') then
+    select count(*) into :v_owned from silver.information_schema.schemata
+      where schema_name = upper(:v_schema) and schema_owner = 'SILVER_PROVISIONER';
+    if (v_owned > 0) then
+      v_schema_note := 'handed over';
+    end if;
+  end if;
+  if (v_schema_note <> 'existing') then
+    execute immediate 'grant ownership on schema ' || c_db || '.' || v_schema || ' to role ' || v_role;
   end if;
 
   -- 6. Lease row and the ONBOARDED event

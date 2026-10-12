@@ -12,7 +12,7 @@
 --      refused; onboarding is safe to rerun; offboarding retires a unit completely
 --      and it can be onboarded again.
 --
--- Case ids INC1.nn. Export the final query to evidence/INC1_<yyyymmdd>.csv.
+-- Case ids INC1.nn (INC1.00 to INC1.42). Export the final query to evidence/INC1_<yyyymmdd>.csv.
 -- Rerunnable: Part 0 resets the four demo units.
 -- Trial shortcut T1: one user acts as every role, including unit roles (Part 5).
 -- Run as: the switching user. Requires: i1_10, i1_20, i1_30, i1_40.
@@ -109,17 +109,28 @@ call lld_lab.evidence.record($run_id, 'INC1', 'INC1.16', 'Each published schema 
   'show schemas in database silver',
   'CORE:SVC_SILVER_CORE:MANAGED ACCESS,CRM:SVC_SILVER_CRM:MANAGED ACCESS,ERP:SVC_SILVER_ERP:MANAGED ACCESS,HR:SVC_SILVER_HR:MANAGED ACCESS', $obs);
 
-show grants to role svc_silver_core;
-set obs = (select listagg("name", ',') within group (order by "name")
-           from table(result_scan(last_query_id())) where "granted_on" in ('ROLE', 'DATABASE_ROLE'));
+-- In a block, so a missing role is recorded as a FAIL instead of stopping the demo
+declare v varchar; begin
+  show grants to role svc_silver_core;
+  select listagg("name", ',') within group (order by "name") into :v
+    from table(result_scan(last_query_id())) where "granted_on" in ('ROLE', 'DATABASE_ROLE');
+  return v;
+exception when other then return 'ERROR: ' || sqlerrm;
+end;
+set obs = (select $1 from table(result_scan(last_query_id())));
 call lld_lab.evidence.record($run_id, 'INC1', 'INC1.17', 'Core holds the ERP and CRM reader roles, the unit base and the task runner',
   'show grants to role svc_silver_core', '%READER_CRM%READER_ERP%SILVER_UNIT_BASE%TASK_RUNNER%', $obs);
 call lld_lab.evidence.record($run_id, 'INC1', 'INC1.18', 'Core does not hold the HR reader role (not a declared upstream)',
   'show grants to role svc_silver_core', '!%READER_HR%', $obs);
 
-show grants to role svc_silver_erp;
-set obs = (select listagg("name", ',') within group (order by "name")
-           from table(result_scan(last_query_id())) where "granted_on" in ('ROLE', 'DATABASE_ROLE'));
+declare v varchar; begin
+  show grants to role svc_silver_erp;
+  select listagg("name", ',') within group (order by "name") into :v
+    from table(result_scan(last_query_id())) where "granted_on" in ('ROLE', 'DATABASE_ROLE');
+  return v;
+exception when other then return 'ERROR: ' || sqlerrm;
+end;
+set obs = (select $1 from table(result_scan(last_query_id())));
 call lld_lab.evidence.record($run_id, 'INC1', 'INC1.19', 'ERP holds its raw reader role (from the platform), the unit base and the task runner',
   'show grants to role svc_silver_erp', '%RAW.READER_ERP%SILVER_UNIT_BASE%TASK_RUNNER%', $obs);
 
@@ -135,7 +146,21 @@ call lld_lab.evidence.record($run_id, 'INC1', 'INC1.21', 'The aggregate reader d
 -- Part 6: privileges in use, as the unit roles (trial shortcut T1) -----------------------
 use role silver_provisioner;
 grant role svc_silver_erp  to user identifier($me);
+grant role svc_silver_crm  to user identifier($me);
+grant role svc_silver_hr   to user identifier($me);
 grant role svc_silver_core to user identifier($me);
+
+-- Stand-in for the first publication (Increment 2): the unit role, as schema owner, grants
+-- USAGE on its schema to its reader role. Onboarding hands the schema over with no grants.
+use role svc_silver_erp;
+call lld_lab.evidence.probe($run_id, 'INC1', 'INC1.42', 'The unit role (schema owner) grants USAGE to its reader role, as publication will',
+  $$grant usage on schema silver.erp to database role silver.reader_erp$$, '!ERROR:%');
+use role svc_silver_crm;
+grant usage on schema silver.crm to database role silver.reader_crm;
+use role svc_silver_hr;
+grant usage on schema silver.hr to database role silver.reader_hr;
+use role svc_silver_core;
+grant usage on schema silver.core to database role silver.reader_core;
 
 use role svc_silver_erp;
 call lld_lab.evidence.probe($run_id, 'INC1', 'INC1.22', 'ERP role clones its own build schema (managed access), as publication will',

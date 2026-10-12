@@ -223,7 +223,7 @@ Creating a role needs the account privilege `CREATE ROLE`, and granting the acco
 3. Grants the access role `SILVER_UNIT_BASE` *(new)*, which holds the fixed set from Section 5.3: `CREATE SCHEMA` on the database, `USAGE` on the project object, the publish procedure and the run-control procedures, `SELECT` on configuration and status, and the warehouse. Object owners grant to `SILVER_UNIT_BASE` once; the provisioner, which owns it, grants it to each unit role. The provisioner therefore needs no grant option on anyone else's objects.
 4. Grants an access role `TASK_RUNNER` *(new)*, which `SECURITYADMIN` created once with `EXECUTE TASK`. This is how the account privilege reaches new roles without `MANAGE GRANTS`.
 5. Grants the reader roles of the unit's Silver upstreams (IA-2).
-6. Creates the unit's published schema as the new role, `WITH MANAGED ACCESS`, grants schema `USAGE` to `silver.reader_<unit>`, inserts the lease row, and records an `ONBOARDED` event.
+6. Creates the unit's published schema `WITH MANAGED ACCESS` and hands it to the new role with **no grants on it**, inserts the lease row, and records an `ONBOARDED` event. Schema `USAGE` for `silver.reader_<unit>` is not granted here: the first publication grants it, as every publication does (grant, swap, revoke; F3). Granting it at onboarding would make the hand-over copy the grant (`GRANT OWNERSHIP ... COPY CURRENT GRANTS`), which in an owner's-rights procedure needs `MANAGE GRANTS` (Observed: INC1.01, first run 2026-10-12). Until its first publication a unit is visible to no consumer, which is also the intended behaviour.
 
 Two steps are outside the stewards' control by design:
 
@@ -328,7 +328,7 @@ Increment 1 of the prototype (`prototype/README.md`) implements Sections 5, 7.1.
 | `prototype/10_external/i1_20_platform_raw.sql` | Simulated raw sources, with platform-owned raw reader database roles |
 | `prototype/06_run_control/i1_30_control_tables.sql` | `units` (with `sensitive`), `unit_dependencies`, `publish_log`, `unit_lease`, `log_event` |
 | `prototype/01_identity/i1_40_provisioning.sql` | `onboard_unit`, `offboard_unit`, `grant_unit_reader`, `revoke_unit_reader` |
-| `prototype/demo/i1_demo_onboarding.sql` | The demo, cases INC1.00 to INC1.41 (V-IA-9) |
+| `prototype/demo/i1_demo_onboarding.sql` | The demo, cases INC1.00 to INC1.42 (V-IA-9) |
 
 **Result:** not yet run.
 
