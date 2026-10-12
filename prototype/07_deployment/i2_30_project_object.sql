@@ -32,7 +32,9 @@ use role silver_steward;
 -- CREATE the first time (a no-op afterwards), then ADD VERSION: every run deploys the files at
 -- $git_ref. On the very first run the object therefore gets two identical versions, which is
 -- harmless and keeps the script free of branching on session variables.
-set from_path = (select '''@lld_lab.git.lld_repo/branches/' || $git_ref || '/dbt/silver''');
+-- The branch name is double-quoted in the path: a name with a slash ('claude/...') is otherwise
+-- read as a branch 'claude' and a folder (first run 2026-10-12). Quoting is harmless for 'main'.
+set from_path = (select '''@lld_lab.git.lld_repo/branches/"' || $git_ref || '"/dbt/silver''');
 set create_sql = (select 'create dbt project if not exists silver.ops.silver_layer from ' || $from_path || ' dbt_version = ''1.12.3''');
 set add_sql    = (select 'alter dbt project silver.ops.silver_layer add version from ' || $from_path);
 execute immediate $create_sql;
