@@ -1,0 +1,24 @@
+CASE_ID,OUTCOME,OBSERVED
+INC2.10,FAIL,ERROR: Uncaught exception of type 'STATEMENT_ERROR' on line 40 at position 4 : SQL execution error: Ownership restriction violation in a managed access schema. Grantee need to be a subordinate role of the schema owner.
+INC2.11,FAIL,ERROR: Uncaught exception of type 'STATEMENT_ERROR' on line 40 at position 4 : SQL execution error: Ownership restriction violation in a managed access schema. Grantee need to be a subordinate role of the schema owner.
+INC2.12,PASS,REFUSED:no_selector
+INC2.13,FAIL,"PUBLISH_CRM:SILVER_STEWARD:suspended,PUBLISH_ERP:SILVER_STEWARD:suspended"
+INC2.14,PASS,"ERROR: SQL compilation error:
+Unknown user-defined function SILVER.OPS.PUBLISH_UNIT."
+INC2.15,FAIL,"ERROR: SQL compilation error:
+Task 'SILVER.TASKS.PUBLISH_ERP' does not exist or not authorized. Your primary role SILVER_OPERATOR must have at least one privilege granted on TASK SILVER.TASKS.PUBLISH_ERP."
+INC2.16,FAIL,"ERROR: SQL compilation error:
+Task 'SILVER.TASKS.PUBLISH_CRM' does not exist or not authorized. Your primary role SILVER_OPERATOR must have at least one privilege granted on TASK SILVER.TASKS.PUBLISH_CRM."
+INC2.17,FAIL,TIMEOUT
+INC2.18,FAIL,TIMEOUT
+INC2.19,FAIL,<NULL>
+INC2.20,FAIL,"ERROR: SQL compilation error:
+Object 'SILVER.ERP.ERP_ACCOUNTS' does not exist or not authorized. Your primary role ANALYST_ALL must have at least one privilege granted on TABLE SILVER.ERP.ERP_ACCOUNTS."
+INC2.21,FAIL,"ERROR: SQL compilation error:
+Object 'SILVER.ERP.ERP_ORDERS_CURRENT' does not exist or not authorized. Your primary role ANALYST_ALL must have at least one privilege granted on TABLE SILVER.ERP.ERP_ORDERS_CURRENT."
+INC2.22,FAIL,"ERROR: SQL compilation error:
+Object 'SILVER.CRM.CRM_CONTACTS' does not exist or not authorized. Your primary role ANALYST_ALL must have at least one privilege granted on TABLE SILVER.CRM.CRM_CONTACTS."
+INC2.23,PASS,"ERROR: SQL compilation error:
+Object 'SILVER.ERP.RAW__ACCOUNTS' does not exist or not authorized. Your primary role ANALYST_ALL must have at least one privilege granted on TABLE SILVER.ERP.RAW__ACCOUNTS."
+INC2.24,PASS,"ERROR: SQL compilation error:
+Schema 'SILVER.ERP' does not exist or not authorized. Your primary role ANALYST_HR must have USAGE or any other privilege granted on SCHEMA SILVER.ERP."
