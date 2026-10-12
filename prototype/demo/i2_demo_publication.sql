@@ -114,13 +114,25 @@ call lld_lab.evidence.probe($run_id, 'INC2', 'INC2.24', 'ANALYST_HR cannot read 
   $$select count(*) from silver.erp.erp_accounts$$, 'ERROR:%');
 
 use role sysadmin;
-show grants on table silver.erp.erp_accounts;
-set obs = (select listagg("privilege" || ':' || "granted_to" || ':' || "grantee_name", ',') within group (order by "privilege")
-           from table(result_scan(last_query_id())) where "privilege" <> 'OWNERSHIP');
+-- In a block, so a missing table is recorded as a FAIL instead of stopping the demo
+declare v varchar; begin
+  show grants on table silver.erp.erp_accounts;
+  select listagg("privilege" || ':' || "granted_to" || ':' || "grantee_name", ',') within group (order by "privilege") into :v
+    from table(result_scan(last_query_id())) where "privilege" <> 'OWNERSHIP';
+  return v;
+exception when other then return 'ERROR: ' || sqlerrm;
+end;
+set obs = (select $1 from table(result_scan(last_query_id())));
 call lld_lab.evidence.record($run_id, 'INC2', 'INC2.25', 'dbt grants SELECT to the reader database role (V-IA-1)',
   'show grants on table silver.erp.erp_accounts', 'SELECT:DATABASE_ROLE:%READER_ERP%', $obs);
-show grants on schema silver.erp__build;
-set obs = (select count(*) from table(result_scan(last_query_id())) where "privilege" = 'USAGE' and "grantee_name" ilike '%READER_ERP%');
+declare v varchar; begin
+  show grants on schema silver.erp__build;
+  select count(*)::varchar into :v from table(result_scan(last_query_id()))
+    where "privilege" = 'USAGE' and "grantee_name" ilike '%READER_ERP%';
+  return v;
+exception when other then return 'ERROR: ' || sqlerrm;
+end;
+set obs = (select $1 from table(result_scan(last_query_id())));
 call lld_lab.evidence.record($run_id, 'INC2', 'INC2.26', 'After the swap the reader holds no USAGE on the build schema (F3)',
   'show grants on schema silver.erp__build', '0', $obs);
 
@@ -140,9 +152,14 @@ call lld_lab.evidence.probe($run_id, 'INC2', 'INC2.28', 'ANALYST_ALL reads the s
 call lld_lab.evidence.probe($run_id, 'INC2', 'INC2.29', 'The incremental model merged the CDC update (order 1 now RETURNED)',
   $$select status from silver.erp.erp_orders_current where order_id = 1$$, 'RETURNED');
 use role sysadmin;
-show grants on table silver.erp.erp_orders_current;
-set obs = (select listagg("privilege" || ':' || "granted_to" || ':' || "grantee_name", ',') within group (order by "privilege")
-           from table(result_scan(last_query_id())) where "privilege" <> 'OWNERSHIP');
+declare v varchar; begin
+  show grants on table silver.erp.erp_orders_current;
+  select listagg("privilege" || ':' || "granted_to" || ':' || "grantee_name", ',') within group (order by "privilege") into :v
+    from table(result_scan(last_query_id())) where "privilege" <> 'OWNERSHIP';
+  return v;
+exception when other then return 'ERROR: ' || sqlerrm;
+end;
+set obs = (select $1 from table(result_scan(last_query_id())));
 call lld_lab.evidence.record($run_id, 'INC2', 'INC2.30', 'The incremental model still grants SELECT to the reader role after clone, dbt and swap (V-IA-1)',
   'show grants on table silver.erp.erp_orders_current', 'SELECT:DATABASE_ROLE:%READER_ERP%', $obs);
 
