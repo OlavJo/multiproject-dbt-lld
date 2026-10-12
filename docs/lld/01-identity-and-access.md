@@ -223,7 +223,7 @@ Creating a role needs the account privilege `CREATE ROLE`, and granting the acco
 3. Grants the access role `SILVER_UNIT_BASE` *(new)*, which holds the fixed set from Section 5.3: `CREATE SCHEMA` on the database, `USAGE` on the project object, the publish procedure and the run-control procedures, `SELECT` on configuration and status, and the warehouse. Object owners grant to `SILVER_UNIT_BASE` once; the provisioner, which owns it, grants it to each unit role. The provisioner therefore needs no grant option on anyone else's objects.
 4. Grants an access role `TASK_RUNNER` *(new)*, which `SECURITYADMIN` created once with `EXECUTE TASK`. This is how the account privilege reaches new roles without `MANAGE GRANTS`.
 5. Grants the reader roles of the unit's Silver upstreams (IA-2).
-6. Creates the unit's published schema as the new role, `WITH MANAGED ACCESS`, grants schema `USAGE` to `silver.reader_<unit>`, inserts the lease row, and records an `ONBOARDED` event.
+6. Creates the unit's published schema `WITH MANAGED ACCESS` and hands it to the new role with **no grants on it**, inserts the lease row, and records an `ONBOARDED` event. Schema `USAGE` for `silver.reader_<unit>` is not granted here: the first publication grants it, as every publication does (grant, swap, revoke; F3). Granting it at onboarding would make the hand-over copy the grant (`GRANT OWNERSHIP ... COPY CURRENT GRANTS`), which in an owner's-rights procedure needs `MANAGE GRANTS` (Observed: INC1.01, first run 2026-10-12). Until its first publication a unit is visible to no consumer, which is also the intended behaviour.
 
 Two steps are outside the stewards' control by design:
 
@@ -302,9 +302,11 @@ Small checks the recommendations depend on, none covered by the spikes. They can
 | V-IA-8 | `IS_ROLE_IN_SESSION` in a masking policy reveals to a service role that holds `PII_CLEAR_<scope>`, with secondary roles off, including inside a task and an `EXECUTE DBT PROJECT` run | 6.4, GV-3 |
 | V-IA-9 | An owner's-rights procedure owned by `SILVER_PROVISIONER` creates a role, grants it privileges and `TASK_RUNNER`, creates a database role and grants it, and creates a schema as the new role (or hands it over); the least privileges `SILVER_PROVISIONER` needs | 7.1.1 |
 
+**Results.** V-IA-9 **Observed** (Increment 1, 2026-10-12; Section 11): yes, with one constraint. The hand-over of the schema must carry no grants, because `GRANT OWNERSHIP ... COPY CURRENT GRANTS` in an owner's-rights procedure needs `MANAGE GRANTS`.
+
 ## 9. Residual risks
 
-- **`CREATE SCHEMA` cannot be scoped by name.** A unit role can create any schema in its database. Mitigated by code review and a periodic check that every schema in a unit database has the expected owner.
+- **`CREATE SCHEMA` cannot be scoped by name.** A unit role can create any schema in its database (Observed: INC1.27). Mitigated by code review and a periodic check that every schema in a unit database has the expected owner.
 - **`SILVER_CLONER` is powerful.** Confined to one owner's-rights procedure with fixed SQL and inputs read from configuration; no person or dbt target uses it.
 - **A missing or wrong classification tag is a silent leak** (S9f.B6): service roles read and store clear values. The CI tag check (component 2) remains the safety net, not the role model.
 
@@ -328,9 +330,19 @@ Increment 1 of the prototype (`prototype/README.md`) implements Sections 5, 7.1.
 | `prototype/10_external/i1_20_platform_raw.sql` | Simulated raw sources, with platform-owned raw reader database roles |
 | `prototype/06_run_control/i1_30_control_tables.sql` | `units` (with `sensitive`), `unit_dependencies`, `publish_log`, `unit_lease`, `log_event` |
 | `prototype/01_identity/i1_40_provisioning.sql` | `onboard_unit`, `offboard_unit`, `grant_unit_reader`, `revoke_unit_reader` |
-| `prototype/demo/i1_demo_onboarding.sql` | The demo, cases INC1.00 to INC1.41 (V-IA-9) |
+| `prototype/demo/i1_demo_onboarding.sql` | The demo, cases INC1.00 to INC1.42 (V-IA-9) |
 
-**Result:** not yet run.
+**Result: V-IA-9 Observed.** Demo run 2026-10-12 (`evidence/INC1_20261012.csv`): 43 PASS, 1 INFO (INC1.27, the residual risk in Section 9), all with secondary roles off. The first run (`evidence/INC1_20261012_run1.csv`) failed at the schema hand-over; the fix is choice 8 below.
+
+- **Steward self-service works without an administrator** (IA-1's condition). `SILVER_OPERATOR` onboards ERP, CRM, HR and Core (INC1.01 to 04); neither the operator nor the steward owner role can create a role directly (INC1.07, 08).
+- **Inside the owner's-rights procedure**, `SILVER_PROVISIONER` creates the service role, grants it to `SYSADMIN`, grants `SILVER_UNIT_BASE` and `TASK_RUNNER`, creates the reader database role and grants it to `silver.reader`, grants upstream reader roles, creates the managed-access schema and hands it over (INC1.15 to 21).
+- **The schema hand-over must carry no grants.** `GRANT OWNERSHIP ... COPY CURRENT GRANTS` in an owner's-rights procedure needs `MANAGE GRANTS` (Observed: first run, INC1.01 to 03). A plain `GRANT OWNERSHIP` of a schema with no grants works (INC1.01, second run). Schema `USAGE` for the reader role therefore comes with publication (F3), not onboarding (Section 7.1.1, step 6); the unit role, as owner, can grant it (INC1.42).
+- **Read access follows declared dependencies and source ownership**: Core holds the ERP and CRM readers and not HR (INC1.17, 18); ERP reads its own raw source only (INC1.23, 24) and cannot touch another unit (INC1.25); Core has no raw access (INC1.28).
+- **Sensitive units stay out of the aggregate reader**: `ANALYST_ALL` sees CORE, CRM, ERP; `ANALYST_HR` sees HR only (INC1.20, 21, 29, 30).
+- **Guard rails**: malformed names, unknown units, missing upstreams and service-role grantees are refused (INC1.00, 05, 06, 14); offboarding is refused while a dependent exists (INC1.35); onboarding is safe to rerun (INC1.34); offboarding removes the role, reader role and schema, and the consumers' access with them, and the unit can be onboarded again (INC1.36 to 41).
+- **Run control records it**: `ONBOARDED` events, lease rows and `ACCESS_GRANTED` events (INC1.31 to 33); unit roles cannot write the log directly (INC1.26).
+
+**Least privileges of `SILVER_PROVISIONER`** (as run): `CREATE ROLE` on the account; ownership of `SILVER_UNIT_BASE` and `TASK_RUNNER` (and of every unit role it creates); `USAGE`, `CREATE SCHEMA`, `CREATE DATABASE ROLE` on `silver`; `USAGE`, `CREATE PROCEDURE` on `silver.ops`; `SELECT` on `units` and `unit_dependencies`; `SELECT`, `INSERT`, `DELETE` on `unit_lease`; `USAGE` on `log_event`. No `MANAGE GRANTS`.
 
 **Implementation choices to confirm at the increment 1 review:**
 
@@ -341,3 +353,4 @@ Increment 1 of the prototype (`prototype/README.md`) implements Sections 5, 7.1.
 5. New event types in `publish_log`: `ONBOARDED`, `OFFBOARDED`, `ACCESS_GRANTED`, `ACCESS_REVOKED` (an addition to SLD 12.2).
 6. `grant_unit_reader` refuses service roles: a unit reads its upstreams only through `unit_dependencies`. Who approves access to a sensitive unit is a governance process step (GV-2, GV-3); the procedure logs every grant.
 7. Raw access is a platform-owned database role per source (`raw.reader_<source>`), granted by the platform to the unit role as the last onboarding step.
+8. Onboarding hands the published schema to the unit role with **no grants**; the reader role's schema `USAGE` arrives with the first publication (F3). Until then no consumer sees the unit. An onboarding interrupted before the hand-over is completed by a rerun.

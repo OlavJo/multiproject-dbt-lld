@@ -70,6 +70,7 @@ grant role task_runner      to role sysadmin;
 
 -- Databases -------------------------------------------------------------------------
 use role sysadmin;
+use warehouse lld_wh;   -- SYSADMIN owns LLD_WH; the Snowflake Scripting blocks below need a warehouse
 create database if not exists raw           comment = 'Prototype: simulated Bronze landing (platform-owned)';
 create database if not exists silver        comment = 'Prototype: Silver Layer';
 create database if not exists analytics_ops comment = 'Prototype: run control';
@@ -107,3 +108,13 @@ end;
 -- Check -------------------------------------------------------------------------------
 show roles like 'SILVER_%';
 select "name", "owner", "comment" from table(result_scan(last_query_id())) order by "name";
+
+-- TASK_RUNNER is deliberately a one-privilege access role: EXECUTE TASK on the
+-- account, which a role needs to own a task that runs (LLD 01, 7.1.1, F2).
+-- onboard_unit grants it to every unit role, so no one needs MANAGE GRANTS.
+set run_id = (select uuid_string());
+show grants to role task_runner;
+set obs = (select listagg("privilege" || ' ON ' || "granted_on", ', ') within group (order by "privilege")
+           from table(result_scan(last_query_id())));
+call lld_lab.evidence.record($run_id, 'INC1', 'INC1.90', 'TASK_RUNNER holds exactly EXECUTE TASK on the account',
+  'show grants to role task_runner', 'EXECUTE TASK ON ACCOUNT', $obs);

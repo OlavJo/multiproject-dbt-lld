@@ -26,7 +26,7 @@ Further component folders (`02_governance/`, `05_publication/`, ...) appear with
 | # | Increment | Value demonstrated | Verifies | Status |
 |---|---|---|---|---|
 | 0 | Clean slate | The prototype's own lab (warehouse, evidence store, Git integration), independent of the spike objects; the spike databases and roles removed, the spike record (`SPIKE_LAB`) kept | | **Done** 2026-10-11 |
-| 1 | **Unit onboarding** | Stewards onboard and retire Silver units themselves: a role per unit, reader roles, a sensitive source kept out of the aggregate reader, refusals for bad input | V-IA-9; IA-1, IA-3 | Scripts ready |
+| 1 | **Unit onboarding** | Stewards onboard and retire Silver units themselves: a role per unit, reader roles, a sensitive source kept out of the aggregate reader, refusals for bad input | V-IA-9; IA-1, IA-3 | **Done** 2026-10-12 |
 | 2 | First publication under the new roles | ERP lands, freezes, builds and publishes through the publish procedure, run by its own task; a consumer reads it through the reader database role | V-IA-1, V-IA-7 | Planned |
 | 3 | Consistent reads through the clone procedure | Core builds from input clones taken by `SILVER_CLONER`, reading upstream published objects only | V-IA-2, V-IA-3; IA-2 | Planned |
 | 4 | Clear values and the sensitive source | Governance tags and masking with a `PII_CLEAR` access role; Core matches on clear values; HR stays restricted | V-IA-6, V-IA-8; GV-3 | Planned |
@@ -43,6 +43,16 @@ Each increment ends with: its scripts, a demo with probes, the evidence CSV in `
 | INC0.14 | First run FAIL, observed `null`: `SHOW WAREHOUSES` shows the `resource_monitor` column only to roles that can see the monitor (by default `ACCOUNTADMIN`), so `SYSADMIN` reads `null` although the monitor is set. Check moved to `ACCOUNTADMIN`; PASS on the next two runs. Relevant to OC-2: whoever monitors cost needs `MONITOR` on the resource monitors, not just warehouse ownership. |
 | INC0.05 | 720 spike observations kept in `SPIKE_LAB` |
 | INC0.20 | This repository readable from Snowflake through `LLD_GIT_API` and the PAT secret |
+
+**Increment 1** (2026-10-12, `evidence/INC1_20261012.csv`): 43 PASS, 1 INFO; V-IA-9 Observed. Full results in LLD 01, Section 11.
+
+| Case | Finding |
+|---|---|
+| i1_10 | First run stopped at the first scripting block: no warehouse selected. Scripts now select `LLD_WH` after their first `USE ROLE` |
+| INC1.01 to 03 | First demo run (`evidence/INC1_20261012_run1.csv`): `GRANT OWNERSHIP ... COPY CURRENT GRANTS` in an owner's-rights procedure needs `MANAGE GRANTS`. `onboard_unit` now hands the schema over with no grants; the reader role's `USAGE` comes with publication (F3). PASS on the second run |
+| INC1.42 | The unit role, as schema owner, grants `USAGE` to its reader role (the step publication will take) |
+| INC1.27 | INFO, as designed: a unit role can create any schema in `silver` (LLD 01, Section 9) |
+| INC1.90 | `TASK_RUNNER` holds exactly `EXECUTE TASK` on the account |
 
 ## Running an increment
 
