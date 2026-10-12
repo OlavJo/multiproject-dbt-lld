@@ -1,0 +1,23 @@
+CASE_ID,OUTCOME,OBSERVED
+INC1.00,PASS,REFUSED:upstream_not_onboarded
+INC1.01,FAIL,"ERROR: Uncaught exception of type 'STATEMENT_ERROR' on line 87 at position 4 : SQL access control error:
+Insufficient privileges to operate on grant ownership 'with copy current grants'. This executable runs with owner's rights. The owner role SILVER_PROVISIONER must have MANAGE GRANTS granted on ACCOUNT CF72262."
+INC1.02,FAIL,"ERROR: Uncaught exception of type 'STATEMENT_ERROR' on line 87 at position 4 : SQL access control error:
+Insufficient privileges to operate on grant ownership 'with copy current grants'. This executable runs with owner's rights. The owner role SILVER_PROVISIONER must have MANAGE GRANTS granted on ACCOUNT CF72262."
+INC1.03,FAIL,"ERROR: Uncaught exception of type 'STATEMENT_ERROR' on line 87 at position 4 : SQL access control error:
+Insufficient privileges to operate on grant ownership 'with copy current grants'. This executable runs with owner's rights. The owner role SILVER_PROVISIONER must have MANAGE GRANTS granted on ACCOUNT CF72262."
+INC1.04,FAIL,REFUSED:upstream_not_onboarded
+INC1.05,PASS,REFUSED:invalid_unit_name
+INC1.06,PASS,REFUSED:not_in_units
+INC1.07,PASS,"ERROR: SQL access control error:
+Insufficient privileges to operate on account 'CF72262'. Your primary role SILVER_OPERATOR must have CREATE ROLE granted on ACCOUNT CF72262."
+INC1.08,PASS,"ERROR: SQL access control error:
+Insufficient privileges to operate on account 'CF72262'. Your primary role SILVER_STEWARD must have CREATE ROLE granted on ACCOUNT CF72262."
+INC1.09,PASS,Statement executed successfully.
+INC1.10,PASS,Statement executed successfully.
+INC1.11,PASS,Statement executed successfully.
+INC1.12,PASS,GRANTED:silver.reader to ANALYST_ALL
+INC1.13,FAIL,REFUSED:unit_not_onboarded
+INC1.14,PASS,REFUSED:invalid_role
+INC1.15,FAIL,"SVC_SILVER_CRM:SILVER_PROVISIONER,SVC_SILVER_ERP:SILVER_PROVISIONER,SVC_SILVER_HR:SILVER_PROVISIONER"
+INC1.16,FAIL,"CRM:SILVER_PROVISIONER:MANAGED ACCESS,ERP:SILVER_PROVISIONER:MANAGED ACCESS,HR:SILVER_PROVISIONER:MANAGED ACCESS"
