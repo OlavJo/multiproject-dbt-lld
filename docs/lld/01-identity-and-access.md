@@ -78,7 +78,7 @@ Not tested, and relied on below: see Section 8 (verification items).
 
 ## 5. Role catalogue (draft)
 
-Organised in layers. Each account role is granted to `SYSADMIN` so administrators can manage what it owns (Snowflake's recommended practice). Masking uses the session's own role (F11), so inheritance by `SYSADMIN` does not reveal clear values.
+Organised in layers; [`access-map.md`](access-map.md) draws the roles as built in the prototype. Each account role is granted to `SYSADMIN` so administrators can manage what it owns (Snowflake's recommended practice). Masking uses the session's own role (F11), so inheritance by `SYSADMIN` does not reveal clear values.
 
 ### 5.1 System roles
 
