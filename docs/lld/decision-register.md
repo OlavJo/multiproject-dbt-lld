@@ -56,13 +56,13 @@ Every open design decision for the LLD, one row each. Each decision is recorded 
 | PB-1 | Consistent reads mechanism | Input clones (adopted, S10); publication windows if clone cost is material | S10; S5 not run | Open (confirm after S5) |
 | PB-2 | Semantic views and new columns | Lag one publication; or apply after the swap | S1 | Open |
 | PB-3 | Object identity per unit | Option A (replace on publication, baseline); Option B (transactional DML) for selected Tier 1 marts | SLD 10.10; S11 not run | Deferred (until a consumer needs stable identity) |
-| PB-4 | Where the publish procedure lives, and how it generalises to Tier 1 and Tier 2 | One generic procedure in the ops database; or one per project database | `setup/08` hard-codes the `silver` database | Open |
+| PB-4 | Where the publish procedure lives, and how it generalises to Tier 1 and Tier 2 | One generic procedure in the ops database; or one per project database | `setup/08` hard-codes the `silver` database; Increment 2 keeps names as constants at the top of `publish_unit` | Open |
 
 ## 6. Run control and orchestration
 
 | ID | Decision | Options | Constrained by | Status |
 |---|---|---|---|---|
-| RC-1 | Scheduling | Scheduled gated task per unit (SLD baseline); task graph; stream-driven dispatcher | A task graph needs one owner (SLD 3.1); S8: task status is not publication status | Open |
+| RC-1 | Scheduling | Scheduled gated task per unit (SLD baseline); task graph; stream-driven dispatcher. Sub-question: where unit tasks live and who creates them | A task graph needs one owner (SLD 3.1); S8: task status is not publication status; a task runs as its owner, so a unit's task is owned by its unit role; INC1.01: a hand-over cannot copy grants; INC2.10 (first run): in a managed-access schema an object can be handed only to a role below the schema owner | Open; task placement decided for the prototype 2026-10-12 as I2-1 (`SILVER_SCHEDULER` owns `silver.tasks`; `prototype/README.md`, Increment 2) |
 | RC-2 | Alerting | Snowflake alerts on run-control views; task notifications; external | SLD 12.6 | Open |
 | RC-3 | Configuration deployment | Ops repository with seeds or DDL; review | SLD 12.3 | Open |
 | RC-4 | Location and ownership of run control | `analytics_ops.control` owned by the steward role (as tested); or a platform-wide owner | SLD 12.1 | Open |

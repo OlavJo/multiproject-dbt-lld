@@ -1,0 +1,23 @@
+version: 2
+
+sources:
+  - name: crm_raw
+    database: raw
+    schema: crm
+    config:
+      loaded_at_query: |
+        select max(completed_at)
+        from {{ var('ops_database') }}.control.v_landing_complete
+        where source_system = 'CRM'
+    tables:
+      - name: contacts
+
+  - name: crm_frozen
+    database: silver
+    schema: crm
+    tables:
+      - name: contacts
+        identifier: raw__contacts
+        columns:
+          - name: contact_id
+            data_tests: [not_null, unique]

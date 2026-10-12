@@ -11,6 +11,7 @@ Working documents for the Low Level Design (LLD) that follows the High Level Des
 | [`component-map.md`](component-map.md) | The ten components: for each, what it owns, its interfaces, its reference in the HLD and the spike skeleton, its open items and its dependencies |
 | [`decision-register.md`](decision-register.md) | Every open design decision, one row each, with options, the evidence that constrains it, and its status |
 | [`01-identity-and-access.md`](01-identity-and-access.md) | Component 1: role catalogue, service roles, consumer access, grant mechanics |
+| [`access-map.md`](access-map.md) | Quick reference, as built: who holds which role, ownership and privileges (diagrams and a matrix), updated with each increment |
 
 Further component documents are added in this order (component map, "Order of work"): environments and naming (3), governance (2), Silver dbt project (4), publication (5), run control (6), deployment and CI/CD (7), consumer interface (8), operations and cost (9).
 

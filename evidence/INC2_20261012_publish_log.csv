@@ -1,0 +1,103 @@
+EVENT_TS,UNIT,EVENT_TYPE,RUN_ID,WATERMARK,DETAIL
+2026-10-12 01:08:39.895,silver.erp,OFFBOARDED,,,"{
+  ""reader"": ""silver.reader_erp"",
+  ""role"": ""SVC_SILVER_ERP""
+}"
+2026-10-12 01:08:42.922,silver.crm,OFFBOARDED,,,"{
+  ""reader"": ""silver.reader_crm"",
+  ""role"": ""SVC_SILVER_CRM""
+}"
+2026-10-12 01:22:45.521,silver.erp,OFFBOARDED,,,"{
+  ""reader"": ""silver.reader_erp"",
+  ""role"": ""SVC_SILVER_ERP""
+}"
+2026-10-12 01:22:48.249,silver.crm,OFFBOARDED,,,"{
+  ""reader"": ""silver.reader_crm"",
+  ""role"": ""SVC_SILVER_CRM""
+}"
+2026-10-12 01:23:04.420,silver.erp,ONBOARDED,,,"{
+  ""reader"": ""silver.reader_erp"",
+  ""role"": ""SVC_SILVER_ERP"",
+  ""schema"": ""created"",
+  ""sensitive"": false,
+  ""upstream_readers"": """"
+}"
+2026-10-12 01:23:09.493,silver.crm,ONBOARDED,,,"{
+  ""reader"": ""silver.reader_crm"",
+  ""role"": ""SVC_SILVER_CRM"",
+  ""schema"": ""created"",
+  ""sensitive"": false,
+  ""upstream_readers"": """"
+}"
+2026-10-12 01:25:02.542,silver.erp,ONBOARDED,,,"{
+  ""reader"": ""silver.reader_erp"",
+  ""role"": ""SVC_SILVER_ERP"",
+  ""schema"": ""existing"",
+  ""sensitive"": false,
+  ""upstream_readers"": """"
+}"
+2026-10-12 03:06:33.823,silver.erp,DEPLOYED,0a18f4de-07d8-472d-bbb1-060c1988faf6,,"{
+  ""git_ref"": ""claude/dazzling-sagan-ludxca"",
+  ""object"": ""silver.ops.silver_layer""
+}"
+2026-10-12 03:06:33.823,silver.crm,DEPLOYED,0a18f4de-07d8-472d-bbb1-060c1988faf6,,"{
+  ""git_ref"": ""claude/dazzling-sagan-ludxca"",
+  ""object"": ""silver.ops.silver_layer""
+}"
+2026-10-12 03:54:14.367,silver.erp,ONBOARDED,,,"{
+  ""reader"": ""silver.reader_erp"",
+  ""role"": ""SVC_SILVER_ERP"",
+  ""schema"": ""existing"",
+  ""sensitive"": false,
+  ""upstream_readers"": """"
+}"
+2026-10-12 03:54:20.828,silver.crm,ONBOARDED,,,"{
+  ""reader"": ""silver.reader_crm"",
+  ""role"": ""SVC_SILVER_CRM"",
+  ""schema"": ""existing"",
+  ""sensitive"": false,
+  ""upstream_readers"": """"
+}"
+2026-10-12 03:54:24.970,silver.erp,TASK_PROVISIONED,,,"{
+  ""owner"": ""SVC_SILVER_ERP"",
+  ""task"": ""silver.tasks.publish_erp"",
+  ""task_note"": ""created""
+}"
+2026-10-12 03:54:27.916,silver.crm,TASK_PROVISIONED,,,"{
+  ""owner"": ""SVC_SILVER_CRM"",
+  ""task"": ""silver.tasks.publish_crm"",
+  ""task_note"": ""created""
+}"
+2026-10-12 03:54:54.276,silver.erp,STARTED,a73e185a-727c-4177-8521-51f6cef79db0,2026-10-12 03:54:43.188,"{
+  ""role"": ""SVC_SILVER_ERP"",
+  ""selector"": ""unit_erp"",
+  ""target"": ""prod_erp""
+}"
+2026-10-12 03:54:57.286,silver.crm,STARTED,1378185e-3baf-4eb9-bf96-f0a39a29ec61,2026-10-12 03:54:44.802,"{
+  ""role"": ""SVC_SILVER_CRM"",
+  ""selector"": ""unit_crm"",
+  ""target"": ""prod_crm""
+}"
+2026-10-12 03:55:44.614,silver.crm,PUBLISHED,1378185e-3baf-4eb9-bf96-f0a39a29ec61,2026-10-12 03:54:44.802,"{
+  ""canonical_ok"": true,
+  ""role"": ""SVC_SILVER_CRM"",
+  ""state_query_id"": ""01c7ac2b-0004-309b-0003-5b0a000941ca""
+}"
+2026-10-12 03:55:45.661,silver.erp,PUBLISHED,a73e185a-727c-4177-8521-51f6cef79db0,2026-10-12 03:54:43.188,"{
+  ""canonical_ok"": true,
+  ""role"": ""SVC_SILVER_ERP"",
+  ""state_query_id"": ""01c7ac2b-0004-309b-0003-5b0a000941de""
+}"
+2026-10-12 03:56:31.146,silver.erp,STARTED,ba7c9afa-4cee-4106-a79a-02644042a7ba,2026-10-12 03:56:20.905,"{
+  ""role"": ""SVC_SILVER_ERP"",
+  ""selector"": ""unit_erp"",
+  ""target"": ""prod_erp""
+}"
+2026-10-12 03:57:26.982,silver.erp,PUBLISHED,ba7c9afa-4cee-4106-a79a-02644042a7ba,2026-10-12 03:56:20.905,"{
+  ""canonical_ok"": true,
+  ""role"": ""SVC_SILVER_ERP"",
+  ""state_query_id"": ""01c7ac2d-0004-309b-0003-5b0a000946e2""
+}"
+2026-10-12 03:57:49.208,silver.erp,SKIPPED,ad2550ee-cdee-4874-bd46-ea1bb19997b9,,"{
+  ""reason"": ""nothing_new""
+}"

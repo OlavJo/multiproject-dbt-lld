@@ -78,7 +78,7 @@ Not tested, and relied on below: see Section 8 (verification items).
 
 ## 5. Role catalogue (draft)
 
-Organised in layers. Each account role is granted to `SYSADMIN` so administrators can manage what it owns (Snowflake's recommended practice). Masking uses the session's own role (F11), so inheritance by `SYSADMIN` does not reveal clear values.
+Organised in layers; [`access-map.md`](access-map.md) draws the roles as built in the prototype. Each account role is granted to `SYSADMIN` so administrators can manage what it owns (Snowflake's recommended practice). Masking uses the session's own role (F11), so inheritance by `SYSADMIN` does not reveal clear values.
 
 ### 5.1 System roles
 
@@ -121,6 +121,7 @@ Because the unit role owns its managed-access schemas, it applies the dbt `grant
 | `SILVER_CLONER` *(new)* | Owns the owner's-rights procedure that takes input clones of upstream unit schemas, grants them to the downstream unit role and drops them. Never granted to a person or to a dbt target | IA-2 |
 | `SILVER_PROVISIONER` *(new)* | Owns `onboard_unit` and `offboard_unit`, which create and retire a unit's roles and grants. Holds `CREATE ROLE`; never granted to a person | IA-1, 7.1.1 |
 | `TASK_RUNNER` *(new)* | Access role holding the account privilege `EXECUTE TASK`, granted to every service role that owns a task. Owned by `SILVER_PROVISIONER` | 7.1.1 |
+| `SILVER_SCHEDULER` *(new)* | Owns `silver.tasks` (managed access) and the procedure that creates a unit's task, hands it to the unit role and grants `OPERATE` to `SILVER_OPERATOR`. Holds every unit role, because in a managed-access schema an object can be handed only to a role below the schema owner (Observed: INC2.10, first run). Never granted to a person | Prototype choice I2-1; RC-1 |
 | `SILVER_UNIT_BASE` *(new)* | Access role holding the privileges common to every Silver unit role (Section 5.3, except the unit's own schemas, raw and upstream readers). Object owners grant to it once; the provisioner, which owns it, grants it to each new unit role | 7.1.1 |
 
 ### 5.5 CI and deployment roles
@@ -302,7 +303,7 @@ Small checks the recommendations depend on, none covered by the spikes. They can
 | V-IA-8 | `IS_ROLE_IN_SESSION` in a masking policy reveals to a service role that holds `PII_CLEAR_<scope>`, with secondary roles off, including inside a task and an `EXECUTE DBT PROJECT` run | 6.4, GV-3 |
 | V-IA-9 | An owner's-rights procedure owned by `SILVER_PROVISIONER` creates a role, grants it privileges and `TASK_RUNNER`, creates a database role and grants it, and creates a schema as the new role (or hands it over); the least privileges `SILVER_PROVISIONER` needs | 7.1.1 |
 
-**Results.** V-IA-9 **Observed** (Increment 1, 2026-10-12; Section 11): yes, with one constraint. The hand-over of the schema must carry no grants, because `GRANT OWNERSHIP ... COPY CURRENT GRANTS` in an owner's-rights procedure needs `MANAGE GRANTS`.
+**Results.** V-IA-1 **Observed** (Increment 2, 2026-10-12; INC2.25, INC2.30): dbt `grants` grant `SELECT` to a reader database role, and the grant survives clone, build and swap on an incremental model; dbt never revokes a database-role grant (from the dbt-snowflake code, not tested). V-IA-7 **Observed** (INC2.15, INC2.19): `OPERATE` on a task lets `SILVER_OPERATOR` run it with `EXECUTE TASK`, and the run is the owner's. A unit's task is created and handed over by `SILVER_SCHEDULER` (Section 5.4), because in a managed-access schema an object can be handed only to a role below the schema owner (INC2.10, first run). V-IA-9 **Observed** (Increment 1, 2026-10-12; Section 11): yes, with one constraint. The hand-over of the schema must carry no grants, because `GRANT OWNERSHIP ... COPY CURRENT GRANTS` in an owner's-rights procedure needs `MANAGE GRANTS`.
 
 ## 9. Residual risks
 

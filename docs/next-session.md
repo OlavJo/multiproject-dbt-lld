@@ -6,12 +6,12 @@
 - **Spikes accepted.** HLD v1.4 is the baseline (`docs/hld/`). Deferred: S5, S7, S11, S13.
 - **LLD started** in `docs/lld/`: component map, decision register, and component 1 (Identity and Access) drafted. Decided 2026-10-09: IA-1 (service role per unit, with steward self-service onboarding), IA-2 (fixed clone procedure for input clones), IA-3 (reader database role per unit; sensitive sources kept out of the aggregate reader).
 - **Approach agreed:** LLD and prototype together, in increments, one pull request per increment (`docs/lld/README.md`, "Approach").
-- **Prototype** in `prototype/`: Increment 0 (lab foundation, teardown of spike objects, Git integration) **done** 2026-10-11, evidence `evidence/INC0_20261011.csv`. Increment 1 (unit onboarding) **done** 2026-10-12, evidence `evidence/INC1_20261012.csv`; V-IA-9 Observed, with one constraint (schema hand-over without grants; LLD 01, Section 11).
+- **Prototype** in `prototype/`: Increment 0 (lab foundation, teardown of spike objects, Git integration) **done** 2026-10-11, evidence `evidence/INC0_20261011.csv`. Increment 1 (unit onboarding) **done** 2026-10-12, evidence `evidence/INC1_20261012.csv`; V-IA-9 Observed, with one constraint (schema hand-over without grants; LLD 01, Section 11). Increment 2 (first publications under the unit roles) **done** 2026-10-12, evidence `evidence/INC2_20261012.csv`; V-IA-1 and V-IA-7 Observed; new utility role `SILVER_SCHEDULER` owns the unit tasks' schema (I2-1).
 
 ## Next steps
 
-1. Review and merge the Increment 1 pull request; confirm the implementation choices listed in LLD 01, Section 11 (eight, including the new choice 8).
-2. Increment 2: first publication under the new roles (project object from Git with `ADD VERSION`, publish procedure, lease procedures, a task owned by the unit role, consumer reads through the reader database role). It uses the Git objects for this repository from `prototype/00_git_integration.sql` (`LLD_LAB.GIT.LLD_REPO`, integration `LLD_GIT_API`).
+1. Review and merge the Increment 2 pull request; confirm choices I2-2 to I2-7 (`prototype/README.md`). After the merge, deploy from `main` (`$git_ref = 'main'` in `i2_30`).
+2. Increment 3: consistent reads through the clone procedure (`SILVER_CLONER`, IA-2; V-IA-2, V-IA-3); Core builds from input clones of ERP and CRM. Consider merging `SILVER_CLONER` with `SILVER_SCHEDULER`, which already holds every unit role.
 3. LLD component 3 (environments and naming), which fixes the placeholder names.
 
 ## Housekeeping

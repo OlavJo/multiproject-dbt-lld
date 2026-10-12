@@ -1,0 +1,46 @@
+EVENT_TS,EVENT_TYPE,DETAIL
+2026-10-12 03:06:33.823,DEPLOYED,"{
+  ""git_ref"": ""claude/dazzling-sagan-ludxca"",
+  ""object"": ""silver.ops.silver_layer""
+}"
+2026-10-12 03:06:33.823,DEPLOYED,"{
+  ""git_ref"": ""claude/dazzling-sagan-ludxca"",
+  ""object"": ""silver.ops.silver_layer""
+}"
+2026-10-12 01:25:02.542,ONBOARDED,"{
+  ""reader"": ""silver.reader_erp"",
+  ""role"": ""SVC_SILVER_ERP"",
+  ""schema"": ""existing"",
+  ""sensitive"": false,
+  ""upstream_readers"": """"
+}"
+2026-10-12 01:23:09.493,ONBOARDED,"{
+  ""reader"": ""silver.reader_crm"",
+  ""role"": ""SVC_SILVER_CRM"",
+  ""schema"": ""created"",
+  ""sensitive"": false,
+  ""upstream_readers"": """"
+}"
+2026-10-12 01:23:04.420,ONBOARDED,"{
+  ""reader"": ""silver.reader_erp"",
+  ""role"": ""SVC_SILVER_ERP"",
+  ""schema"": ""created"",
+  ""sensitive"": false,
+  ""upstream_readers"": """"
+}"
+2026-10-12 01:22:48.249,OFFBOARDED,"{
+  ""reader"": ""silver.reader_crm"",
+  ""role"": ""SVC_SILVER_CRM""
+}"
+2026-10-12 01:22:45.521,OFFBOARDED,"{
+  ""reader"": ""silver.reader_erp"",
+  ""role"": ""SVC_SILVER_ERP""
+}"
+2026-10-12 01:08:42.922,OFFBOARDED,"{
+  ""reader"": ""silver.reader_crm"",
+  ""role"": ""SVC_SILVER_CRM""
+}"
+2026-10-12 01:08:39.895,OFFBOARDED,"{
+  ""reader"": ""silver.reader_erp"",
+  ""role"": ""SVC_SILVER_ERP""
+}"

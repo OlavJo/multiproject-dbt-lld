@@ -1,0 +1,35 @@
+# The Silver Layer dbt project (SLD 3.1, 5.1): one project, one folder per publication
+# unit. Deployed as ONE live-version dbt project object, silver.ops.silver_layer, and
+# executed by each unit's service role (LLD 01, IA-1) through silver.ops.publish_unit.
+name: silver
+version: "0.2.0"
+config-version: 2
+profile: silver
+
+model-paths: ["models"]
+macro-paths: ["macros"]
+
+models:
+  silver:
+    # A unit's custom schema names the unit; generate_schema_name (macros/unit_schemas.sql)
+    # resolves it to the published schema or, for the unit being published, <unit>__build.
+    # Grants go to the unit's reader DATABASE role, never to consumer roles (LLD 01, 6.2;
+    # IA-3). Whether dbt applies and re-applies a grant to a database role correctly across
+    # clone and swap is verification item V-IA-1 (Increment 2 demo).
+    erp:
+      +schema: erp
+      +materialized: view
+      +grants:
+        select: ["database role silver.reader_erp"]
+    crm:
+      +schema: crm
+      +materialized: view
+      +grants:
+        select: ["database role silver.reader_crm"]
+
+vars:
+  # Set by the publish procedure: --vars '{publish_unit: erp}'. Unset: every unit resolves
+  # to its published schema.
+  publish_unit: null
+  # Run-control database read by source freshness (SLD 12)
+  ops_database: analytics_ops
