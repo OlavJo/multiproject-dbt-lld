@@ -5,7 +5,12 @@
 --   raw.control.landing_complete   one row per landed batch, written LAST
 --   raw.control.land_batch(source, empty)
 --                                  lands one batch for ERP, CRM or HR, then writes the
---                                  record; empty = true writes the record only (a quiet source)
+--                                  record; empty = true simulates a batch with no new rows in
+--                                  ANY table of the source (a quiet source): the record is still
+--                                  written, so the source stays fresh
+-- Completeness is per source and batch, never per table (SLD 4.1): one record closes the batch
+-- once every table has committed, whether or not a given table received new rows. The freeze
+-- then clones every table of the source at that one watermark (SLD 7.2).
 -- The steward reads the landing-complete table (for the analytics view in i2_20).
 --
 -- Run as: PLATFORM_INGEST. Requires: i1_20. Idempotent: the table is created if
