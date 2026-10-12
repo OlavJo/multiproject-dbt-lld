@@ -1,0 +1,10 @@
+flowchart LR
+  classDef util fill:#f3e5f5,stroke:#8e24aa,color:#4a148c
+  classDef obj fill:#ffffff,stroke:#9e9e9e,color:#212121
+
+  PROV["SILVER_PROVISIONER"]:::util
+  PROV -->|CREATE ROLE| ACCT[("Account")]:::obj
+  PROV ==>|OWNERSHIP| ROLESOBJ[("SVC_SILVER_&lt;UNIT&gt;, SILVER_UNIT_BASE,<br/>TASK_RUNNER, silver.reader,<br/>silver.reader_&lt;unit&gt;")]:::obj
+  PROV ==>|OWNERSHIP| PROCS[("silver.ops<br/>provisioning procedures")]:::obj
+  PROV -->|CREATE SCHEMA,<br/>CREATE DATABASE ROLE| SILVER[("silver database;<br/>silver.ops schema")]:::obj
+  PROV -->|"SELECT config,<br/>lease DML, USAGE log_event"| AOPS[("analytics_ops.control")]:::obj

@@ -1,0 +1,27 @@
+flowchart TB
+  classDef sys fill:#eceff1,stroke:#607d8b,color:#263238
+  classDef func fill:#e3f2fd,stroke:#1e88e5,color:#0d47a1
+  classDef own fill:#fff3e0,stroke:#fb8c00,color:#e65100
+  classDef util fill:#f3e5f5,stroke:#8e24aa,color:#4a148c
+  classDef svc fill:#e8f5e9,stroke:#43a047,color:#1b5e20
+  classDef dbr fill:#fffde7,stroke:#c0a000,color:#5d4b00
+
+  STEWARDP(["Steward"]) --> OPERATOR["SILVER_OPERATOR"]:::func
+  ANALYSTP(["Analyst"]) --> AALL["ANALYST_ALL"]:::func
+  ANALYSTP --> AHR["ANALYST_HR"]:::func
+
+  SYSADMIN["SYSADMIN<br/>holds every account role"]:::sys
+  SYSADMIN --> PLATFORM["PLATFORM_INGEST"]:::own
+  SYSADMIN --> STEWARD["SILVER_STEWARD"]:::own
+  SYSADMIN --> PROV["SILVER_PROVISIONER"]:::util
+  SYSADMIN --> SVC["SVC_SILVER_&lt;UNIT&gt;<br/>one per unit"]:::svc
+  SYSADMIN --> SCHED["SILVER_SCHEDULER"]:::util
+  SCHED -->|every unit role| SVC
+
+  SVC --> BASE["SILVER_UNIT_BASE"]:::util
+  SVC --> TASKR["TASK_RUNNER"]:::util
+  SVC -->|granted by the platform| RAWR["raw.reader_&lt;source&gt;"]:::dbr
+  SVC -->|its declared Silver upstreams| SR["silver.reader_&lt;unit&gt;"]:::dbr
+  AALL --> SRA["silver.reader"]:::dbr
+  SRA -->|non-sensitive units only| SR
+  AHR -->|a sensitive unit, e.g. HR| SR

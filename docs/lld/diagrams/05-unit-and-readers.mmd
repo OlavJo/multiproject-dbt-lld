@@ -1,0 +1,28 @@
+flowchart LR
+  classDef util fill:#f3e5f5,stroke:#8e24aa,color:#4a148c
+  classDef svc fill:#e8f5e9,stroke:#43a047,color:#1b5e20
+  classDef dbr fill:#fffde7,stroke:#c0a000,color:#5d4b00
+  classDef obj fill:#ffffff,stroke:#9e9e9e,color:#212121
+
+  SVC["SVC_SILVER_&lt;UNIT&gt;"]:::svc
+  BASE["SILVER_UNIT_BASE"]:::util
+  TASKR["TASK_RUNNER"]:::util
+  RAWR["raw.reader_&lt;source&gt;"]:::dbr
+  SR["silver.reader_&lt;unit&gt;"]:::dbr
+
+  UNITSCH[("silver.&lt;unit&gt;<br/>managed access")]:::obj
+  SILVER[("silver database,<br/>silver.ops")]:::obj
+  AOPS[("analytics_ops.control")]:::obj
+  WH[("LLD_WH")]:::obj
+  ACCT[("Account")]:::obj
+  RAW[("raw.&lt;source&gt;<br/>schema and tables")]:::obj
+
+  SVC ==>|OWNERSHIP| UNITSCH
+  SVC ==>|OWNERSHIP| TASK[("silver.tasks.publish_&lt;unit&gt;")]:::obj
+  BASE -->|"USAGE on the project object,<br/>publish_unit, lease procedures"| PUB[("silver.ops, analytics_ops.control<br/>publication objects")]:::obj
+  BASE -->|"USAGE, CREATE SCHEMA on silver;<br/>USAGE on silver.ops"| SILVER
+  BASE -->|"SELECT units, unit_dependencies,<br/>publish_log; USAGE log_event"| AOPS
+  BASE -->|USAGE| WH
+  TASKR -->|EXECUTE TASK| ACCT
+  RAWR -->|"USAGE, SELECT"| RAW
+  SR -->|"USAGE (granted at each publication),<br/>SELECT on published objects"| UNITSCH
