@@ -31,7 +31,7 @@ Further component folders (`02_governance/`, ...) appear with the increments tha
 | 0 | Clean slate | The prototype's own lab (warehouse, evidence store, Git integration), independent of the spike objects; the spike databases and roles removed, the spike record (`SPIKE_LAB`) kept | | **Done** 2026-10-11 |
 | 1 | **Unit onboarding** | Stewards onboard and retire Silver units themselves: a role per unit, reader roles, a sensitive source kept out of the aggregate reader, refusals for bad input | V-IA-9; IA-1, IA-3 | **Done** 2026-10-12 |
 | 2 | First publication under the new roles | ERP lands, freezes, builds and publishes through the publish procedure, run by its own task; a consumer reads it through the reader database role | V-IA-1, V-IA-7 | **Done** 2026-10-12 |
-| 3 | Consistent reads through the clone procedure | Core builds from input clones taken by `SILVER_CLONER`, reading upstream published objects only | V-IA-2, V-IA-3; IA-2 | Planned |
+| 3 | Consistent reads through the clone procedure | Core builds from input clones taken by `SILVER_SCHEDULER`'s procedure (IA-2's clone role), reading upstream published objects only | V-IA-2, V-IA-3; IA-2 | Scripts ready |
 | 4 | Clear values and the sensitive source | Governance tags and masking with a `PII_CLEAR` access role; Core matches on clear values; HR stays restricted | V-IA-6, V-IA-8; GV-3 | Planned |
 | 5 | CI under its own role | A CI build with `IMPORTS` of canonical state and `--defer`, under `CI_SILVER` | V-IA-4, V-IA-5 | Planned |
 
@@ -104,6 +104,31 @@ As with the spikes, scripts run in Snowsight worksheets (or any client that supp
 | demo | `demo/i2_demo_publication.sql` | switches itself; waits for each task run (up to 10 minutes); export to `evidence/INC2_<yyyymmdd>.csv` |
 
 Every script is idempotent, and the demos reset or reuse their own units, so any step can be rerun.
+
+**Increment 3, in order** (after the Increment 2 demo, whose published ERP and CRM it uses):
+
+| Step | Script | Runs as |
+|---|---|---|
+| 3.10 | `05_publication/i3_10_input_clones.sql` | `SILVER_SCHEDULER`, `SILVER_STEWARD` (switches itself) |
+| 3.20 | rerun `05_publication/i2_40_publish_procedure.sql` (publish_unit now takes input clones) | `SILVER_STEWARD` |
+| 3.30 | rerun `07_deployment/i2_30_project_object.sql` (the Core models; `$git_ref` = the branch until merged) | `SYSADMIN`, then `SILVER_STEWARD` |
+| demo | `demo/i3_demo_input_clones.sql` | switches itself; about 6 minutes; export to `evidence/INC3_<yyyymmdd>.csv` |
+
+## Increment 3: design and choices to confirm
+
+**What it builds.** The Core module (Tier 0.5; `dbt/silver/models/core`) publishes from **input clones** of ERP and CRM taken at its gate (SLD 10.9; S10). Two owner's-rights procedures owned by `SILVER_SCHEDULER` take and drop the clones (`i3_10`); `publish_unit` calls them for any unit with Silver upstreams and passes the clone list to dbt (`input_clones`), which redirects the unit's references to `<unit>__in_<upstream>`.
+
+**Relies on.** IA-2 (b), Decided 2026-10-09 (a fixed clone procedure owned by a clone role). Decided 2026-10-12: the scheduler is that role (same privileges: every unit role).
+
+**Choices to confirm at the Increment 3 review:**
+
+| # | Choice | Why |
+|---|---|---|
+| I3-1 | `SILVER_SCHEDULER` takes the clones; no separate `SILVER_CLONER` (renaming deferred to EN-2; candidate `SILVER_ORCHESTRATOR`) | Identical privileges; one fewer role holding every unit role |
+| I3-2 | The clone procedure grants `USAGE` on each clone schema to the unit's role, derived from the unit name, never from the caller. Any unit role may call it, but only for clones granted to the configured unit | IA-2 (b); the caller cannot widen its own access |
+| I3-3 | The clone list comes from `unit_dependencies` and reaches dbt as `--vars input_clones`, instead of a list in `dbt_project.yml` (as in the spike) | One source of truth for a unit's upstreams |
+| I3-4 | Input clones are plain schemas, not managed access, owned by the scheduler | Private to one run, never granted to consumers (LLD 01, 6.3) |
+| I3-5 | Core keeps S10's two reads and the `same_rows` test, with a 60-second pause (`core_read_pause_seconds`) for the demo | Shows consistent reads under a mid-build publication; the pause is set to 0 outside demos |
 
 ## Increment 2: design and choices to confirm
 

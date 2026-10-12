@@ -1,0 +1,9 @@
+version: 2
+
+models:
+  - name: core_reads_a
+  - name: core_reads_b
+    data_tests:
+      - same_rows:
+          arguments:
+            compare_to: ref('core_reads_a')

@@ -18,3 +18,8 @@ silver:
       <<: *prod
       role: SVC_SILVER_CRM
       schema: crm
+    # The Core module: reads published Silver outputs (as input clones), never raw
+    prod_core:
+      <<: *prod
+      role: SVC_SILVER_CORE
+      schema: core

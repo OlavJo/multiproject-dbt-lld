@@ -26,6 +26,13 @@ models:
       +materialized: view
       +grants:
         select: ["database role silver.reader_crm"]
+    # The Core module (Tier 0.5, SLD 9): reads the published ERP and CRM units, never raw.
+    # While Core is published it reads input clones of them (IA-2; macros/unit_schemas.sql).
+    core:
+      +schema: core
+      +materialized: table
+      +grants:
+        select: ["database role silver.reader_core"]
 
 vars:
   # Set by the publish procedure: --vars '{publish_unit: erp}'. Unset: every unit resolves
@@ -33,3 +40,10 @@ vars:
   publish_unit: null
   # Run-control database read by source freshness (SLD 12)
   ops_database: analytics_ops
+  # Set by the publish procedure for a unit with Silver upstreams: --vars '{input_clones: [erp, crm]}'.
+  # While publish_unit is being built, a reference to one of these units resolves to the input clone
+  # <publish_unit>__in_<upstream>, taken at the gate (SLD 10.9; spike S10).
+  input_clones: []
+  # Demo only (Increment 3): the pause between Core's two reads of its upstreams, so an upstream
+  # publication can land between them (spike S10). Set to 0 outside the demo.
+  core_read_pause_seconds: 60

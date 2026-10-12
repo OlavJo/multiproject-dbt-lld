@@ -16,14 +16,16 @@
 --   * the reader role is the unit's own, silver.reader_<unit> (IA-3), not silver.reader;
 --     the unit role owns both schemas, so it grants and revokes itself (INC1.42)
 --   * names (database, project object, reader prefix) are constants at the top (guardrail 7)
---   * a unit with Silver upstreams is refused until Increment 3 adds input clones through
---     SILVER_CLONER (IA-2); the spike's inherited-role clones are not reproduced
+--   * input clones (Increment 3) are taken and dropped by silver.ops.take_input_clones and
+--     drop_input_clones, owned by SILVER_SCHEDULER (IA-2 b), not by the unit role: the spike's
+--     unit role inherited the upstream unit roles to clone them, which IA-2 rejects
 --
 -- PB-4 (where the procedure lives for Tier 1 and Tier 2) is open; Silver's lives in
 -- silver.ops, owned by SILVER_STEWARD, as in the HLD baseline.
 --
 -- Returns PUBLISHED, SKIPPED:<reason> or FAILED:<stage>.
--- Run as: SILVER_STEWARD. Requires: i1_40, i2_20, i2_30. Idempotent.
+-- Run as: SILVER_STEWARD. Requires: i1_40, i2_20, i2_30 (and i3_10 for units with Silver
+-- upstreams). Idempotent.
 -- =============================================================================
 
 use role silver_steward;
@@ -68,6 +70,10 @@ declare
   v_canon_err varchar;
   v_fail_qid  varchar;
   v_role      varchar;
+  v_inputs    varchar default '';
+  v_clone_ts  timestamp_ntz;
+  v_cloned    boolean default false;
+  v_dropped   varchar;
 begin
   select current_role() into :v_role;
   select selector, dbt_target into :v_selector, :v_target
@@ -110,11 +116,6 @@ begin
     select count_if(upstream_unit like 'silver.%'), count_if(upstream_unit like 'raw.%')
       into :v_silver_up, :v_raw_up
       from analytics_ops.control.unit_dependencies where unit = :p_unit;
-    if (v_silver_up > 0) then
-      v_exc := 'input clones are not available before Increment 3 (IA-2)';
-      v_stage := 'input_clones';
-      raise failed;
-    end if;
     -- The unit's watermark: the minimum of its upstream watermarks, read now (SLD 11.2)
     select min(s.watermark) into :v_wm
       from analytics_ops.control.unit_dependencies d
@@ -128,6 +129,21 @@ begin
     v_stage := 'clone';
     v_sql := 'create or replace schema ' || c_db || '.' || v_build || ' clone ' || c_db || '.' || v_schema || ' with managed access';
     execute immediate :v_sql;
+
+    -- 2b. Input clones (units with Silver upstreams; SLD 10.9, IA-2 b): taken now, by the
+    -- scheduler's procedure, and read by the unit's models through var input_clones
+    if (v_silver_up > 0) then
+      v_stage := 'input_clones';
+      call silver.ops.take_input_clones(:p_unit) into :v_inputs;
+      v_cloned := true;
+      select sysdate() into :v_clone_ts;
+      if (v_inputs is null or v_inputs = '' or startswith(v_inputs, 'REFUSED')) then
+        v_exc := 'take_input_clones: ' || coalesce(v_inputs, '<null>');
+        raise failed;
+      end if;
+      v_dbt_args := ' --vars "{publish_unit: ' || v_schema || ', input_clones: [' || v_inputs || ']}" --target ' || v_target
+                 || ' --target-path target/' || v_schema || ' --log-path logs/' || v_schema;
+    end if;
 
     -- 3. Freeze at the watermark (units with raw upstreams only, SLD 7.2)
     if (v_raw_up > 0) then
@@ -159,6 +175,9 @@ begin
     execute immediate 'alter schema ' || c_db || '.' || v_build || ' swap with ' || c_db || '.' || v_schema;
     execute immediate 'revoke usage on schema ' || c_db || '.' || v_build || ' from database role ' || v_reader;
     v_granted := false;
+    if (v_cloned) then
+      call silver.ops.drop_input_clones(:p_unit) into :v_dropped;
+    end if;
 
     -- 6. Canonical state for CI (SLD 3.2); a failure here does not affect consumers
     v_stage := 'canonical';
@@ -176,7 +195,8 @@ begin
     -- 7. PUBLISHED, release
     call analytics_ops.control.log_event(:p_unit, 'PUBLISHED', :v_wm, :v_run_id,
       object_construct('role', :v_role, 'state_query_id', :v_state_qid,
-                       'canonical_ok', :v_canon_ok, 'canonical_error', :v_canon_err));
+                       'canonical_ok', :v_canon_ok, 'canonical_error', :v_canon_err,
+                       'input_clones', :v_inputs, 'inputs_cloned_at', :v_clone_ts));
     call analytics_ops.control.release_lease(:p_unit, :v_run_id) into :v_released;
     return 'PUBLISHED';
 
@@ -190,6 +210,12 @@ begin
       if (v_granted) then
         begin
           execute immediate 'revoke usage on schema ' || c_db || '.' || v_build || ' from database role ' || v_reader;
+        exception when other then null;
+        end;
+      end if;
+      if (v_cloned) then
+        begin
+          call silver.ops.drop_input_clones(:p_unit) into :v_dropped;
         exception when other then null;
         end;
       end if;

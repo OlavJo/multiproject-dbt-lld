@@ -15,7 +15,7 @@
 | 0 Clean slate (lab foundation, spike teardown, Git integration) | Done 2026-10-11 | `evidence/INC0_20261011.csv` | |
 | 1 Unit onboarding (steward self-service) | Done 2026-10-12, merged (PR #2) | `evidence/INC1_20261012.csv` | V-IA-9 |
 | 2 First publications under the unit roles | Done 2026-10-12, merged (PR #3) | `evidence/INC2_20261012.csv`, `_publish_log.csv` | V-IA-1, V-IA-7 |
-| 3 Consistent reads through input clones (Core) | **Being drafted** on the branch | | V-IA-2, V-IA-3 (planned) |
+| 3 Consistent reads through input clones (Core) | **Scripts ready, not yet run** (on the branch) | | V-IA-2, V-IA-3 (planned) |
 
 Key findings so far (details in the prototype README "Results" and LLD 01, Sections 8 and 11):
 
@@ -33,7 +33,7 @@ Key findings so far (details in the prototype README "Results" and LLD 01, Secti
 
 ## Next steps
 
-1. **Increment 3**: review the draft (`prototype/README.md`, "Increment 3"), then run it in the order listed there; export the demo evidence to `evidence/INC3_<date>.csv`; fix what fails; pull request.
+1. **Increment 3**: review the draft (`prototype/README.md`, "Increment 3": choices I3-1 to I3-5), then run it in the order listed there: `i3_10`, rerun `i2_40`, rerun `i2_30` with `$git_ref = 'claude/dazzling-sagan-ludxca'` (the Core models are on the branch), then `demo/i3_demo_input_clones.sql` (about 6 minutes). Export the evidence to `evidence/INC3_<date>.csv`; fix what fails; pull request.
 2. Confirm prototype choices I2-2 to I2-7 (`prototype/README.md`) if not done at the Increment 2 review.
 3. Increments 4 (clear values and the sensitive source; GV-3) and 5 (CI under its own role; IA-5).
 4. LLD component 3 (environments and naming, EN-1, EN-2), which fixes the placeholder names, including the scheduler's.

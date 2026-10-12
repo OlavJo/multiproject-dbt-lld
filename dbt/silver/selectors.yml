@@ -12,3 +12,8 @@ selectors:
     definition:
       method: path
       value: models/crm
+  - name: unit_core
+    description: "Core module (Tier 0.5): reads the published ERP and CRM units"
+    definition:
+      method: path
+      value: models/core
