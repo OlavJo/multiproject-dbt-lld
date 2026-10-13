@@ -162,7 +162,7 @@ body { background: var(--bg); color: var(--ink); margin: 0; }
 <section class="title-slide">
   <div class="eyebrow"><span class="strip b"><i></i><i></i><i></i></span>Analytics on Snowflake</div>
   <h1>The Bronze Layer</h1>
-  <p class="lead">Our interface with the rest of the organisation, and why it deserves our attention even though Platform owns it.</p>
+  <p class="lead">Our interface with the rest of the organisation</p>
   <div class="layer-bar"><div></div><div></div><div></div></div>
   <div class="meta">Discussion deck · October 2026</div>
 </section>
@@ -191,8 +191,9 @@ body { background: var(--bg); color: var(--ink); margin: 0; }
     <div class="panel accent">
       <h3>What this rules out</h3>
       <p>"Replicate everything before we deliver anything."</p>
-      <p>"Wire Gold straight to legacy tables and deal with it later."</p>
-      <p class="muted small" style="margin-bottom:0">The first never finishes. The second makes "later" impossibly expensive.</p>
+      <p>"Wire Gold to legacy tables and deal with it later."</p>
+      <p class="muted small" style="margin-bottom:0">The first never finishes.</p> 
+      <p class="muted small" style="margin-bottom:0">The second makes "later" impossibly expensive.</p>
     </div>
   </div>
 </section>
@@ -214,15 +215,15 @@ body { background: var(--bg); color: var(--ink); margin: 0; }
       <div>external feeds</div>
     </div>
     <div class="cell b"><b>As received</b>Landed by Platform via Airflow, batch or CDC, daily or hourly. Unchanged content, one schema per source.</div>
-    <div class="cell"><b>Source-aligned staging</b>One dbt project per source. Naming and typing, snapshots. No joins, no business logic.</div>
-    <div class="cell"><b>Published products</b>Business projects: intermediate, marts, aggregates, semantic views. Built on published Silver interfaces.</div>
+    <div class="cell"><b>Source-aligned staging</b>One dbt project gating all sources. Naming and typing, entity resolution, historical snapshots. No business joins, no business logic.</div>
+    <div class="cell"><b>Published products</b>Multiple dbt business projects: intermediate, marts, aggregates, semantic views. Built on published Silver interfaces.</div>
   </div>
   <div class="owner">
     <span></span>
     <span class="plat">Owned by Platform</span>
     <span>Owned by Analytics</span>
   </div>
-  <p class="foot">Everything we build starts from what Bronze hands us. If we don't define that hand-over, Platform defines it for us by default.</p>
+  <p class="foot">Everything we build starts from what Bronze hands us. If we don't define that hand-over, the Platform team defines it for us by default.</p>
 </section>
 
 <!-- 5 Defined by arrival -->
@@ -232,15 +233,16 @@ body { background: var(--bg); color: var(--ink); margin: 0; }
   <div class="cols">
     <div>
       <p>In the medallion pattern, Bronze holds data <strong>as received</strong>: unchanged, from whatever system sent it.</p>
-      <p>Nothing requires that system to be operational. From Snowflake's point of view, the Oracle DW is a source with an owner, a schedule and a schema, just like core banking.</p>
-      <p>So landing DW outputs in Bronze is not impure. <strong>Mislabelling them would be.</strong></p>
+      <p><strong>Nothing requires that system to be operational. </strong></p>
+      <p>From Snowflake's point of view, the Oracle DW is a source with an owner, a schedule and a schema, just like core banking.</p>
+      <p>The difference requires classification as metadata. </p>
     </div>
     <div class="panel">
-      <h3>Honest versus misleading</h3>
+      <h3>Honesty is in classification</h3>
       <table>
         <tr><th>Landing as</th><th>Reader assumes</th></tr>
-        <tr><td><code>oracle_dw.dim_customer</code></td><td>Derived data with upstream logic. Correct.</td></tr>
-        <tr><td><code>core_banking.customer</code></td><td>Operational truth. Wrong, and invisible.</td></tr>
+        <tr><td><code>oracle_dw.dim_customer</code></td><td>Derived data with upstream logic.</td></tr>
+        <tr><td><code>core_banking.customer</code></td><td>Operational truth. Lowest grain.</td></tr>
       </table>
     </div>
   </div>
@@ -255,16 +257,17 @@ body { background: var(--bg); color: var(--ink); margin: 0; }
       <p>A table can be highly modelled and still belong in Silver. A conformed dimension from the DW is <em>someone else's</em> Gold, arriving as <em>our</em> source.</p>
       <p>Silver's rules apply to <strong>what we do to it</strong>, and they do not change:</p>
       <ul>
-        <li>No joins, no business logic.</li>
-        <li>Naming, typing and standardisation only.</li>
+        <li>No business joins, no business logic.</li>
+        <li>Naming, typing and standardisation.</li>
+        <li>Entity resolution and CDC deduplication.</li>
         <li>Snapshots only where the source does not already keep history.</li>
       </ul>
     </div>
     <div class="panel accent">
-      <h3>The question for any layer</h3>
-      <p><strong>Bronze:</strong> did it arrive unchanged?</p>
-      <p><strong>Silver:</strong> did we only shape it, not change its meaning?</p>
-      <p style="margin-bottom:0"><strong>Gold:</strong> did we add something a consumer needs?</p>
+      <h3>The question for any medallion layer</h3>
+      <p><strong>Bronze:</strong> Did it arrive unchanged?</p>
+      <p><strong>Silver:</strong> Did we only shape it, not change its meaning?</p>
+      <p style="margin-bottom:0"><strong>Gold:</strong> Did we add something a consumer needs?</p>
     </div>
   </div>
 </section>
@@ -272,23 +275,27 @@ body { background: var(--bg); color: var(--ink); margin: 0; }
 <!-- 7 Two kinds of source -->
 <section>
   <div class="eyebrow"><span class="strip b"><i></i><i></i><i></i></span>Source classification</div>
-  <h2>Two kinds of source, both legitimate</h2>
+  <h2>Two kinds of source, both available</h2>
   <table>
     <tr><th></th><th>Operational source</th><th>Derived source</th></tr>
     <tr><td>Examples</td><td>Core banking, payments, CRM</td><td>Oracle DW, other marts, vendor aggregates</td></tr>
     <tr><td>Business logic</td><td>Minimal; transactional records</td><td>Already applied upstream, by another team</td></tr>
     <tr><td>Lineage</td><td>Ends at the system of record</td><td>Ends at a <strong>declared boundary</strong></td></tr>
     <tr><td>Trust basis</td><td>System of record</td><td>Decades of curation, existing regulatory use</td></tr>
-    <tr><td>What we may lose</td><td>Little</td><td>Grain, attributes, latency the upstream discards</td></tr>
+    <tr><td>What we may lose</td><td>Little - this is the source</td><td>Grain, attributes, latency the upstream discards</td></tr>
     <tr><td>Extra obligation</td><td>Standard contract</td><td>Standard contract <strong>plus</strong> derived-source metadata</td></tr>
   </table>
-  <p class="foot">Every source in Bronze is declared as one or the other. A mixed Bronze then becomes a classified inventory instead of a mess.</p>
+  <p class="foot">
+    Every source in Bronze is declared as one or the other. 
+    <br/>
+    A mixed Bronze then becomes a classified inventory instead of a mess.
+  </p>
 </section>
 
 <!-- 8 Interface contract -->
 <section>
   <div class="eyebrow"><span class="strip b"><i></i><i></i><i></i></span>The interface</div>
-  <h2>What we need Platform to hand over with every source</h2>
+  <h2>What we need as hand over with every source</h2>
   <div class="cols">
     <div class="contract">
       <div><span class="k">source</span>: oracle_dw</div>
@@ -308,7 +315,7 @@ body { background: var(--bg); color: var(--ink); margin: 0; }
         <li><strong><code>source_as_of</code></strong> is distinct from load time and drives watermarks.</li>
         <li><strong>Schema change policy</strong> decides whether staging fails loudly or drifts silently.</li>
       </ul>
-      <p class="muted small">Analytics doesn't own Bronze, but we are its main consumer. We should write this contract and agree it with Platform.</p>
+      <p class="muted small">Analytics doesn't own Bronze, but we are its main consumer. We should write this contract and agree it with the Platform team.</p>
     </div>
   </div>
 </section>
@@ -362,7 +369,7 @@ body { background: var(--bg); color: var(--ink); margin: 0; }
 <!-- 11 Risks -->
 <section>
   <div class="eyebrow">Risks with derived sources</div>
-  <h2>Where "bring it in and pass it through" goes wrong</h2>
+  <h2>Understanding and classifying what comes in</h2>
   <div class="cols">
     <div class="panel">
       <span class="tag emp">Known pattern</span>
@@ -394,7 +401,7 @@ body { background: var(--bg); color: var(--ink); margin: 0; }
   <div class="seam">
     <div class="stackv">
       <div class="box"><b>Today</b><code>stg_oracle_dw__customer</code></div>
-      <div class="box later"><b>Later, if a trigger fires</b><code>stg_core_banking__customer</code></div>
+      <div class="box later"><b>Later, if a lower grain is required</b><code>stg_core_banking__customer</code></div>
     </div>
     <div class="arrow">→</div>
     <div class="box contract-box"><b>Published Silver interface</b>Stable names, columns and grain, delivered through our interface packages.</div>
@@ -410,14 +417,14 @@ body { background: var(--bg); color: var(--ink); margin: 0; }
 <!-- 13 Triggers -->
 <section>
   <div class="eyebrow">When to go deeper</div>
-  <h2>Replace a piece only when a trigger fires</h2>
+  <h2>Replace a piece only when required</h2>
   <div class="triggers">
     <div class="panel"><h3>Decommissioning</h3><p style="margin-bottom:0">The DW is being retired, or faces a vendor or cost deadline. Replication becomes unavoidable, on that timeline.</p></div>
     <div class="panel"><h3>Capability gap</h3><p style="margin-bottom:0">We need grain, latency or attributes the DW does not keep.</p></div>
     <div class="panel"><h3>Ownership for evolution</h3><p style="margin-bottom:0">The logic must change faster than the DW team can change it, and the business needs that change.</p></div>
     <div class="panel"><h3>Regulatory lineage</h3><p style="margin-bottom:0">Auditors require lineage to the operational source for a specific output.</p></div>
   </div>
-  <p class="foot">Without a trigger, consuming the DW is the right call. Each trigger applies to a piece, so one big migration becomes many small, justified ones.</p>
+  <p class="foot">Without any additional requirement, consuming the DW is the right call. Each new requirement applies to just one portion, so one big migration becomes many small, justified ones.</p>
 </section>
 
 <!-- 14 Kimball -->
@@ -427,7 +434,8 @@ body { background: var(--bg); color: var(--ink); margin: 0; }
   <div class="cols">
     <div>
       <p>A well-run DW is built on conformed dimensions and a bus of shared facts. Reusing them is exactly what the bus architecture is for.</p>
-      <p>Rebuilding a conformed customer dimension we already have creates a second, competing version. That is the outcome Kimball's method exists to prevent.</p>
+      <p>Rebuilding a conformed customer dimension we already have creates a second, competing version. </p>
+      <p><strong>That is the outcome Kimball's method exists to prevent.</strong></p>
     </div>
     <div class="panel accent">
       <h3>Where purity belongs</h3>
@@ -441,26 +449,13 @@ body { background: var(--bg); color: var(--ink); margin: 0; }
   </div>
 </section>
 
-<!-- 15 Open questions -->
-<section>
-  <div class="eyebrow"><span class="strip b"><i></i><i></i><i></i></span>Before the LLD commits</div>
-  <h2>Four questions to settle for the Oracle DW</h2>
-  <table>
-    <tr><th>Question</th><th>Why it matters</th><th>Ask</th></tr>
-    <tr><td>History semantics per table</td><td>Decides whether we snapshot, and whether snapshots are correct</td><td>DW team</td></tr>
-    <tr><td>Retirement or migration plans</td><td>Sets whether replication is a deadline or an option</td><td>Technology leadership</td></tr>
-    <tr><td>Known grain needs</td><td>Shows whether any use case already needs the operational source</td><td>Analytics teams</td></tr>
-    <tr><td>Load and change contract</td><td>CDC, append or replace; schema change policy; <code>source_as_of</code></td><td>Platform</td></tr>
-  </table>
-</section>
-
-<!-- 16 Summary -->
+<!-- 15 Summary -->
 <section class="statement">
   <div class="eyebrow"><span class="strip b"><i></i><i></i><i></i></span>Summary</div>
   <p class="line" style="font-size:40px">Bronze holds data as received, from any source that is honestly labelled.</p>
-  <p class="line" style="font-size:40px">Highly modelled data can sit in Silver; the rules govern what <span class="hl">we</span> do to it.</p>
-  <p class="line" style="font-size:40px">Gold depends on contracts, so any source can be replaced when a trigger fires.</p>
-  <p class="line muted" style="font-size:32px">We should write the Bronze interface contract with Platform, now.</p>
+  <p class="line" style="font-size:40px">Highly modelled data can sit in Silver; our rules govern what <span class="hl">we</span> do to it.</p>
+  <p class="line" style="font-size:40px">Gold depends on contracts, so any source can be replaced.</p>
+  <p class="line muted" style="font-size:32px">We should write the Bronze interface contract with the Platform upfront.</p>
 </section>
 
 </div>
